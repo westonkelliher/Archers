@@ -31,13 +31,25 @@ let touchStart = {x: 0, y: 0};
 var touchPad = document.getElementById('movePad');
 
 touchPad.addEventListener('touchstart', function(e) {
-    isTouchActive = true;
-
     // Prevent the default highlighting behavior
     e.preventDefault();
 
+    if (isTouchActive) { return; }
+
+    // check for correct touch
+    var touch = null;
+    for (let aTouch of e.changedTouches) {
+        if (aTouch.target.id == "movePad") {
+            touch = aTouch;
+        }
+    }
+    if (touch == null) {
+        return;
+    }
+
+    isTouchActive = true;
+
     // Get the touch position
-    var touch = e.touches[0];
     var touchX = touch.clientX;
     var touchY = touch.clientY;
 
@@ -57,8 +69,17 @@ touchPad.addEventListener('touchcancel', function(e) {
 }, false);
 
 var throttledDragEvent = throttle(function(e) {
+    // check for correct touch
+    var touch = null;
+    for (let aTouch of e.changedTouches) {
+        if (aTouch.target.id == "movePad") {
+            touch = aTouch;
+        }
+    }
+    if (touch == null) {
+        return;
+    }
     // Get the touch position
-    var touch = e.touches[0];
     var touchX = touch.clientX;
     var touchY = touch.clientY;
 
@@ -81,42 +102,62 @@ let bowTouchStart = {x: 0, y: 0};
 var bowPad = document.getElementById('bowPad');
 
 bowPad.addEventListener('touchstart', function(e) {
-    isTouchActive = true;
-
     // Prevent the default highlighting behavior
     e.preventDefault();
 
+    if (isBowTouchActive) { console.log("tried while active"); return; }
+
+    // check for correct touch
+    var touch = null;
+    for (let aTouch of e.changedTouches) {
+        if (aTouch.target.id == "bowPad") {
+            touch = aTouch;
+        }
+    }
+    if (touch == null) {
+        return;
+    }
+
+    isBowTouchActive = true;
+
     // Get the touch position
-    var touch = e.touches[0];
     var touchX = touch.clientX;
     var touchY = touch.clientY;
 
     // Print "touch start" and the x,y position
     console.log("touch start: " + touchX + ", " + touchY);
-    touchStart.x = touchX;
-    touchStart.y = touchY;
+    bowTouchStart.x = touchX;
+    bowTouchStart.y = touchY;
 }, false);
 
 
 bowPad.addEventListener('touchend', function(e) {
-    isTouchActive = false;
+    isBowTouchActive = false;
     send_datum("bow:0,0");
 }, false);
 
 bowPad.addEventListener('touchcancel', function(e) {
-    isTouchActive = false;
+    isBowTouchActive = false;
     send_datum("bow:0,0");
 }, false);
 
 
 var bowDrag = throttle(function(e) {
-    // Get the touch position
-    var touch = e.touches[0];
+    // check for correct touch
+    var touch = null;
+    for (let aTouch of e.changedTouches) {
+        if (aTouch.target.id == "bowPad") {
+            touch = aTouch;
+        }
+    }
+    if (touch == null) {
+        return;
+    }
     var touchX = touch.clientX;
     var touchY = touch.clientY;
 
-    if (isTouchActive) {
-        let datum = "bow:" + String(touchX - touchStart.x) + "," + String(touchY - touchStart.y);
+    if (isBowTouchActive) {
+        let datum = "bow:" + String(touchX - bowTouchStart.x) + "," + String(touchY - bowTouchStart.y);
         send_datum(datum);
     }
 }, 33); // Throttle to 30 times per second (33.33 milliseconds)
