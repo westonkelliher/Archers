@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://dpvb6ptchtp0j"]
+
+[ext_resource type="Script" path="res://bow.gd" id="1_h7ojm"]
+[ext_resource type="Texture2D" uid="uid://cjnxt5hjt54n6" path="res://bow.png" id="1_ntyp6"]
+
+[node name="Bow" type="Node2D"]
+script = ExtResource("1_h7ojm")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.18, 0.18)
+texture = ExtResource("1_ntyp6")
+offset = Vector2(200, 0)
+hframes = 2
