@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://dcbqnl0lw5qdg"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_4wnrd"]
-[ext_resource type="Texture2D" uid="uid://csxcmdic1xywo" path="res://body.png" id="1_k7638"]
-[ext_resource type="Texture2D" uid="uid://om38vif5dpww" path="res://head.png" id="2_tn63n"]
+[ext_resource type="Texture2D" uid="uid://c4tsd3025wpy5" path="res://body.png" id="1_k7638"]
+[ext_resource type="Texture2D" uid="uid://cdsjjiuy7jkin" path="res://head.png" id="2_tn63n"]
 [ext_resource type="PackedScene" uid="uid://dpvb6ptchtp0j" path="res://bow.tscn" id="2_vx5ds"]
 [ext_resource type="PackedScene" uid="uid://cuil4gqxlaq1c" path="res://arrow.tscn" id="3_xgj5a"]
 
@@ -39,3 +39,7 @@ shape = SubResource("CircleShape2D_7070m")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
 shape = SubResource("CircleShape2D_1gr7i")
+
+[node name="PowerMeter" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0

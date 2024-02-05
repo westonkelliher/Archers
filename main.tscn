@@ -49,4 +49,6 @@ position = Vector2(1892, 563)
 rotation = 1.5708
 scale = Vector2(1.55, 0.8)
 
+[connection signal="bow_charge" from="Player" to="." method="_on_player_bow_charge"]
+[connection signal="bow_shot" from="Player" to="." method="_on_player_bow_shot"]
 [connection signal="message_received" from="Controlpads" to="." method="_on_game_nite_controlpads_message_received"]
