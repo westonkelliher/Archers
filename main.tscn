@@ -1,17 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://bp3o11s21hwfo"]
+[gd_scene load_steps=4 format=3 uid="uid://bp3o11s21hwfo"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_qydqk"]
 [ext_resource type="PackedScene" uid="uid://dfdnabg7x326v" path="res://courtyard.tscn" id="1_uhtla"]
-[ext_resource type="PackedScene" uid="uid://dcbqnl0lw5qdg" path="res://player.tscn" id="2_71cxr"]
 [ext_resource type="PackedScene" uid="uid://chhpjvwbr85aa" path="res://wall.tscn" id="4_ol2fr"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_qydqk")
 
 [node name="Courtyard" parent="." instance=ExtResource("1_uhtla")]
-
-[node name="Player" parent="." instance=ExtResource("2_71cxr")]
-position = Vector2(387, 342)
 
 [node name="Controlpads" type="GameNiteControlpads" parent="."]
 
@@ -49,6 +45,4 @@ position = Vector2(1892, 563)
 rotation = 1.5708
 scale = Vector2(1.55, 0.8)
 
-[connection signal="bow_charge" from="Player" to="." method="_on_player_bow_charge"]
-[connection signal="bow_shot" from="Player" to="." method="_on_player_bow_shot"]
 [connection signal="message_received" from="Controlpads" to="." method="_on_game_nite_controlpads_message_received"]

@@ -10,7 +10,7 @@ const JUMP_VELOCITY = -400.0
 var arrow_scene = preload("res://arrow.tscn")
 var bow_angle = null
 
-signal bow_shot(chargeLevel)
+signal bow_shot(player, chargeLevel)
 signal bow_charge()
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -57,6 +57,7 @@ func handle_controlpad_input(message: String):
 func notTaught():
 	if isCharged:
 		$Bow.release()
-		emit_signal("bow_shot", chargeLevel)
+		print("emit")
+		emit_signal("bow_shot", self, chargeLevel)
 		isCharged = false
 		chargeLevel = 0
