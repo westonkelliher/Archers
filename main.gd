@@ -38,6 +38,7 @@ func _on_player_bow_shot(chargeLevel):
 	print("Bow Shot")
 	var velocity = Vector2(300+300*chargeLevel, 0)
 	velocity = velocity.rotated($Player/Bow.rotation)
+	velocity += $Player.velocity
 	var arrow = arrow_scene.instantiate()
 	arrow.global_position = $Player/Bow.global_position
 	arrow.linear_velocity = velocity
