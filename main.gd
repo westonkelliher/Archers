@@ -31,10 +31,15 @@ func _on_game_nite_controlpads_message_received(client, message):
 		new_player.global_position = Vector2(400, 400)
 		new_player.connect("bow_shot", _on_player_bow_shot)
 		new_player.playerID = client
+		var player_color = Color(randf(), randf(), randf(), 1)
+		new_player.playerColor = player_color
 		add_child(new_player)
-		#print('abc')
 		players[client] = new_player
 		players[client].handle_controlpad_input(message)
+		var colorString = "#%x%x%xff" % [player_color.r*255, player_color.g*255, player_color.b*255]
+		print(colorString)
+		$Controlpads.send_message(client, colorString)
+		
 
 
 func _on_player_bow_charge():

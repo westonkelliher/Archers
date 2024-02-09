@@ -1,9 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://dcbqnl0lw5qdg"]
+[gd_scene load_steps=14 format=3 uid="uid://dcbqnl0lw5qdg"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_4wnrd"]
-[ext_resource type="Texture2D" uid="uid://c4tsd3025wpy5" path="res://body.png" id="1_k7638"]
+[ext_resource type="Texture2D" uid="uid://cg1ye7wyotdb7" path="res://body2.png" id="2_cxa7b"]
 [ext_resource type="Texture2D" uid="uid://cdsjjiuy7jkin" path="res://head.png" id="2_tn63n"]
 [ext_resource type="PackedScene" uid="uid://dpvb6ptchtp0j" path="res://bow.tscn" id="2_vx5ds"]
+[ext_resource type="AudioStream" uid="uid://bvnpxjgrnelam" path="res://classic_hurt.mp3" id="5_1c8u8"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1gr7i"]
 radius = 21.7307
@@ -41,7 +42,7 @@ script = ExtResource("1_4wnrd")
 
 [node name="Body" type="Sprite2D" parent="."]
 scale = Vector2(0.15, 0.15)
-texture = ExtResource("1_k7638")
+texture = ExtResource("2_cxa7b")
 
 [node name="Bow" parent="." instance=ExtResource("2_vx5ds")]
 
@@ -101,6 +102,9 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(0, -12)
 shape = SubResource("CapsuleShape2D_botbv")
+
+[node name="HurtSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_1c8u8")
 
 [connection signal="timeout" from="Healthbar/Timer" to="." method="_on_timer_timeout"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

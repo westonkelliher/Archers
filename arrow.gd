@@ -46,10 +46,11 @@ func hitPlayer(player):
 	self.linear_velocity = Vector2(0, 0)
 	self.angular_velocity = 0
 	$Sprite2D.frame = 1
+	queue_free()
 	#var pos = self.global_position
-	self.get_parent().remove_child(self)
-	player.call_deferred("add_child", self)
+	#self.get_parent().remove_child(self)
+	#player.call_deferred("add_child", self)
 	#self.global_position = player.global_transform.affine_inverse() * self.global_position
-	print(self.global_position)
+	#print(self.global_position)
 	#self.transform.origin = player.global_transform.origin
 	#self.global_position = pos

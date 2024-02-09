@@ -3,6 +3,7 @@ extends CharacterBody2D
 var maxHealth = 100
 var currentHealth = maxHealth
 var playerID = null
+var playerColor = null
 var isDead = false
 
 var isCharged = false
@@ -14,6 +15,7 @@ const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 
 var arrow_scene = preload("res://arrow.tscn")
+var death_explosion = preload("res://death_explosion.tscn")
 var bow_angle = null
 
 signal bow_shot(player, chargeLevel)
@@ -24,6 +26,10 @@ var lastPos
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+
+func _ready():
+	$Body.modulate = playerColor
+	pass # Replace with function body.
 
 func _process(delta):
 	if isCharged and chargeLevel < maxCharge:
@@ -96,6 +102,7 @@ func _on_area_2d_body_entered(body):
 		body.hitPlayer(self)
 
 func playerDamaged(damage):
+	$HurtSound.play()
 	$Healthbar.value -= damage
 	$Healthbar/Timer.start()
 	if $Healthbar.value <= 0:
@@ -105,12 +112,21 @@ func playerDamaged(damage):
 
 func playerDeath():
 	isDead = true
+	deathExplosion()
 	var pos = self.global_position
 	self.global_position = Vector2(-100, -100)
 	await get_tree().create_timer(5.0).timeout
 	$Healthbar.value = 100
 	$Healthbar/Damagebar.value = 100
 	self.global_position = pos
+	pass
+
+
+func deathExplosion():
+	var explosion = death_explosion.instantiate()
+	explosion.global_position = self.global_position
+	explosion.emitting = true
+	get_tree().get_root().add_child(explosion)
 	pass
 
 func _on_timer_timeout():

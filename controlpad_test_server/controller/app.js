@@ -1,6 +1,18 @@
 import { send_datum } from "./controlpad.js";
 
 
+document.addEventListener("controlpad-message", (event) => {
+    
+    var msg = event.detail;
+    console.log("recv: " + msg)
+    let movePad = document.getElementById("movePad");
+    let bowPad = document.getElementById("bowPad");
+    movePad.style.background = msg;
+    bowPad.style.background = msg;
+    
+});
+
+
 // Throttle function to limit the rate of execution
 function throttle(func, limit) {
     var lastFunc;
