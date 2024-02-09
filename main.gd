@@ -30,8 +30,9 @@ func _on_game_nite_controlpads_message_received(client, message):
 		var new_player = player_scene.instantiate()
 		new_player.global_position = Vector2(400, 400)
 		new_player.connect("bow_shot", _on_player_bow_shot)
+		new_player.playerID = client
 		add_child(new_player)
-		print('abc')
+		#print('abc')
 		players[client] = new_player
 		players[client].handle_controlpad_input(message)
 
@@ -46,7 +47,7 @@ func _on_player_bow_charge():
 
 
 func _on_player_bow_shot(player, chargeLevel):
-	print("Bow Shot")
+	#print("Bow Shot")
 	var velocity = Vector2(300+300*chargeLevel, 0)
 	var bow = player.get_node('Bow')
 	velocity = velocity.rotated(bow.rotation)
@@ -56,5 +57,6 @@ func _on_player_bow_shot(player, chargeLevel):
 	arrow.linear_velocity = velocity
 	arrow.rotation = bow.rotation
 	arrow.z_velo = 4+4*chargeLevel
+	arrow.originPlayer = player.playerID
 	add_child(arrow)
 	pass # Replace with function body.

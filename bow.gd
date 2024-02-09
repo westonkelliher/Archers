@@ -21,4 +21,4 @@ func pull_back():
 
 func release():
 	$Sprite2D.frame = 0
-	print("Release")
+	#print("Release")

@@ -1,8 +1,14 @@
 extends CharacterBody2D
 
+var maxHealth = 100
+var currentHealth = maxHealth
+var playerID = null
+var isDead = false
+
 var isCharged = false
 var chargeLevel = 0
-@export var maxCharge = 4
+var maxCharge = 4
+var chargeMultiplier = 2
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
@@ -12,13 +18,21 @@ var bow_angle = null
 
 signal bow_shot(player, chargeLevel)
 signal bow_charge()
+signal hit()
+
+var lastPos
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func _process(delta):
 	if isCharged and chargeLevel < maxCharge:
-		chargeLevel += delta
+		chargeLevel += delta*chargeMultiplier
+		$Chargebar.value = chargeLevel
+	#Arrow stick test
+	#posDif = self.global_position - lastPos
+	#for child in self.get_children():
+		#child.global_position = self.global_position
 
 
 func _physics_process(delta):
@@ -35,6 +49,9 @@ func handle_controlpad_input(message: String):
 			in_vel *= threshhold/in_vel.length()
 		var mult = 15.0;
 		self.velocity = in_vel * mult;
+		
+		#Test
+		
 	elif parts[0] == "bow":
 		# Rotation
 		var xy = parts[1].split(",")
@@ -57,7 +74,45 @@ func handle_controlpad_input(message: String):
 func notTaught():
 	if isCharged:
 		$Bow.release()
-		print("emit")
 		emit_signal("bow_shot", self, chargeLevel)
 		isCharged = false
 		chargeLevel = 0
+		$Chargebar.value = 0
+
+
+
+
+func _on_area_2d_body_entered(body):
+	#print("Player got hit")
+	if !(body is Arrow):
+		return
+	if body.originPlayer != self.playerID:
+		var damage = body.linear_velocity.length()
+		damage = 20
+		playerDamaged(damage)
+		print("OUCH!")
+		
+		#Funny Test
+		body.hitPlayer(self)
+
+func playerDamaged(damage):
+	$Healthbar.value -= damage
+	$Healthbar/Timer.start()
+	if $Healthbar.value <= 0:
+		playerDeath()
+	pass
+	
+
+func playerDeath():
+	isDead = true
+	var pos = self.global_position
+	self.global_position = Vector2(-100, -100)
+	await get_tree().create_timer(5.0).timeout
+	$Healthbar.value = 100
+	$Healthbar/Damagebar.value = 100
+	self.global_position = pos
+	pass
+
+func _on_timer_timeout():
+	$Healthbar/Damagebar.value = $Healthbar.value
+	pass # Replace with function body.

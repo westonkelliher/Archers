@@ -1,18 +1,42 @@
-[gd_scene load_steps=8 format=3 uid="uid://dcbqnl0lw5qdg"]
+[gd_scene load_steps=13 format=3 uid="uid://dcbqnl0lw5qdg"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_4wnrd"]
-[ext_resource type="Texture2D" uid="uid://csxcmdic1xywo" path="res://body.png" id="1_k7638"]
-[ext_resource type="Texture2D" uid="uid://om38vif5dpww" path="res://head.png" id="2_tn63n"]
+[ext_resource type="Texture2D" uid="uid://c4tsd3025wpy5" path="res://body.png" id="1_k7638"]
+[ext_resource type="Texture2D" uid="uid://cdsjjiuy7jkin" path="res://head.png" id="2_tn63n"]
 [ext_resource type="PackedScene" uid="uid://dpvb6ptchtp0j" path="res://bow.tscn" id="2_vx5ds"]
-[ext_resource type="PackedScene" uid="uid://cuil4gqxlaq1c" path="res://arrow.tscn" id="3_xgj5a"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_7070m"]
-radius = 133.407
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1gr7i"]
 radius = 21.7307
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rjgrg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q8lbc"]
+bg_color = Color(0.156863, 0.901961, 0.392157, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ell6x"]
+bg_color = Color(0.184314, 0.184314, 0.184314, 1)
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+shadow_color = Color(0, 0, 0, 0.27451)
+shadow_offset = Vector2(0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1g7yd"]
+bg_color = Color(0.686275, 0.184314, 0.168627, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qghbj"]
+bg_color = Color(0.184314, 0.184314, 0.184314, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q6p3b"]
+bg_color = Color(0, 0.882353, 0.921569, 1)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_botbv"]
+radius = 20.0
+height = 94.0
+
 [node name="Player" type="CharacterBody2D"]
+collision_layer = 2
 script = ExtResource("1_4wnrd")
 
 [node name="Body" type="Sprite2D" parent="."]
@@ -21,25 +45,62 @@ texture = ExtResource("1_k7638")
 
 [node name="Bow" parent="." instance=ExtResource("2_vx5ds")]
 
-[node name="Arrow" parent="Bow" instance=ExtResource("3_xgj5a")]
-position = Vector2(60, 0)
-
 [node name="Head" type="Sprite2D" parent="."]
 position = Vector2(0, -39)
 scale = Vector2(0.15, 0.15)
 texture = ExtResource("2_tn63n")
 
-[node name="Area2D" type="Area2D" parent="Head"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Head/Area2D"]
-visible = false
-modulate = Color(1, 0, 0.00784314, 1)
-shape = SubResource("CircleShape2D_7070m")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource("CircleShape2D_1gr7i")
 
-[node name="PowerMeter" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="Healthbar" type="ProgressBar" parent="."]
+z_index = 1
+offset_left = -30.0
+offset_top = 23.0
+offset_right = 90.0
+offset_bottom = 50.0
+scale = Vector2(0.5, 0.5)
+theme_override_styles/background = SubResource("StyleBoxEmpty_rjgrg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_q8lbc")
+value = 100.0
+show_percentage = false
+
+[node name="Damagebar" type="ProgressBar" parent="Healthbar"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_ell6x")
+theme_override_styles/fill = SubResource("StyleBoxFlat_1g7yd")
+value = 100.0
+show_percentage = false
+
+[node name="Timer" type="Timer" parent="Healthbar"]
+wait_time = 0.4
+one_shot = true
+
+[node name="Chargebar" type="ProgressBar" parent="."]
+z_index = 1
+offset_left = -30.0
+offset_top = 36.0
+offset_right = 90.0
+offset_bottom = 50.0
+scale = Vector2(0.5, 0.5)
+theme_override_styles/background = SubResource("StyleBoxFlat_qghbj")
+theme_override_styles/fill = SubResource("StyleBoxFlat_q6p3b")
+max_value = 4.0
+show_percentage = false
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -12)
+shape = SubResource("CapsuleShape2D_botbv")
+
+[connection signal="timeout" from="Healthbar/Timer" to="." method="_on_timer_timeout"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
