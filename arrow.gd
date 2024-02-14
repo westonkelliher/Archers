@@ -5,6 +5,7 @@ var z_velo = 1
 var arrowScale = 1
 var originPlayer = null
 var playerHit = false
+var damage = 20
 
 signal hit()
 

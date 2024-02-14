@@ -11,6 +11,8 @@ var chargeLevel = 0
 var maxCharge = 4
 var chargeMultiplier = 2
 
+var arrowDamage = 20
+
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 
@@ -76,6 +78,19 @@ func handle_controlpad_input(message: String):
 			#emit_signal("bow_charge")
 		else:
 			notTaught()
+	
+	elif parts[0] == "upgrade":
+		upgradeHandler(parts[1])
+
+func upgradeHandler(upgrade):
+	if upgrade == "bow":
+		print("Bow upgraded")
+		chargeMultiplier += chargeMultiplier*.5
+	elif upgrade == "arrow":
+		print("Arrows Upgraded")
+		arrowDamage += arrowDamage*.5
+	elif upgrade == "ability":
+		print("Ability Upgraded")
 
 func notTaught():
 	if isCharged:
@@ -93,12 +108,11 @@ func _on_area_2d_body_entered(body):
 	if !(body is Arrow):
 		return
 	if body.originPlayer != self.playerID:
-		var damage = body.linear_velocity.length()
-		damage = 20
-		playerDamaged(damage)
+		#var damage = body.linear_velocity.length()
+		playerDamaged(body.damage)
 		print("OUCH!")
 		
-		#Funny Test
+		#tested to see if I could make arrows stick out of people, todo ig
 		body.hitPlayer(self)
 
 func playerDamaged(damage):

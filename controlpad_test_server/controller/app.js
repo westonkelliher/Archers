@@ -13,6 +13,56 @@ document.addEventListener("controlpad-message", (event) => {
 });
 
 
+function addUpgradeButtons() {
+    const container = document.createElement('div');
+    container.style.position = 'fixed'; // Use fixed positioning
+    container.style.top = '15%'; // Center vertically
+    container.style.left = '50%'; // Center horizontally
+    container.style.transform = 'translate(-50%, -50%)'; // Adjust the exact center
+    container.style.display = 'flex'; // Use flexbox for alignment
+    container.style.gap = '20px'; // Gap between buttons
+
+    const buttonData = [
+        { name: 'Bow Upgrade', imageSrc: 'resources/bowUpgrade.png', msg: 'bow' },
+        { name: 'Arrow Upgrade', imageSrc: 'resources/arrowUpgrade.png', msg: 'arrow' },
+        { name: 'Ability Upgrade', imageSrc: 'resources/abilityUpgrade.png', msg: 'ability' }
+    ];
+
+
+    // Create and append buttons to the container
+    for (let i = 0; i < 3; i++) {
+      const button = document.createElement('button');
+      button.textContent = buttonData[i].name; // Set button text
+      button.style.border = '3px solid #000000';
+      button.style.width = '120px'; // Set width
+      button.style.height ='120px'; // Set height
+      button.style.borderRadius = '10px'; // Make corners rounded
+      // Create and append image element to the button
+      const img = document.createElement('img');
+      img.src = buttonData[i].imageSrc;
+      img.style.width = '60px'; // Set image width (adjust as needed)
+      img.style.height = '60px'; // Set image height (adjust as needed)
+      img.style.display = 'block'; // Ensure the image is block-level
+      img.style.margin = 'auto'; // Center the image within the button
+      button.appendChild(img)
+
+      // Add event listener to button
+        button.addEventListener('click', function() {
+            // Perform action on button click
+            //console.log(`Button ${i + 1} clicked`);
+            console.log(`upgrade:` + buttonData[i].msg);
+            send_datum(`upgrade:` + buttonData[i].msg)
+        });
+
+      container.appendChild(button); // Add button to container
+    }
+
+    // Append the container to the body of the document
+    document.body.appendChild(container);
+}
+
+
+
 // Throttle function to limit the rate of execution
 function throttle(func, limit) {
     var lastFunc;
@@ -176,3 +226,6 @@ var bowDrag = throttle(function(e) {
 
 // Add the throttled touchmove event listener to the element
 bowPad.addEventListener('touchmove', bowDrag, false);
+
+//console.log("sanity");
+addUpgradeButtons();

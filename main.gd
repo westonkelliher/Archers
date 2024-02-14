@@ -63,5 +63,6 @@ func _on_player_bow_shot(player, chargeLevel):
 	arrow.rotation = bow.rotation
 	arrow.z_velo = 4+4*chargeLevel
 	arrow.originPlayer = player.playerID
+	arrow.damage = player.arrowDamage
 	add_child(arrow)
 	pass # Replace with function body.
