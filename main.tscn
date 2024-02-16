@@ -1,8 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://bp3o11s21hwfo"]
+[gd_scene load_steps=8 format=3 uid="uid://bp3o11s21hwfo"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_qydqk"]
 [ext_resource type="PackedScene" uid="uid://dfdnabg7x326v" path="res://courtyard.tscn" id="1_uhtla"]
 [ext_resource type="PackedScene" uid="uid://chhpjvwbr85aa" path="res://wall.tscn" id="4_ol2fr"]
+[ext_resource type="Texture2D" uid="uid://demurpl8oubw1" path="res://Archers.png" id="4_wfiw2"]
+[ext_resource type="Texture2D" uid="uid://cunss1urgfj7h" path="res://button.png" id="5_sicy3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j5xsk"]
+size = Vector2(594, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ehcgw"]
+size = Vector2(584, 80)
 
 [node name="Main" type="Node"]
 script = ExtResource("1_qydqk")
@@ -45,4 +53,75 @@ position = Vector2(1892, 563)
 rotation = 1.5708
 scale = Vector2(1.55, 0.8)
 
+[node name="InformationLabel" type="RichTextLabel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -183.0
+offset_top = -152.5
+offset_right = 183.0
+offset_bottom = 152.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+bbcode_enabled = true
+text = "[center]"
+fit_content = true
+scroll_active = false
+
+[node name="MenuElements" type="Node2D" parent="."]
+
+[node name="Logo" type="Sprite2D" parent="MenuElements"]
+position = Vector2(994, 280)
+scale = Vector2(2.28, 2.28)
+texture = ExtResource("4_wfiw2")
+
+[node name="MultiplayerButton" type="Area2D" parent="MenuElements"]
+position = Vector2(994, 576)
+collision_mask = 4
+
+[node name="MultiplayerButtonCollision" type="CollisionShape2D" parent="MenuElements/MultiplayerButton"]
+position = Vector2(-1, 0)
+shape = SubResource("RectangleShape2D_j5xsk")
+
+[node name="Sprite2D" type="Sprite2D" parent="MenuElements/MultiplayerButton"]
+texture = ExtResource("5_sicy3")
+
+[node name="MultiplayerButtonLabel" type="RichTextLabel" parent="MenuElements/MultiplayerButton"]
+offset_left = -298.0
+offset_top = -48.0
+offset_right = 300.0
+offset_bottom = 48.0
+theme_override_font_sizes/normal_font_size = 30
+bbcode_enabled = true
+text = "[center]Start Multiplayer [center]()"
+metadata/_edit_use_anchors_ = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="MenuElements/MultiplayerButton"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MenuElements/MultiplayerButton/StaticBody2D"]
+position = Vector2(2, 0)
+shape = SubResource("RectangleShape2D_ehcgw")
+
+[node name="MultiplayerButton2" type="Area2D" parent="MenuElements"]
+position = Vector2(994, 750)
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MenuElements/MultiplayerButton2"]
+shape = SubResource("RectangleShape2D_j5xsk")
+
+[node name="Sprite2D" type="Sprite2D" parent="MenuElements/MultiplayerButton2"]
+texture = ExtResource("5_sicy3")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MenuElements/MultiplayerButton2"]
+offset_left = -298.0
+offset_top = -48.0
+offset_right = 300.0
+offset_bottom = 48.0
+bbcode_enabled = true
+
 [connection signal="message_received" from="Controlpads" to="." method="_on_game_nite_controlpads_message_received"]
+[connection signal="body_entered" from="MenuElements/MultiplayerButton" to="." method="_on_multiplayer_button_body_entered"]

@@ -55,3 +55,12 @@ func hitPlayer(player):
 	#print(self.global_position)
 	#self.transform.origin = player.global_transform.origin
 	#self.global_position = pos
+
+func hitButton(): 
+	$CollisionShape2D.set_deferred("disabled", true)
+	z = 0
+	z_velo = 0
+	self.linear_velocity = Vector2(0, 0)
+	self.angular_velocity = 0
+	$Sprite2D.frame = 1
+

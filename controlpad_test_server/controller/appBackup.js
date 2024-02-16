@@ -1,7 +1,5 @@
 import { send_datum } from "./controlpad.js";
 
-let upgradePoints = 2;
-
 /*
 document.addEventListener("controlpad-message", (event) => {
     
@@ -19,22 +17,12 @@ document.addEventListener("controlpad-message", (event) => {
     var msg = event.detail;
     console.log("recv: " + msg);
 
-    // Split the message by colon
-    const parts = msg.split(":");
-    // Check if the first part is "upgrade"
-    if (parts[0] === "upgrade") {
-        // Display the upgrade message
-        toggleUpgradePointsMessage(true);
-        // Set the value of the number of upgrade points
-        upgradePoints = parseInt(parts[1]); // Assuming the second part is the number of points
-        // Update the message displaying the number of upgrade points
-        updateUpgradePointsMessage();
-        toggleUpgradeButtons(true);
-    } if (parts[0] === "clear") {
-        toggleUpgradeButtons(false);
-        toggleUpgradePointsMessage(false);
+    if (msg === "example") {
+        // Toggle the upgrade buttons
+        toggleUpgradeButtons(true); // Enable the buttons
     } else {
-        // Set the background for movePad and bowPad if the message is not "upgrade"
+        // Disable the upgrade buttons if message is not "example"
+        
         let movePad = document.getElementById("movePad");
         let bowPad = document.getElementById("bowPad");
         movePad.style.background = msg;
@@ -77,8 +65,10 @@ function addUpgradeButtons() {
 
         // Add event listener to button
         button.addEventListener('click', function() {
-            // Handle button click
-            handleButtonClick(buttonData[i]);
+            // Perform action on button click
+            //console.log(`Button ${i + 1} clicked`);
+            console.log(`upgrade:` + buttonData[i].msg);
+            send_datum(`upgrade:` + buttonData[i].msg);
         });
 
         container.appendChild(button); // Add button to container
@@ -86,28 +76,6 @@ function addUpgradeButtons() {
 
     // Append the container to the body of the document
     document.body.appendChild(container);
-}
-
-// Function to handle button click
-function handleButtonClick(buttonData) {
-    // Check if there are enough upgrade points
-    if (upgradePoints > 0) {
-        // Decrease the number of upgrade points
-        upgradePoints--;
-        // Update the message displaying the number of upgrade points
-        updateUpgradePointsMessage();
-        // Log the upgrade action
-        console.log(`upgrade: ${buttonData.msg}`);
-        // Send the upgrade action
-        send_datum(`upgrade:${buttonData.msg}`);
-        // Check if upgrade points are exhausted
-        if (upgradePoints === 0) {
-            // Disable and hide the buttons
-            toggleUpgradeButtons(false);
-            console.log(`ready:`);
-            send_datum(`ready:`);
-        }
-    }
 }
 
 function toggleUpgradeButtons(enabled) {
@@ -123,33 +91,6 @@ function toggleUpgradeButtons(enabled) {
         }
     });
 }
-
-function addUpgradePointsMessage() {
-    const messageContainer = document.createElement('div');
-    messageContainer.id = 'upgradePointsMessage';
-    messageContainer.style.position = 'fixed';
-    messageContainer.style.top = '50%';
-    messageContainer.style.left = '50%';
-    messageContainer.style.transform = 'translate(-50%, -50%)';
-    messageContainer.style.fontSize = '20px'; // Adjust the font size as needed
-    messageContainer.style.margin = '10px'; // Adjust the margins as needed
-    document.body.appendChild(messageContainer);
-}
-
-function updateUpgradePointsMessage() {
-    const message = document.getElementById('upgradePointsMessage');
-    message.innerHTML = `Spend upgrade points.<br>You have ${upgradePoints} points.`;
-}
-
-function toggleUpgradePointsMessage(visible) {
-    const message = document.getElementById('upgradePointsMessage');
-    if (visible) {
-        message.style.display = 'block';
-    } else {
-        message.style.display = 'none';
-    }
-}
-
 
 // Throttle function to limit the rate of execution
 function throttle(func, limit) {
@@ -311,6 +252,3 @@ bowPad.addEventListener('touchmove', bowDrag, false);
 //console.log("sanity");
 addUpgradeButtons();
 toggleUpgradeButtons(false);
-addUpgradePointsMessage();
-updateUpgradePointsMessage();
-toggleUpgradePointsMessage(false);

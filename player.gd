@@ -5,11 +5,15 @@ var currentHealth = maxHealth
 var playerID = null
 var playerColor = null
 var isDead = false
+var gameScore = 0
+var controllable = true
+var readyUp = false
 
 var isCharged = false
 var chargeLevel = 0
 var maxCharge = 4
 var chargeMultiplier = 2
+var speedMultiplier = 15
 
 var arrowDamage = 20
 
@@ -34,7 +38,7 @@ func _ready():
 	pass # Replace with function body.
 
 func _process(delta):
-	if isCharged and chargeLevel < maxCharge:
+	if isCharged and chargeLevel < maxCharge and controllable:
 		chargeLevel += delta*chargeMultiplier
 		$Chargebar.value = chargeLevel
 	#Arrow stick test
@@ -49,18 +53,18 @@ func _physics_process(delta):
 
 func handle_controlpad_input(message: String):
 	var parts = message.split(":")
-	if parts[0] == "move":
+	if parts[0] == "move" and controllable:
 		var xy = parts[1].split(",")
 		var in_vel = Vector2(float(xy[0]), float(xy[1]))
 		var threshhold = 16.0;
 		if in_vel.length() > threshhold:
 			in_vel *= threshhold/in_vel.length()
-		var mult = 15.0;
-		self.velocity = in_vel * mult;
+		#var mult = 15.0;
+		self.velocity = in_vel * speedMultiplier;
 		
 		#Test
 		
-	elif parts[0] == "bow":
+	elif parts[0] == "bow": #and controllable:
 		# Rotation
 		var xy = parts[1].split(",")
 		var in_aim = Vector2(float(xy[0]), float(xy[1]))
@@ -81,6 +85,9 @@ func handle_controlpad_input(message: String):
 	
 	elif parts[0] == "upgrade":
 		upgradeHandler(parts[1])
+	
+	elif parts[0] == "ready":
+		readyUp = true
 
 func upgradeHandler(upgrade):
 	if upgrade == "bow":
@@ -91,14 +98,16 @@ func upgradeHandler(upgrade):
 		arrowDamage += arrowDamage*.5
 	elif upgrade == "ability":
 		print("Ability Upgraded")
+		speedMultiplier += speedMultiplier*.5
 
 func notTaught():
 	if isCharged:
 		$Bow.release()
-		emit_signal("bow_shot", self, chargeLevel)
-		isCharged = false
-		chargeLevel = 0
-		$Chargebar.value = 0
+		if controllable:
+			emit_signal("bow_shot", self, chargeLevel)
+			isCharged = false
+			chargeLevel = 0
+			$Chargebar.value = 0
 
 
 
@@ -110,39 +119,57 @@ func _on_area_2d_body_entered(body):
 	if body.originPlayer != self.playerID:
 		#var damage = body.linear_velocity.length()
 		playerDamaged(body.damage)
-		print("OUCH!")
+		#print("OUCH!")
 		
 		#tested to see if I could make arrows stick out of people, todo ig
 		body.hitPlayer(self)
 
 func playerDamaged(damage):
 	$HurtSound.play()
-	$Healthbar.value -= damage
-	$Healthbar/Timer.start()
-	if $Healthbar.value <= 0:
-		playerDeath()
-	pass
-	
+	if get_parent().pvpOn:
+		$Healthbar.value -= damage
+		$Healthbar/Timer.start()
+		if $Healthbar.value <= 0:
+			playerDeath()
 
 func playerDeath():
 	isDead = true
+	controllable = false
+	readyUp = false
 	deathExplosion()
-	var pos = self.global_position
 	self.global_position = Vector2(-100, -100)
-	await get_tree().create_timer(5.0).timeout
+	get_parent().winCheck()
+	pass
+
+func refresh():
 	$Healthbar.value = 100
 	$Healthbar/Damagebar.value = 100
-	self.global_position = pos
-	pass
+	$RoyalCrown.visible = false
+	isDead = false
 
 
 func deathExplosion():
 	var explosion = death_explosion.instantiate()
 	explosion.global_position = self.global_position
 	explosion.emitting = true
+	explosion.modulate = playerColor
 	get_tree().get_root().add_child(explosion)
 	pass
+	
+func restoreAll():
+	$Healthbar.value = 100
+	$Healthbar/Damagebar.value = 100
+	isDead = false
+	readyUp = false
+	chargeMultiplier = 2
+	gameScore = 0
+	arrowDamage = 20
+	speedMultiplier = 15
+
+func winner():
+	$RoyalCrown.visible = true
 
 func _on_timer_timeout():
 	$Healthbar/Damagebar.value = $Healthbar.value
 	pass # Replace with function body.
+
