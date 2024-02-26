@@ -138,7 +138,7 @@ function addUpgradePointsMessage() {
 
 function updateUpgradePointsMessage() {
     const message = document.getElementById('upgradePointsMessage');
-    message.innerHTML = `Spend upgrade points.<br>You have ${upgradePoints} points.`;
+    message.innerHTML = `Spend upgrade points!<br>You have ${upgradePoints} points.`;
 }
 
 function toggleUpgradePointsMessage(visible) {

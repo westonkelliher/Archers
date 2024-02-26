@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://cva4ir2h6v4cm"]
+
+[ext_resource type="Script" path="res://wolf.gd" id="1_mrc20"]
+[ext_resource type="Texture2D" uid="uid://802cd7yaswbw" path="res://wolf.png" id="1_t4dfb"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3lv70"]
+radius = 56.0
+height = 240.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jdpqt"]
+size = Vector2(96, 32)
+
+[node name="Wolf" type="CharacterBody2D"]
+scale = Vector2(0.5, 0.5)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("1_mrc20")
+agro = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = -1.5708
+texture = ExtResource("1_t4dfb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+rotation = -1.5708
+shape = SubResource("CapsuleShape2D_3lv70")
+
+[node name="Bite" type="Area2D" parent="."]
+rotation = -1.5708
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bite"]
+visible = false
+position = Vector2(0, 112)
+shape = SubResource("RectangleShape2D_jdpqt")
+debug_color = Color(0.984314, 0.129412, 0, 0.419608)
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+rotation = -1.5708
+shape = SubResource("CapsuleShape2D_3lv70")
+
+[connection signal="body_entered" from="Bite" to="." method="_on_bite_body_entered"]
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

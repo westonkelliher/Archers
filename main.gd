@@ -2,9 +2,11 @@ extends Node
 #@export var arrow_scene = PackedScene
 var arrow_scene = preload("res://arrow.tscn")
 var player_scene = preload("res://player.tscn")
+var barrel_scene = preload("res://barrel.tscn")
 
 var players = {}
 var readiedPlayers = []
+var barrels = []
 
 var power = 0
 var max_power = 1000
@@ -16,11 +18,22 @@ var pvpOn =false
 var roundNumber = 1
 
 var menuElemPos = null
+var vpSize
 
+#Music
+var mainTheme = preload("res://audio/Scape Main.ogg")
+var battleTheme = preload("res://audio/Mage Arena.ogg")
+var battleStart = preload("res://audio/battleHorn.mp3")
+var fanfare = preload("res://audio/fanfare.mp3")
+var wardrums = preload("res://audio/warDrums.wav")
+var jaunt = preload("res://audio/dumbassFlute.mp3")
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	vpSize = get_viewport().size
+	Autoloader.mainScene = self
+	musicManager(mainTheme)
 	pass # Replace with function body.
 
 
@@ -121,20 +134,32 @@ func winCheck():
 			#$Controlpads.send_message(winningPlayer.playerID, "upgrade:2")
 
 func roundInit():
+	$MusicPlayer.stop()
+	clearJunk()
 	universalControl(false)
 	placeEvenly()
+	sfxManager(wardrums)
 	$InformationLabel.text = "[center]Round "+str(roundNumber)
 	$InformationLabel.visible = true
 	await get_tree().create_timer(1.0).timeout
 	$InformationLabel.text = "[center]Ready?"
 	await get_tree().create_timer(2.5).timeout
+	await $SoundEffects.finished
 	$InformationLabel.text = "[center]GO!"
+	sfxManager(battleStart)
 	await get_tree().create_timer(0.5).timeout
+	musicManager(battleTheme)
 	$InformationLabel.visible = false
 	universalControl(true)
+	$BarrelTimer.start()
+	numBarrels = 0
 	pass
 
 func roundOver(winner):
+	clearJunk()
+	$BarrelTimer.stop()
+	$MusicPlayer.stop()
+	sfxManager(fanfare)
 	var tempC = winner.playerColor
 	var hex_color = tempC.to_html(false)
 	if winner.gameScore == 3:
@@ -155,9 +180,11 @@ func roundOver(winner):
 			hex_color = tempC.to_html(false)
 			$InformationLabel.text += "\n[color=#" + hex_color + "]This player has "+str(players[player].gameScore)+" wins"
 		$InformationLabel.visible = true
-		await get_tree().create_timer(10.0).timeout
+		#await get_tree().create_timer(10.0).timeout
 		roundNumber += 1
-		#readyUpGamepad()
+		await $SoundEffects.finished
+		musicManager(jaunt)
+		await readyUpGamepad()
 		msgToAll("clear:")
 		roundInit()
 	pass
@@ -165,16 +192,17 @@ func roundOver(winner):
 func readyUpGamepad():
 	var allReady = false
 	while not allReady:
-		print("I'm looping")
-		allReady = true  # Assume all players are ready until proven otherwise
+		allReady = true
 		for player in players:
-			print(players[player].readyUp)
 			if not players[player].readyUp:
-				allReady = false  # At least one player is not ready
-				break  # Exit the loop to avoid unnecessary checks
-		await get_tree().create_timer(1.0).timeout
-	print("Somehow broke out of loop")
-	print(allReady)
+				allReady = false
+				break
+		if not $MusicPlayer.is_playing():
+			allReady = true
+		else:
+			await get_tree().create_timer(0.5).timeout
+	if allReady:
+		return allReady
 
 
 func gameOver():
@@ -182,6 +210,7 @@ func gameOver():
 	multiplayerStarted = false
 	roundNumber = 1
 	universalControl(true)
+	musicManager(mainTheme)
 	readiedPlayers = []
 	$MenuElements.position = Vector2(0,0)
 	for player in players:
@@ -199,6 +228,11 @@ func msgToAll(msg):
 	for player in players:
 		$Controlpads.send_message(players[player].playerID, msg)
 
+func clearJunk():
+	for child in get_children():
+		if child.has_method("clean"):
+			child.clean()
+
 
 @onready var buttonLabel = $MenuElements/MultiplayerButton/MultiplayerButtonLabel
 func _on_multiplayer_button_body_entered(body):
@@ -215,55 +249,33 @@ func _on_multiplayer_button_body_entered(body):
 		body.queue_free()
 		multiplayerSetup()
 
+var numBarrels = 0
+func _on_barrel_timer_timeout():
+	if numBarrels < 3:
+		barrelLogic()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#This shit was me tryna big-brain and failing terribly, but it might be worth coming back to in the future
-func placeEvenlyFail(): 
-	var x = get_viewport().size.x
-	var y = get_viewport().size.y
-	var left = x*.1
-	var right = x*.9
-	var center = x/2
-	
-	
-	var numPlayers = len(players.values())
-	numPlayers = 3
-	
-	var divisions = ceil(numPlayers / 2)+1
-
-
-	var index = 1
-	var playerX
-	var playerY
+func barrelLogic():
+	var avgPos = Vector2(0,0)
+	var numAlivePlayers = 0
 	for player in players:
-		if index%2 == 0:
-			playerX = right
-		else:
-			playerX = left
-		
-		players[player].global_position = Vector2(playerX, y/2)
-		
-		index += 1
-	
-	#print(players)
-	#print(len(players.values()))
-	#for player in players
+		if !(players[player].isDead):
+			avgPos += players[player].global_position
+			numAlivePlayers += 1
+	avgPos /= numAlivePlayers
+	var barrelPos = Vector2()
+	barrelPos.x = avgPos.x + vpSize.x*randf_range(.1,-.1)
+	barrelPos.y = avgPos.y + vpSize.y*randf_range(.1,-.1)
+	var barrel = barrel_scene.instantiate()
+	barrel.global_position = barrelPos
+	add_child(barrel)
+	numBarrels += 1
+	pass
+
+func musicManager(song):
+	$MusicPlayer.stream = song
+	$MusicPlayer.play()
+
+func sfxManager(effect):
+	$SoundEffects.stream = effect
+	$SoundEffects.play()

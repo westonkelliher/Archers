@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Player
 
 var maxHealth = 100
 var currentHealth = maxHealth
@@ -17,12 +18,16 @@ var speedMultiplier = 15
 
 var arrowDamage = 20
 
+var knockback = Vector2.ZERO
+
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 
 var arrow_scene = preload("res://arrow.tscn")
 var death_explosion = preload("res://death_explosion.tscn")
 var bow_angle = null
+
+var sfx_shootBow = preload("res://audio/shootBow.mp3")
 
 signal bow_shot(player, chargeLevel)
 signal bow_charge()
@@ -41,15 +46,14 @@ func _process(delta):
 	if isCharged and chargeLevel < maxCharge and controllable:
 		chargeLevel += delta*chargeMultiplier
 		$Chargebar.value = chargeLevel
-	#Arrow stick test
-	#posDif = self.global_position - lastPos
-	#for child in self.get_children():
-		#child.global_position = self.global_position
+
 
 
 func _physics_process(delta):
+	velocity += knockback
+	knockback = knockback.move_toward(Vector2.ZERO, 200 * delta)
+	knockback = knockback*.5
 	move_and_slide()
-
 
 func handle_controlpad_input(message: String):
 	var parts = message.split(":")
@@ -91,13 +95,13 @@ func handle_controlpad_input(message: String):
 
 func upgradeHandler(upgrade):
 	if upgrade == "bow":
-		print("Bow upgraded")
+		#print("Bow upgraded")
 		chargeMultiplier += chargeMultiplier*.5
 	elif upgrade == "arrow":
-		print("Arrows Upgraded")
+		#print("Arrows Upgraded")
 		arrowDamage += arrowDamage*.5
 	elif upgrade == "ability":
-		print("Ability Upgraded")
+		#print("Ability Upgraded")
 		speedMultiplier += speedMultiplier*.5
 
 func notTaught():
@@ -113,24 +117,33 @@ func notTaught():
 
 
 func _on_area_2d_body_entered(body):
-	#print("Player got hit")
 	if !(body is Arrow):
 		return
 	if body.originPlayer != self.playerID:
-		#var damage = body.linear_velocity.length()
 		playerDamaged(body.damage)
-		#print("OUCH!")
-		
-		#tested to see if I could make arrows stick out of people, todo ig
 		body.hitPlayer(self)
 
 func playerDamaged(damage):
 	$HurtSound.play()
-	if get_parent().pvpOn:
+	if Autoloader.mainScene.pvpOn:
 		$Healthbar.value -= damage
 		$Healthbar/Timer.start()
 		if $Healthbar.value <= 0:
 			playerDeath()
+
+func playerGainHealth(health):
+	$Healthbar.value += health
+	$Healthbar/Damagebar.value += health
+	if $Healthbar.value > 100:
+		$Healthbar.value = 100
+		$Healthbar/Damagebar.value = 100
+
+
+func hitstun(stun):
+	controllable = false
+	await get_tree().create_timer(stun).timeout
+	controllable = true
+
 
 func playerDeath():
 	isDead = true
@@ -138,7 +151,7 @@ func playerDeath():
 	readyUp = false
 	deathExplosion()
 	self.global_position = Vector2(-100, -100)
-	get_parent().winCheck()
+	Autoloader.mainScene.winCheck()
 	pass
 
 func refresh():
@@ -153,7 +166,8 @@ func deathExplosion():
 	explosion.global_position = self.global_position
 	explosion.emitting = true
 	explosion.modulate = playerColor
-	get_tree().get_root().add_child(explosion)
+	#get_tree().get_root().add_child(explosion)
+	Autoloader.mainScene.add_child(explosion)
 	pass
 	
 func restoreAll():
@@ -171,5 +185,8 @@ func winner():
 
 func _on_timer_timeout():
 	$Healthbar/Damagebar.value = $Healthbar.value
-	pass # Replace with function body.
+
+func sfxManager(effect):
+	$SoundEffects.stream = effect
+	$SoundEffects.play()
 

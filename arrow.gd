@@ -48,13 +48,7 @@ func hitPlayer(player):
 	self.angular_velocity = 0
 	$Sprite2D.frame = 1
 	queue_free()
-	#var pos = self.global_position
-	#self.get_parent().remove_child(self)
-	#player.call_deferred("add_child", self)
-	#self.global_position = player.global_transform.affine_inverse() * self.global_position
-	#print(self.global_position)
-	#self.transform.origin = player.global_transform.origin
-	#self.global_position = pos
+
 
 func hitButton(): 
 	$CollisionShape2D.set_deferred("disabled", true)
@@ -64,3 +58,16 @@ func hitButton():
 	self.angular_velocity = 0
 	$Sprite2D.frame = 1
 
+
+func hitEntity():
+	$CollisionShape2D.set_deferred("disabled", true)
+	z = 0
+	z_velo = 0
+	self.linear_velocity = Vector2(0, 0)
+	self.angular_velocity = 0
+	$Sprite2D.frame = 1
+	queue_free()
+
+
+func clean():
+	queue_free()

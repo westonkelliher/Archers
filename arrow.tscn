@@ -3,8 +3,9 @@
 [ext_resource type="Script" path="res://arrow.gd" id="1_nrblj"]
 [ext_resource type="Texture2D" uid="uid://cakuomb6pjqaa" path="res://arrow3.png" id="2_e3vv5"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_fpo1x"]
-size = Vector2(52, 4)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dpp57"]
+radius = 2.0
+height = 50.0
 
 [node name="Arrow" type="RigidBody2D"]
 collision_layer = 4
@@ -17,5 +18,6 @@ texture = ExtResource("2_e3vv5")
 hframes = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(1, 0)
-shape = SubResource("RectangleShape2D_fpo1x")
+position = Vector2(4, 0)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_dpp57")

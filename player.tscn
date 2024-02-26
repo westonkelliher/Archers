@@ -1,10 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://dcbqnl0lw5qdg"]
+[gd_scene load_steps=16 format=3 uid="uid://dcbqnl0lw5qdg"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_4wnrd"]
 [ext_resource type="Texture2D" uid="uid://cg1ye7wyotdb7" path="res://body2.png" id="2_cxa7b"]
 [ext_resource type="Texture2D" uid="uid://cdsjjiuy7jkin" path="res://head.png" id="2_tn63n"]
 [ext_resource type="PackedScene" uid="uid://dpvb6ptchtp0j" path="res://bow.tscn" id="2_vx5ds"]
 [ext_resource type="AudioStream" uid="uid://bvnpxjgrnelam" path="res://classic_hurt.mp3" id="5_1c8u8"]
+[ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="6_4eyak"]
 [ext_resource type="Texture2D" uid="uid://dlc1dgfxtrabg" path="res://crown.png" id="6_ghutc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1gr7i"]
@@ -39,6 +40,7 @@ height = 94.0
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
+collision_mask = 17
 script = ExtResource("1_4wnrd")
 
 [node name="Body" type="Sprite2D" parent="."]
@@ -106,6 +108,9 @@ shape = SubResource("CapsuleShape2D_botbv")
 
 [node name="HurtSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_1c8u8")
+
+[node name="SoundEffects" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_4eyak")
 
 [node name="RoyalCrown" type="Sprite2D" parent="."]
 visible = false

@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://ch2gfgh2bevr7"]
+
+[ext_resource type="Script" path="res://Barrel.gd" id="1_rn4k6"]
+[ext_resource type="Texture2D" uid="uid://dgmg5c377chyq" path="res://barrel.png" id="2_dhtpo"]
+[ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="3_i51mg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dpgly"]
+size = Vector2(40, 60)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xk2ek"]
+radius = 19.0
+height = 60.0
+
+[node name="Barrel" type="StaticBody2D"]
+scale = Vector2(1.5, 1.5)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("1_rn4k6")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_dhtpo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_dpgly")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, 2)
+shape = SubResource("CapsuleShape2D_xk2ek")
+
+[node name="BreakNoise" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_i51mg")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
