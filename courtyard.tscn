@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dfdnabg7x326v"]
 
-[ext_resource type="Texture2D" uid="uid://djpmgxrmfhxtg" path="res://bg.png" id="1_1t7um"]
+[ext_resource type="Texture2D" uid="uid://2kgiujcdt7ep" path="res://images/bg.png" id="1_1t7um"]
 
 [node name="Courtyard" type="Node2D"]
 

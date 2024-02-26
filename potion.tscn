@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://do1cp8qhck20o"]
 
 [ext_resource type="Script" path="res://potion.gd" id="1_8igj3"]
-[ext_resource type="Texture2D" uid="uid://dxb111ev45nn8" path="res://potionHealth.png" id="1_onr0p"]
+[ext_resource type="Texture2D" uid="uid://b86dbhgyxqu1t" path="res://images/potionHealth.png" id="1_onr0p"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ik6ks"]
 radius = 342.857
