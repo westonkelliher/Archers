@@ -82,6 +82,7 @@ func handle_controlpad_input(message: String):
 		if in_aim.length() > threshhold:
 			if !isCharged:
 				isCharged = true
+				$Chargebar.visible = true
 				$Bow.pull_back()
 			#emit_signal("bow_charge")
 		else:
@@ -107,6 +108,7 @@ func upgradeHandler(upgrade):
 func notTaught():
 	if isCharged:
 		$Bow.release()
+		$Chargebar.visible = false
 		if controllable:
 			emit_signal("bow_shot", self, chargeLevel)
 			isCharged = false
@@ -126,6 +128,7 @@ func _on_area_2d_body_entered(body):
 func playerDamaged(damage):
 	$HurtSound.play()
 	if Autoloader.mainScene.pvpOn:
+		$Healthbar.visible = true
 		$Healthbar.value -= damage
 		$Healthbar/Timer.start()
 		if $Healthbar.value <= 0:

@@ -138,6 +138,7 @@ stream = ExtResource("6_321b4")
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
+visible = false
 offset_right = 1920.0
 offset_bottom = 1080.0
 

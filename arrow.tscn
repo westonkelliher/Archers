@@ -13,11 +13,11 @@ gravity_scale = 0.0
 script = ExtResource("1_nrblj")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.15, 0.15)
+scale = Vector2(0.135, 0.135)
 texture = ExtResource("2_t7ps2")
 hframes = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(4, 0)
+position = Vector2(1, 0)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_dpp57")

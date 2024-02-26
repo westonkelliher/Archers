@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bfdvytebnnfwm"]
 
-[ext_resource type="Texture2D" uid="uid://djbhpv5bas5km" path="res://textbox.png" id="1_gh7n4"]
-[ext_resource type="FontFile" uid="uid://bx1q6glughkkf" path="res://fonts/m6x11plus.ttf" id="2_5mcmx"]
+[ext_resource type="Texture2D" uid="uid://blwkats6n6v2c" path="res://images/textbox.png" id="1_l4cqf"]
+[ext_resource type="FontFile" uid="uid://dked6s8f615p4" path="res://fonts/m6x11plus.ttf" id="2_5mcmx"]
 
 [node name="TextBox" type="MarginContainer"]
 offset_right = 334.0
@@ -10,7 +10,7 @@ size_flags_horizontal = 4
 
 [node name="NinePatchRect" type="NinePatchRect" parent="."]
 layout_mode = 2
-texture = ExtResource("1_gh7n4")
+texture = ExtResource("1_l4cqf")
 region_rect = Rect2(0, 0, 300, 300)
 patch_margin_left = 90
 patch_margin_top = 90

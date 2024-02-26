@@ -85,7 +85,7 @@ func _on_player_bow_shot(player, chargeLevel):
 	velocity = velocity.rotated(bow.rotation)
 	velocity += player.velocity
 	var arrow = arrow_scene.instantiate()
-	arrow.global_position = bow.global_position
+	arrow.global_position = bow.global_position + Vector2(29,0).rotated(bow.rotation)
 	arrow.linear_velocity = velocity
 	arrow.rotation = bow.rotation
 	arrow.z_velo = 4+4*chargeLevel
