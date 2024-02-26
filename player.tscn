@@ -11,7 +11,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_1gr7i"]
 radius = 21.7307
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rjgrg"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yh5v8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q8lbc"]
 bg_color = Color(0.156863, 0.901961, 0.392157, 1)
@@ -52,13 +52,12 @@ visible = false
 shape = SubResource("CircleShape2D_1gr7i")
 
 [node name="Healthbar" type="ProgressBar" parent="."]
-visible = false
 offset_left = -30.0
 offset_top = 28.0
 offset_right = 90.0
 offset_bottom = 45.0
 scale = Vector2(0.5, 0.5)
-theme_override_styles/background = SubResource("StyleBoxEmpty_rjgrg")
+theme_override_styles/background = SubResource("StyleBoxFlat_yh5v8")
 theme_override_styles/fill = SubResource("StyleBoxFlat_q8lbc")
 value = 100.0
 show_percentage = false
@@ -89,7 +88,6 @@ offset_bottom = 50.0
 scale = Vector2(0.5, 0.5)
 theme_override_styles/background = SubResource("StyleBoxFlat_qghbj")
 theme_override_styles/fill = SubResource("StyleBoxFlat_q6p3b")
-max_value = 4.0
 show_percentage = false
 
 [node name="Bow" parent="." instance=ExtResource("2_vx5ds")]

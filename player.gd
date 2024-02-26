@@ -10,10 +10,6 @@ var gameScore = 0
 var controllable = true
 var readyUp = false
 
-var isCharged = false
-var chargeLevel = 0
-var maxCharge = 4
-var chargeMultiplier = 2
 var speedMultiplier = 15
 
 var arrowDamage = 20
@@ -43,9 +39,12 @@ func _ready():
 	pass # Replace with function body.
 
 func _process(delta):
-	if isCharged and chargeLevel < maxCharge and controllable:
-		chargeLevel += delta*chargeMultiplier
-		$Chargebar.value = chargeLevel
+	if $Bow.charge_amount > 0:
+		$Chargebar.visible = true
+		$Chargebar.value = $Bow.charge_amount*100
+	else:
+		$Chargebar.visible = false
+		
 
 
 
@@ -65,7 +64,7 @@ func handle_controlpad_input(message: String):
 			in_vel *= threshhold/in_vel.length()
 		#var mult = 15.0;
 		self.velocity = in_vel * speedMultiplier;
-		if in_vel.length() > 0 and !isCharged:
+		if in_vel.length() > 0 and !$Bow.is_pulling:
 			var in_angle = in_vel.angle()
 			$Eyes.set_direction(in_angle)
 		
@@ -84,9 +83,7 @@ func handle_controlpad_input(message: String):
 		# Pullback
 		var threshhold = 8.0;
 		if in_aim.length() > threshhold:
-			if !isCharged:
-				isCharged = true
-				$Chargebar.visible = true
+			if !$Bow.is_pulling:
 				$Bow.pull_back()
 			#emit_signal("bow_charge")
 		else:
@@ -100,24 +97,17 @@ func handle_controlpad_input(message: String):
 
 func upgradeHandler(upgrade):
 	if upgrade == "bow":
-		#print("Bow upgraded")
-		chargeMultiplier += chargeMultiplier*.5
+		$Bow.draw_time *= 0.5
+		$Bow.charge_time *= 0.75
 	elif upgrade == "arrow":
-		#print("Arrows Upgraded")
-		arrowDamage += arrowDamage*.5
+		arrowDamage += arrowDamage*.1 + 5
 	elif upgrade == "ability":
-		#print("Ability Upgraded")
-		speedMultiplier += speedMultiplier*.5
+		speedMultiplier += speedMultiplier*.15
 
 func notTaught():
-	if isCharged:
-		$Bow.release()
-		$Chargebar.visible = false
-		if controllable:
-			emit_signal("bow_shot", self, chargeLevel)
-			isCharged = false
-			chargeLevel = 0
-			$Chargebar.value = 0
+	if $Bow.charge_amount > 0 and controllable:
+		emit_signal("bow_shot", self, $Bow.get_power())
+	$Bow.release()
 
 
 
@@ -182,7 +172,6 @@ func restoreAll():
 	$Healthbar/Damagebar.value = 100
 	isDead = false
 	readyUp = false
-	chargeMultiplier = 2
 	gameScore = 0
 	arrowDamage = 20
 	speedMultiplier = 15

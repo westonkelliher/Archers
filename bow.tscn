@@ -13,7 +13,7 @@ position = Vector2(10, 0)
 scale = Vector2(0.11, 0.11)
 texture = ExtResource("2_lucur")
 offset = Vector2(200, 0)
-hframes = 2
+hframes = 3
 
 [node name="SoundEffects" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_cvte8")

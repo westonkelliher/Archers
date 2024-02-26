@@ -78,9 +78,9 @@ func _on_player_bow_charge():
 	pass # Replace with function body.
 
 
-func _on_player_bow_shot(player, chargeLevel):
+func _on_player_bow_shot(player, power):
 	#print("Bow Shot")
-	var velocity = Vector2(300+300*chargeLevel, 0)
+	var velocity = Vector2(300+24*power, 0)
 	var bow = player.get_node('Bow')
 	velocity = velocity.rotated(bow.rotation)
 	velocity += player.velocity
@@ -88,7 +88,7 @@ func _on_player_bow_shot(player, chargeLevel):
 	arrow.global_position = bow.global_position + Vector2(29,0).rotated(bow.rotation)
 	arrow.linear_velocity = velocity
 	arrow.rotation = bow.rotation
-	arrow.z_velo = 4+4*chargeLevel
+	arrow.z_velo = 4+0.3*power
 	arrow.originPlayer = player.playerID
 	arrow.damage = player.arrowDamage
 	add_child(arrow)
