@@ -65,6 +65,9 @@ func handle_controlpad_input(message: String):
 			in_vel *= threshhold/in_vel.length()
 		#var mult = 15.0;
 		self.velocity = in_vel * speedMultiplier;
+		if in_vel.length() > 0 and !isCharged:
+			var in_angle = in_vel.angle()
+			$Eyes.set_direction(in_angle)
 		
 		#Test
 		
@@ -77,6 +80,7 @@ func handle_controlpad_input(message: String):
 			return
 		bow_angle = in_aim.angle() - PI
 		$Bow.rotation = bow_angle
+		$Eyes.set_direction(bow_angle)
 		# Pullback
 		var threshhold = 8.0;
 		if in_aim.length() > threshhold:

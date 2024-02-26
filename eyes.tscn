@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://fvj6smd1lsrc"]
+
+[ext_resource type="Script" path="res://eyes.gd" id="1_a4um8"]
+[ext_resource type="Texture2D" uid="uid://bcdjn2yccxgcg" path="res://images/Eye.png" id="1_krafq"]
+
+[node name="Eyes" type="Node2D"]
+script = ExtResource("1_a4um8")
+eyes_radius = 16.0
+
+[node name="L" type="Sprite2D" parent="."]
+position = Vector2(25, 0)
+scale = Vector2(0.1, 0.08)
+texture = ExtResource("1_krafq")
+
+[node name="R" type="Sprite2D" parent="."]
+position = Vector2(22, 4)
+scale = Vector2(0.1, 0.08)
+texture = ExtResource("1_krafq")
+
+[node name="ref" type="Panel" parent="."]
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 3.0
+offset_bottom = 3.0
