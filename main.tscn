@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" path="res://main.gd" id="1_qydqk"]
 [ext_resource type="PackedScene" uid="uid://dfdnabg7x326v" path="res://courtyard.tscn" id="1_uhtla"]
-[ext_resource type="FontFile" uid="uid://bx1q6glughkkf" path="res://fonts/m6x11plus.ttf" id="4_bcyw0"]
+[ext_resource type="FontFile" uid="uid://dked6s8f615p4" path="res://fonts/m6x11plus.ttf" id="4_bcyw0"]
 [ext_resource type="PackedScene" uid="uid://chhpjvwbr85aa" path="res://wall.tscn" id="4_ol2fr"]
-[ext_resource type="Texture2D" uid="uid://demurpl8oubw1" path="res://Archers.png" id="4_wfiw2"]
-[ext_resource type="Texture2D" uid="uid://cunss1urgfj7h" path="res://button.png" id="5_sicy3"]
-[ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="6_321b4"]
+[ext_resource type="Texture2D" uid="uid://xjqjcbe3rsrl" path="res://Archers.png" id="4_wfiw2"]
+[ext_resource type="Texture2D" uid="uid://dd1xwm5iiwehm" path="res://button.png" id="5_sicy3"]
+[ext_resource type="AudioStream" uid="uid://bu05g4qtypg83" path="res://audio/barrelBreak.mp3" id="6_321b4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j5xsk"]
 size = Vector2(594, 96)
