@@ -3,6 +3,7 @@ extends Node
 var arrow_scene = preload("res://arrow.tscn")
 var player_scene = preload("res://player.tscn")
 var barrel_scene = preload("res://barrel.tscn")
+var text_box_scene = preload("res://text_box.tscn")
 
 var players = {}
 var readiedPlayers = []
@@ -27,6 +28,10 @@ var battleStart = preload("res://audio/battleHorn.mp3")
 var fanfare = preload("res://audio/fanfare.mp3")
 var wardrums = preload("res://audio/warDrums.wav")
 var jaunt = preload("res://audio/dumbassFlute.mp3")
+
+#OnReady
+@onready var textBoxLabel = $CenterContainer/TextBox/MarginContainer/Label
+@onready var textBox = $CenterContainer/TextBox
 
 
 # Called when the node enters the scene tree for the first time.
@@ -139,17 +144,17 @@ func roundInit():
 	universalControl(false)
 	placeEvenly()
 	sfxManager(wardrums)
-	$InformationLabel.text = "[center]Round "+str(roundNumber)
-	$InformationLabel.visible = true
+	textBoxLabel.text = "Round "+str(roundNumber)
+	textBox.visible = true
 	await get_tree().create_timer(1.0).timeout
-	$InformationLabel.text = "[center]Ready?"
+	textBoxLabel.text = "Ready?"
 	await get_tree().create_timer(2.5).timeout
 	await $SoundEffects.finished
-	$InformationLabel.text = "[center]GO!"
+	textBoxLabel.text = "[center]GO!"
 	sfxManager(battleStart)
 	await get_tree().create_timer(0.5).timeout
 	musicManager(battleTheme)
-	$InformationLabel.visible = false
+	textBox.visible = false
 	universalControl(true)
 	$BarrelTimer.start()
 	numBarrels = 0

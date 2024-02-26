@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bp3o11s21hwfo"]
+[gd_scene load_steps=12 format=3 uid="uid://bp3o11s21hwfo"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_qydqk"]
 [ext_resource type="PackedScene" uid="uid://dfdnabg7x326v" path="res://courtyard.tscn" id="1_uhtla"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://demurpl8oubw1" path="res://Archers.png" id="4_wfiw2"]
 [ext_resource type="Texture2D" uid="uid://cunss1urgfj7h" path="res://button.png" id="5_sicy3"]
 [ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="6_321b4"]
+[ext_resource type="PackedScene" uid="uid://bfdvytebnnfwm" path="res://text_box.tscn" id="8_sqdn3"]
+[ext_resource type="PackedScene" uid="uid://sh5kf42pn3y6" path="res://rich_text_box.tscn" id="9_bqcoj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j5xsk"]
 size = Vector2(594, 96)
@@ -134,6 +136,17 @@ wait_time = 5.0
 stream = ExtResource("6_321b4")
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="TextBox" parent="CenterContainer" instance=ExtResource("8_sqdn3")]
+layout_mode = 2
+
+[node name="RichTextBox" parent="CenterContainer" instance=ExtResource("9_bqcoj")]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
 
 [connection signal="message_received" from="Controlpads" to="." method="_on_game_nite_controlpads_message_received"]
 [connection signal="body_entered" from="MenuElements/MultiplayerButton" to="." method="_on_multiplayer_button_body_entered"]
