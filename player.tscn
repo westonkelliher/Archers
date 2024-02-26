@@ -1,12 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://dcbqnl0lw5qdg"]
+[gd_scene load_steps=15 format=3 uid="uid://dcbqnl0lw5qdg"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_4wnrd"]
-[ext_resource type="Texture2D" uid="uid://btf4fmhi61i" path="res://Body.png" id="2_nbiue"]
+[ext_resource type="Texture2D" uid="uid://ctecffdj4oytg" path="res://images/Body.png" id="2_2uug1"]
 [ext_resource type="PackedScene" uid="uid://dpvb6ptchtp0j" path="res://bow.tscn" id="2_vx5ds"]
-[ext_resource type="Texture2D" uid="uid://bk7cfiddvj5v6" path="res://Head.png" id="4_r58dk"]
-[ext_resource type="AudioStream" uid="uid://cood1dfiwbpev" path="res://classic_hurt.mp3" id="5_1c8u8"]
+[ext_resource type="Texture2D" uid="uid://cdu60c8rwpvkv" path="res://images/Head.png" id="4_7edw6"]
+[ext_resource type="AudioStream" uid="uid://c5w2uyhpri6bf" path="res://classic_hurt.mp3" id="5_1c8u8"]
 [ext_resource type="AudioStream" uid="uid://bu05g4qtypg83" path="res://audio/barrelBreak.mp3" id="6_4eyak"]
-[ext_resource type="Texture2D" uid="uid://bwi8itr1h2bpy" path="res://crown.png" id="6_ghutc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1gr7i"]
 radius = 21.7307
@@ -45,7 +44,7 @@ script = ExtResource("1_4wnrd")
 
 [node name="Body" type="Sprite2D" parent="."]
 scale = Vector2(0.07, 0.07)
-texture = ExtResource("2_nbiue")
+texture = ExtResource("2_2uug1")
 
 [node name="Bow" parent="." instance=ExtResource("2_vx5ds")]
 
@@ -53,7 +52,7 @@ texture = ExtResource("2_nbiue")
 modulate = Color(0.823529, 0.631373, 0.431373, 1)
 position = Vector2(0, -34)
 scale = Vector2(0.07, 0.07)
-texture = ExtResource("4_r58dk")
+texture = ExtResource("4_7edw6")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
@@ -119,7 +118,6 @@ stream = ExtResource("6_4eyak")
 visible = false
 position = Vector2(0.0281242, -59)
 scale = Vector2(0.116651, 0.0705882)
-texture = ExtResource("6_ghutc")
 
 [connection signal="timeout" from="Healthbar/Timer" to="." method="_on_timer_timeout"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

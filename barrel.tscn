@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://ch2gfgh2bevr7"]
 
 [ext_resource type="Script" path="res://Barrel.gd" id="1_rn4k6"]
-[ext_resource type="Texture2D" uid="uid://dgmg5c377chyq" path="res://barrel.png" id="2_dhtpo"]
-[ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="3_i51mg"]
+[ext_resource type="Texture2D" uid="uid://boty0achhudwp" path="res://images/barrel.png" id="2_6k7jr"]
+[ext_resource type="AudioStream" uid="uid://bu05g4qtypg83" path="res://audio/barrelBreak.mp3" id="3_i51mg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dpgly"]
 size = Vector2(40, 60)
@@ -19,7 +19,7 @@ script = ExtResource("1_rn4k6")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
-texture = ExtResource("2_dhtpo")
+texture = ExtResource("2_6k7jr")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)

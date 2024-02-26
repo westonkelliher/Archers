@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://sh5kf42pn3y6"]
 
-[ext_resource type="Texture2D" uid="uid://djbhpv5bas5km" path="res://textbox.png" id="1_cv5rh"]
-[ext_resource type="FontFile" uid="uid://bx1q6glughkkf" path="res://fonts/m6x11plus.ttf" id="2_01mjb"]
+[ext_resource type="Texture2D" uid="uid://blwkats6n6v2c" path="res://images/textbox.png" id="1_cv5rh"]
+[ext_resource type="FontFile" uid="uid://dked6s8f615p4" path="res://fonts/m6x11plus.ttf" id="2_01mjb"]
 
 [node name="RichTextBox" type="MarginContainer"]
 offset_right = 712.0
