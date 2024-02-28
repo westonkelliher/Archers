@@ -32,6 +32,8 @@ var jaunt = preload("res://audio/dumbassFlute.mp3")
 #OnReady
 @onready var textBoxLabel = $CenterContainer/TextBox/MarginContainer/Label
 @onready var textBox = $CenterContainer/TextBox
+@onready var richTextLabel = $CenterContainer/RichTextBox/MarginContainer/RichLabel
+@onready var richTextBox = $CenterContainer/RichTextBox
 
 
 # Called when the node enters the scene tree for the first time.
@@ -47,6 +49,8 @@ func _process(delta):
 	self.delta = delta
 	if Input.is_action_pressed("multiplayer") and not multiplayerStarted:
 		multiplayerSetup()
+	#if not $MusicPlayer.is_playing():
+		#$MusicPlayer.play()
 	pass
 
 
@@ -60,6 +64,7 @@ func _on_game_nite_controlpads_message_received(client, message):
 		new_player.playerID = client
 		var player_color = Color(randf(), randf(), randf(), 1)
 		new_player.playerColor = player_color
+		new_player.playerName = "Player " + str(len(players.values()))
 		add_child(new_player)
 		players[client] = new_player
 		players[client].handle_controlpad_input(message)
@@ -95,6 +100,7 @@ func _on_player_bow_shot(player, power):
 	pass # Replace with function body.
 
 func multiplayerSetup():
+	print(players)
 	multiplayerStarted = true
 	pvpOn = true
 	#$MenuElements.visible = false
@@ -146,13 +152,13 @@ func roundInit():
 	sfxManager(wardrums)
 	textBoxLabel.text = "Round "+str(roundNumber)
 	textBox.visible = true
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.5).timeout
 	textBoxLabel.text = "Ready?"
-	await get_tree().create_timer(2.5).timeout
+	#await get_tree().create_timer(2.5).timeout
 	await $SoundEffects.finished
-	textBoxLabel.text = "[center]GO!"
+	textBoxLabel.text = "GO!"
 	sfxManager(battleStart)
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(1.0).timeout
 	musicManager(battleTheme)
 	textBox.visible = false
 	universalControl(true)
@@ -175,7 +181,11 @@ func roundOver(winner):
 		$InformationLabel.visible = false
 		gameOver()
 	else:
-		$InformationLabel.text = "[color=#" + hex_color + "]This Color Wins the Round!"
+		richTextLabel.text = "[center][color=#" + hex_color + "]Player[/color] has won the Round!"
+		richTextBox.visible = true
+		await get_tree().create_timer(2.0).timeout
+		#$InformationLabel.text = "[color=#" + hex_color + "]This Color Wins the Round!"
+		richTextLabel.text = "[center]Scores[/center]"
 		for player in players:
 			if players[player] == winner:
 				$Controlpads.send_message(winner.playerID, "upgrade:2")
@@ -184,12 +194,14 @@ func roundOver(winner):
 			tempC = players[player].playerColor
 			hex_color = tempC.to_html(false)
 			$InformationLabel.text += "\n[color=#" + hex_color + "]This player has "+str(players[player].gameScore)+" wins"
+			richTextLabel.text += "\n[color=#" + hex_color + "]Player				"+str(players[player].gameScore)
 		$InformationLabel.visible = true
 		#await get_tree().create_timer(10.0).timeout
 		roundNumber += 1
 		await $SoundEffects.finished
 		musicManager(jaunt)
 		await readyUpGamepad()
+		richTextBox.visibile = false
 		msgToAll("clear:")
 		roundInit()
 	pass

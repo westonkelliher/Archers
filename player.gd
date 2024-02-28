@@ -5,6 +5,7 @@ var maxHealth = 100
 var currentHealth = maxHealth
 var playerID = null
 var playerColor = null
+var playerName = null
 var isDead = false
 var gameScore = 0
 var controllable = true
