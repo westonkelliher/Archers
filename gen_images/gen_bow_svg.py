@@ -1,4 +1,6 @@
 import svgwrite
+import cairosvg
+from PIL import Image, ImageFilter
 import pygame
 import math
 
@@ -87,11 +89,15 @@ def pushed_bow(b):
     return BowDef(b.angle+3, b.bend_len, b.curve_len+7, thickness=b.thickness,
                   height=b.height-15, push=b.push+25, pull=b.pull+25)
 
+def p_pushed_bow(b, p):
+    return BowDef(b.angle+0.12*p, b.bend_len, b.curve_len+0.28*p, thickness=b.thickness,
+                  height=b.height-0.6*p, push=b.push+p, pull=b.pull+p)
+
 
 # draw dat
-bow_a = BowDef(70, 10, 150)
-bow_b = pushed_bow(bow_a)
-bow_c = pushed_bow(bow_b)
+bow_a = BowDef(70, 10, 150, height=420, thickness=40)
+bow_b = p_pushed_bow(bow_a, 30)
+bow_c = p_pushed_bow(bow_a, 55)
 
 draw_bow(bow_a, Vector2(100, 0))
 draw_bow(bow_b, Vector2(700, 0))
@@ -99,5 +105,9 @@ draw_bow(bow_c, Vector2(1300, 0))
 
 # Save the drawing
 DWG.save()
+cairosvg.svg2png(url='./bow.svg', write_to='./temp.png')
 
-         
+image = Image.open('./temp.png')
+blurred = image.filter(ImageFilter.GaussianBlur(2))
+
+blurred.save('./bow.png')
