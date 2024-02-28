@@ -93,7 +93,7 @@ func _on_player_bow_shot(player, power):
 	arrow.global_position = bow.global_position + Vector2(29,0).rotated(bow.rotation)
 	arrow.linear_velocity = velocity
 	arrow.rotation = bow.rotation
-	arrow.z_velo = 4+0.3*power
+	arrow.z_velo = 4+0.1*power
 	arrow.originPlayer = player.playerID
 	arrow.damage = player.arrowDamage
 	add_child(arrow)
