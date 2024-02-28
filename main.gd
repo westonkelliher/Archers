@@ -201,7 +201,7 @@ func roundOver(winner):
 		await $SoundEffects.finished
 		musicManager(jaunt)
 		await readyUpGamepad()
-		richTextBox.visibile = false
+		richTextBox.visible = false
 		msgToAll("clear:")
 		roundInit()
 	pass
