@@ -175,10 +175,13 @@ func roundOver(winner):
 	var hex_color = tempC.to_html(false)
 	if winner.gameScore == 3:
 		winner.winner()
-		$InformationLabel.text = "[color=#" + hex_color + "][center]This Color Wins the Game!"
-		$InformationLabel.visible = true
+		richTextLabel.text = "[center][color=#" + hex_color + "]Player[/color] Wins the Game!"
+		#$InformationLabel.text = "[color=#" + hex_color + "][center]This Color Wins the Game!"
+		#$InformationLabel.visible = true
+		richTextBox.visible = true
 		await get_tree().create_timer(3.0).timeout
-		$InformationLabel.visible = false
+		#$InformationLabel.visible = false
+		richTextBox.visible = false
 		gameOver()
 	else:
 		richTextLabel.text = "[center][color=#" + hex_color + "]Player[/color] has won the Round!"
@@ -193,7 +196,7 @@ func roundOver(winner):
 				$Controlpads.send_message(players[player].playerID, "upgrade:1")
 			tempC = players[player].playerColor
 			hex_color = tempC.to_html(false)
-			$InformationLabel.text += "\n[color=#" + hex_color + "]This player has "+str(players[player].gameScore)+" wins"
+			#$InformationLabel.text += "\n[color=#" + hex_color + "]This player has "+str(players[player].gameScore)+" wins"
 			richTextLabel.text += "\n[color=#" + hex_color + "]Player				"+str(players[player].gameScore)
 		$InformationLabel.visible = true
 		#await get_tree().create_timer(10.0).timeout

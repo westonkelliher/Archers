@@ -29,8 +29,7 @@ layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("2_01mjb")
 theme_override_font_sizes/normal_font_size = 100
 bbcode_enabled = true
-text = "[center]Scores[/center]
-[color=red]Player[/color]			4
+text = "[center][color=red]Player[/color] Wins the Game!
 "
 fit_content = true
 scroll_active = false

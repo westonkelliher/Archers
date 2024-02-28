@@ -157,6 +157,7 @@ func refresh():
 	$Healthbar/Damagebar.value = 100
 	$RoyalCrown.visible = false
 	isDead = false
+	readyUp = false
 
 
 func deathExplosion():
