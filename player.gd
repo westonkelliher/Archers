@@ -101,7 +101,7 @@ func upgradeHandler(upgrade):
 		$Bow.draw_time *= 0.5
 		$Bow.charge_time *= 0.75
 	elif upgrade == "arrow":
-		arrowDamage += arrowDamage*.1 + 5
+		arrowDamage += arrowDamage*.2 + 10
 	elif upgrade == "ability":
 		speedMultiplier += speedMultiplier*.15
 

@@ -52,6 +52,7 @@ visible = false
 shape = SubResource("CircleShape2D_1gr7i")
 
 [node name="Healthbar" type="ProgressBar" parent="."]
+visible = false
 offset_left = -30.0
 offset_top = 28.0
 offset_right = 90.0

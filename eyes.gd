@@ -26,12 +26,9 @@ func _process(delta):
 func set_single_eye_direction(eye, theta):
 	if theta < 0:
 		theta += PI*2
-	print(theta)
 	if theta > PI and theta < PI*2:
-		print("a")
 		eye.visible = false
 		return
-	print("b")
 	eye.visible = true
 	eye.position = Vector2(eyes_radius, 0).rotated(theta)
 	eye.position.y *= .3
