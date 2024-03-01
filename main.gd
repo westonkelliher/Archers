@@ -148,6 +148,7 @@ func roundInit():
 	$MusicPlayer.stop()
 	clearJunk()
 	universalControl(false)
+	pvpOn = true
 	placeEvenly()
 	sfxManager(wardrums)
 	textBoxLabel.text = "Round "+str(roundNumber)
@@ -167,6 +168,7 @@ func roundInit():
 	pass
 
 func roundOver(winner):
+	pvpOn = false
 	clearJunk()
 	$BarrelTimer.stop()
 	$MusicPlayer.stop()
@@ -196,7 +198,6 @@ func roundOver(winner):
 				$Controlpads.send_message(players[player].playerID, "upgrade:1")
 			tempC = players[player].playerColor
 			hex_color = tempC.to_html(false)
-			#$InformationLabel.text += "\n[color=#" + hex_color + "]This player has "+str(players[player].gameScore)+" wins"
 			richTextLabel.text += "\n[color=#" + hex_color + "]Player				"+str(players[player].gameScore)
 		$InformationLabel.visible = true
 		#await get_tree().create_timer(10.0).timeout

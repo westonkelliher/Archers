@@ -10,6 +10,7 @@ var isDead = false
 var gameScore = 0
 var controllable = true
 var readyUp = false
+var savedPosition = null
 
 var speedMultiplier = 15
 
@@ -45,7 +46,6 @@ func _process(delta):
 		$Chargebar.value = $Bow.charge_amount*100
 	else:
 		$Chargebar.visible = false
-		
 
 
 
@@ -95,6 +95,8 @@ func handle_controlpad_input(message: String):
 	
 	elif parts[0] == "ready":
 		readyUp = true
+		controllable = true
+		self.global_position = savedPosition
 
 func upgradeHandler(upgrade):
 	if upgrade == "bow":
@@ -148,6 +150,7 @@ func playerDeath():
 	controllable = false
 	readyUp = false
 	deathExplosion()
+	savedPosition = self.global_position
 	self.global_position = Vector2(-100, -100)
 	Autoloader.mainScene.winCheck()
 	pass
