@@ -1,4 +1,4 @@
-import { send_datum } from "./controlpad.js";
+import { send_controlpad_message } from "./controlpad.js";
 
 let upgradePoints = 2;
 
@@ -99,13 +99,13 @@ function handleButtonClick(buttonData) {
         // Log the upgrade action
         console.log(`upgrade: ${buttonData.msg}`);
         // Send the upgrade action
-        send_datum(`upgrade:${buttonData.msg}`);
+        send_controlpad_message(`upgrade:${buttonData.msg}`);
         // Check if upgrade points are exhausted
         if (upgradePoints === 0) {
             // Disable and hide the buttons
             toggleUpgradeButtons(false);
             console.log(`ready:`);
-            send_datum(`ready:`);
+            send_controlpad_message(`ready:`);
         }
     }
 }
@@ -208,12 +208,12 @@ touchPad.addEventListener('touchstart', function(e) {
 
 touchPad.addEventListener('touchend', function(e) {
     isTouchActive = false;
-    send_datum("move:0,0");
+    send_controlpad_message("move:0,0");
 }, false);
 
 touchPad.addEventListener('touchcancel', function(e) {
     isTouchActive = false;
-    send_datum("move:0,0");
+    send_controlpad_message("move:0,0");
 }, false);
 
 var throttledDragEvent = throttle(function(e) {
@@ -233,7 +233,7 @@ var throttledDragEvent = throttle(function(e) {
 
     if (isTouchActive) {
         let datum = "move:" + String(touchX - touchStart.x) + "," + String(touchY - touchStart.y);
-        send_datum(datum);
+        send_controlpad_message(datum);
     }
 }, 33); // Throttle to 30 times per second (33.33 milliseconds)
 
@@ -277,12 +277,12 @@ bowPad.addEventListener('touchstart', function(e) {
 
 bowPad.addEventListener('touchend', function(e) {
     isBowTouchActive = false;
-    send_datum("bow:0,0");
+    send_controlpad_message("bow:0,0");
 }, false);
 
 bowPad.addEventListener('touchcancel', function(e) {
     isBowTouchActive = false;
-    send_datum("bow:0,0");
+    send_controlpad_message("bow:0,0");
 }, false);
 
 var bowDrag = throttle(function(e) {
@@ -301,7 +301,7 @@ var bowDrag = throttle(function(e) {
 
     if (isBowTouchActive) {
         let datum = "bow:" + String(touchX - bowTouchStart.x) + "," + String(touchY - bowTouchStart.y);
-        send_datum(datum);
+        send_controlpad_message(datum);
     }
 }, 33); // Throttle to 30 times per second (33.33 milliseconds)
 
