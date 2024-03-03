@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://chhpjvwbr85aa" path="res://wall.tscn" id="4_ol2fr"]
 [ext_resource type="Texture2D" uid="uid://casgnii8k5w2i" path="res://images/button.png" id="5_sicy3"]
 [ext_resource type="AudioStream" uid="uid://bu05g4qtypg83" path="res://audio/barrelBreak.mp3" id="6_321b4"]
-[ext_resource type="Texture2D" uid="uid://bd1lq5lp8pkx" path="res://images/title_blur.png" id="7_1vsb7"]
+[ext_resource type="Texture2D" uid="uid://beabqiaesbo1o" path="res://images/title_fiddled.png" id="7_y6dca"]
 [ext_resource type="PackedScene" uid="uid://bfdvytebnnfwm" path="res://text_box.tscn" id="8_sqdn3"]
 [ext_resource type="PackedScene" uid="uid://sh5kf42pn3y6" path="res://rich_text_box.tscn" id="9_bqcoj"]
 
@@ -97,7 +97,7 @@ scroll_active = false
 [node name="Logo" type="Sprite2D" parent="MenuElements"]
 position = Vector2(960, 280)
 scale = Vector2(0.6, 0.6)
-texture = ExtResource("7_1vsb7")
+texture = ExtResource("7_y6dca")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="MenuElements/Logo"]
 
