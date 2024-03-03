@@ -1,9 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://dfdnabg7x326v"]
 
-[ext_resource type="Texture2D" uid="uid://dvteemv8ts8x7" path="res://images/backsplash original color normal size.png" id="1_pyued"]
+[ext_resource type="Texture2D" uid="uid://bpv0npa4w44sc" path="res://images/backsplash_shaded.png" id="1_mqwc8"]
 
 [node name="Courtyard" type="Node2D"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_pyued")
+texture = ExtResource("1_mqwc8")
 centered = false

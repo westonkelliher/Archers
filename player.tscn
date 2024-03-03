@@ -1,7 +1,7 @@
 [gd_scene load_steps=17 format=3 uid="uid://dcbqnl0lw5qdg"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_4wnrd"]
-[ext_resource type="Texture2D" uid="uid://bnnnkorjrefev" path="res://images/Body.png" id="2_2uug1"]
+[ext_resource type="Texture2D" uid="uid://ctecffdj4oytg" path="res://images/Body.png" id="2_2uug1"]
 [ext_resource type="PackedScene" uid="uid://dpvb6ptchtp0j" path="res://bow.tscn" id="2_vx5ds"]
 [ext_resource type="Texture2D" uid="uid://beatf4dji8e40" path="res://images/Head.png" id="4_7edw6"]
 [ext_resource type="AudioStream" uid="uid://bvnpxjgrnelam" path="res://classic_hurt.mp3" id="5_1c8u8"]

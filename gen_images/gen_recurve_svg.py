@@ -20,11 +20,18 @@ def move_vector(v1, degrees, dist):
     return new_vector
 
 
-class BowDef:
-    def __init__(self, angle, bend_len, curve_len, thickness=30, height=400, push=0, pull=0):
-        self.angle = angle
-        self.bend_len = bend_len
+class RecurveDef:
+    def __init__(self, wing_len, wing_angle, curve_len, curve_angle,
+                 attach_len, attach_angle, handle_len=40, handle_dist=100, thickness=30,
+                 height=400, push=0, pull=0):
+        self.wing_len = wing_len
+        self.wing_angle = wing_angle
         self.curve_len = curve_len
+        self.curve_angle = curve_angle
+        self.attach_len = attach_len
+        self.attach_angle = attach_angle
+        #
+        self.handle_len = handle_len
         self.thickness = thickness
         self.height = height
         self.push = push
@@ -41,13 +48,16 @@ DWG = svgwrite.Drawing("bow.svg", size=('1800px', '600px'))
 
 def draw_bow(bow, offset=Vector2(0,0)):
     # calculate control points
-    top_end = BASEXY + Vector2(bow.push, -bow.height/2) + offset
-    top_bend = move_vector(top_end, 90-bow.angle, bow.bend_len)
-    top_control = move_vector(top_bend, 90-bow.angle, bow.curve_len)
+    top_curve = BASEXY + Vector2(bow.push, -bow.height/2) + offset
+    top_wing = move_vector(top_end, 90+bow.wing_angle, bow.wing_len)
+    top_attach = move_vector(top_end, 90+bow.angle, bow.bend_len)
+    top_curve_control = move_vector(top_end, 90+bow.angle, bow.wing_len)
+    top_wing_control = move_vector(top_end, 90+bow.angle, bow.wing_len)
+    top_attach_control = move_vector(top_bend, 90+bow.angle, bow.curve_len*2)
     #
     bottom_end = BASEXY + Vector2(bow.push, bow.height/2) + offset
     bottom_bend = move_vector(bottom_end, -90+bow.angle, bow.bend_len)
-    bottom_control = move_vector(bottom_bend, -90+bow.angle, bow.curve_len)
+    bottom_control = move_vector(bottom_bend, -90+bow.angle, bow.curve_len/2)
     #
     string_mid = BASEXY + Vector2(-bow.pull, 0) + offset
     
@@ -91,11 +101,11 @@ def pushed_bow(b):
 
 def p_pushed_bow(b, p):
     return BowDef(b.angle+0.12*p, b.bend_len, b.curve_len+0.28*p, thickness=b.thickness,
-                  height=b.height-1.0*p, push=b.push+p, pull=b.pull+p)
+                  height=b.height-0.6*p, push=b.push+p, pull=b.pull+p)
 
 
 # draw dat
-bow_a = BowDef(70, 20, 150, height=450, thickness=30)
+bow_a = BowDef(70, 10, 150, height=420, thickness=40)
 bow_b = p_pushed_bow(bow_a, 30)
 bow_c = p_pushed_bow(bow_a, 55)
 
