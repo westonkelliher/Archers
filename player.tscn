@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dcbqnl0lw5qdg"]
+[gd_scene load_steps=17 format=3 uid="uid://dcbqnl0lw5qdg"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_4wnrd"]
 [ext_resource type="Texture2D" uid="uid://bnnnkorjrefev" path="res://images/Body.png" id="2_2uug1"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://beatf4dji8e40" path="res://images/Head.png" id="4_7edw6"]
 [ext_resource type="AudioStream" uid="uid://bvnpxjgrnelam" path="res://classic_hurt.mp3" id="5_1c8u8"]
 [ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="6_4eyak"]
+[ext_resource type="AudioStream" uid="uid://citxyku6u5lwp" path="res://audio/gulp 1.wav" id="7_a2ssf"]
 [ext_resource type="PackedScene" uid="uid://fvj6smd1lsrc" path="res://eyes.tscn" id="7_gm42u"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1gr7i"]
@@ -113,6 +114,9 @@ stream = ExtResource("5_1c8u8")
 
 [node name="SoundEffects" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_4eyak")
+
+[node name="DrinkSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_a2ssf")
 
 [node name="RoyalCrown" type="Sprite2D" parent="."]
 visible = false

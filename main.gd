@@ -103,9 +103,10 @@ func multiplayerSetup():
 	print(players)
 	multiplayerStarted = true
 	pvpOn = true
-	#$MenuElements.visible = false
 	menuElemPos = $MenuElements.position
 	$MenuElements.position = Vector2(-5000,-5000)
+	for player in players:
+		players[player].resetUpgrades()
 	roundInit()
 	pass
 
@@ -127,7 +128,6 @@ func placeEvenly():
 		players[player].velocity = Vector2(0, 0)
 		players[player].global_position = spawn_position
 		players[player].refresh()
-		#print(players[player].global_position)
 		i += 1
 
 #This is almost certainly bad code

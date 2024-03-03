@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bp3o11s21hwfo"]
+[gd_scene load_steps=14 format=3 uid="uid://bp3o11s21hwfo"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_qydqk"]
 [ext_resource type="PackedScene" uid="uid://dfdnabg7x326v" path="res://courtyard.tscn" id="1_uhtla"]
@@ -9,6 +9,8 @@
 [ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="6_321b4"]
 [ext_resource type="PackedScene" uid="uid://bfdvytebnnfwm" path="res://text_box.tscn" id="8_sqdn3"]
 [ext_resource type="PackedScene" uid="uid://sh5kf42pn3y6" path="res://rich_text_box.tscn" id="9_bqcoj"]
+[ext_resource type="PackedScene" uid="uid://d4br2o1l1s0x2" path="res://dummy.tscn" id="10_sg6jl"]
+[ext_resource type="Texture2D" uid="uid://dprcwbogpjpnr" path="res://images/walltile 1.png" id="11_iiiut"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j5xsk"]
 size = Vector2(594, 96)
@@ -24,35 +26,43 @@ script = ExtResource("1_qydqk")
 [node name="Controlpads" type="GameNiteControlpads" parent="."]
 
 [node name="Wall" parent="." instance=ExtResource("4_ol2fr")]
+visible = false
 position = Vector2(284, 1097)
 scale = Vector2(1.185, 1)
 
 [node name="Wall2" parent="." instance=ExtResource("4_ol2fr")]
+visible = false
 position = Vector2(994, 1095)
 scale = Vector2(1.185, 1)
 
 [node name="Wall3" parent="." instance=ExtResource("4_ol2fr")]
+visible = false
 position = Vector2(1702, 1096)
 scale = Vector2(1.185, 1)
 
 [node name="Wall4" parent="." instance=ExtResource("4_ol2fr")]
+visible = false
 position = Vector2(284, 27)
 scale = Vector2(1.185, 1)
 
 [node name="Wall5" parent="." instance=ExtResource("4_ol2fr")]
+visible = false
 position = Vector2(994, 25)
 scale = Vector2(1.185, 1)
 
 [node name="Wall6" parent="." instance=ExtResource("4_ol2fr")]
+visible = false
 position = Vector2(1702, 26)
 scale = Vector2(1.185, 1)
 
 [node name="Wall7" parent="." instance=ExtResource("4_ol2fr")]
+visible = false
 position = Vector2(25, 553)
 rotation = -1.5708
 scale = Vector2(1.55, 0.8)
 
 [node name="Wall8" parent="." instance=ExtResource("4_ol2fr")]
+visible = false
 position = Vector2(1892, 563)
 rotation = 1.5708
 scale = Vector2(1.55, 0.8)
@@ -101,7 +111,8 @@ offset_left = -298.0
 offset_top = -48.0
 offset_right = 300.0
 offset_bottom = 48.0
-theme_override_font_sizes/normal_font_size = 30
+theme_override_fonts/normal_font = ExtResource("4_bcyw0")
+theme_override_font_sizes/normal_font_size = 40
 bbcode_enabled = true
 text = "[center]Start Multiplayer [center]()"
 metadata/_edit_use_anchors_ = true
@@ -149,6 +160,38 @@ layout_mode = 2
 visible = false
 custom_minimum_size = Vector2(700, 0)
 layout_mode = 2
+
+[node name="Dummy" parent="." instance=ExtResource("10_sg6jl")]
+position = Vector2(352, 800)
+
+[node name="Walls" type="Node2D" parent="."]
+scale = Vector2(0.063, 0.063)
+
+[node name="TextureRect" type="TextureRect" parent="Walls"]
+offset_right = 1080.0
+offset_bottom = 17270.0
+texture = ExtResource("11_iiiut")
+stretch_mode = 1
+
+[node name="TextureRect3" type="TextureRect" parent="Walls"]
+offset_left = 29460.0
+offset_right = 30540.0
+offset_bottom = 17270.0
+texture = ExtResource("11_iiiut")
+stretch_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Walls"]
+offset_right = 30476.0
+offset_bottom = 1080.0
+texture = ExtResource("11_iiiut")
+stretch_mode = 1
+
+[node name="TextureRect4" type="TextureRect" parent="Walls"]
+offset_top = 16206.3
+offset_right = 30476.0
+offset_bottom = 17286.3
+texture = ExtResource("11_iiiut")
+stretch_mode = 1
 
 [connection signal="message_received" from="Controlpads" to="." method="_on_game_nite_controlpads_message_received"]
 [connection signal="body_entered" from="MenuElements/MultiplayerButton" to="." method="_on_multiplayer_button_body_entered"]

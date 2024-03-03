@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://d4br2o1l1s0x2"]
+
+[ext_resource type="Texture2D" uid="uid://bquotj56mtro2" path="res://images/dummy.png" id="1_fdb58"]
+[ext_resource type="Script" path="res://dummy.gd" id="1_ld2iw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_01fj6"]
+size = Vector2(358, 1193)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_k7cuo"]
+radius = 210.0
+height = 1340.0
+
+[node name="Dummy" type="StaticBody2D"]
+scale = Vector2(0.1, 0.1)
+collision_layer = 16
+collision_mask = 4
+script = ExtResource("1_ld2iw")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_fdb58")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(5, -46.5)
+shape = SubResource("RectangleShape2D_01fj6")
+
+[node name="Hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CapsuleShape2D_k7cuo")
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

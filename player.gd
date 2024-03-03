@@ -11,6 +11,7 @@ var gameScore = 0
 var controllable = true
 var readyUp = false
 var savedPosition = null
+var invulnerable = false
 
 var speedMultiplier = 15
 
@@ -96,7 +97,8 @@ func handle_controlpad_input(message: String):
 	elif parts[0] == "ready":
 		readyUp = true
 		controllable = true
-		self.global_position = savedPosition
+		if isDead:
+			self.global_position = savedPosition
 
 func upgradeHandler(upgrade):
 	if upgrade == "bow":
@@ -118,25 +120,28 @@ func notTaught():
 func _on_area_2d_body_entered(body):
 	if !(body is Arrow):
 		return
-	if body.originPlayer != self.playerID:
+	if body.originPlayer != self.playerID and not invulnerable:
 		playerDamaged(body.damage)
 		body.hitPlayer(self)
 
 func playerDamaged(damage):
 	$HurtSound.play()
-	if Autoloader.mainScene.pvpOn:
-		$Healthbar.visible = true
-		$Healthbar.value -= damage
-		$Healthbar/Timer.start()
-		if $Healthbar.value <= 0:
-			playerDeath()
+	#if Autoloader.mainScene.pvpOn:
+	$Healthbar.visible = true
+	$Healthbar.value -= damage
+	Autoloader.damageNumbers(damage, global_position)
+	$Healthbar/Timer.start()
+	if $Healthbar.value <= 0:
+		playerDeath()
 
-func playerGainHealth(health):
+func playerGainHealth(health, potion = false):
 	$Healthbar.value += health
 	$Healthbar/Damagebar.value += health
 	if $Healthbar.value > 100:
 		$Healthbar.value = 100
 		$Healthbar/Damagebar.value = 100
+	if potion:
+		$DrinkSound.play()
 
 
 func hitstun(stun):
@@ -146,14 +151,27 @@ func hitstun(stun):
 
 
 func playerDeath():
-	isDead = true
-	controllable = false
-	readyUp = false
 	deathExplosion()
 	savedPosition = self.global_position
 	self.global_position = Vector2(-100, -100)
-	Autoloader.mainScene.winCheck()
-	pass
+	if Autoloader.mainScene.multiplayerStarted:
+		isDead = true
+		controllable = false
+		readyUp = false
+		Autoloader.mainScene.winCheck()
+	else:
+		respawn()
+
+
+func respawn():
+	invulnerable = true
+	await get_tree().create_timer(1.0).timeout
+	modulate = Color(1, 1, 1, 0.5)
+	restoreAll()
+	global_position = savedPosition
+	await get_tree().create_timer(5.0).timeout
+	modulate = Color(1, 1, 1, 1)
+	invulnerable = false
 
 func refresh():
 	$Healthbar.value = 100
@@ -161,6 +179,7 @@ func refresh():
 	$RoyalCrown.visible = false
 	isDead = false
 	readyUp = false
+	invulnerable = false
 
 
 func deathExplosion():
@@ -178,8 +197,12 @@ func restoreAll():
 	isDead = false
 	readyUp = false
 	gameScore = 0
+
+func resetUpgrades():
 	arrowDamage = 20
 	speedMultiplier = 15
+	$Bow.draw_time = .5
+	$Bow.charge_time = 4
 
 func winner():
 	$RoyalCrown.visible = true

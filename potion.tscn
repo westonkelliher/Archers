@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://do1cp8qhck20o"]
 
 [ext_resource type="Script" path="res://potion.gd" id="1_8igj3"]
-[ext_resource type="Texture2D" uid="uid://c4akrmj0dbfic" path="res://images/potionHealth.png" id="1_onr0p"]
+[ext_resource type="Texture2D" uid="uid://bsiovmagu1nuo" path="res://images/potionHealth3.png" id="2_bfgq1"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ik6ks"]
 radius = 342.857
@@ -17,6 +17,8 @@ script = ExtResource("1_8igj3")
 shape = SubResource("CapsuleShape2D_ik6ks")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_onr0p")
+position = Vector2(4.76837e-07, 0)
+scale = Vector2(0.284081, 0.281047)
+texture = ExtResource("2_bfgq1")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
