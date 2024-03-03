@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://fvj6smd1lsrc"]
 
 [ext_resource type="Script" path="res://eyes.gd" id="1_a4um8"]
-[ext_resource type="Texture2D" uid="uid://dwwpry20psjph" path="res://images/Eye.png" id="1_krafq"]
+[ext_resource type="Texture2D" uid="uid://bcdjn2yccxgcg" path="res://images/Eye.png" id="1_krafq"]
 
 [node name="Eyes" type="Node2D"]
 script = ExtResource("1_a4um8")

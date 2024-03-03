@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" path="res://main.gd" id="1_qydqk"]
 [ext_resource type="PackedScene" uid="uid://dfdnabg7x326v" path="res://courtyard.tscn" id="1_uhtla"]
-[ext_resource type="FontFile" uid="uid://bx1q6glughkkf" path="res://fonts/m6x11plus.ttf" id="4_bcyw0"]
+[ext_resource type="FontFile" uid="uid://dked6s8f615p4" path="res://fonts/m6x11plus.ttf" id="4_bcyw0"]
 [ext_resource type="PackedScene" uid="uid://chhpjvwbr85aa" path="res://wall.tscn" id="4_ol2fr"]
-[ext_resource type="Texture2D" uid="uid://ig12wpq4glcg" path="res://images/Archers.png" id="4_wfiw2"]
-[ext_resource type="Texture2D" uid="uid://5i2j0kr6qa55" path="res://images/button.png" id="5_sicy3"]
-[ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="6_321b4"]
+[ext_resource type="Texture2D" uid="uid://casgnii8k5w2i" path="res://images/button.png" id="5_sicy3"]
+[ext_resource type="AudioStream" uid="uid://bu05g4qtypg83" path="res://audio/barrelBreak.mp3" id="6_321b4"]
+[ext_resource type="Texture2D" uid="uid://bd1lq5lp8pkx" path="res://images/title_blur.png" id="7_1vsb7"]
 [ext_resource type="PackedScene" uid="uid://bfdvytebnnfwm" path="res://text_box.tscn" id="8_sqdn3"]
 [ext_resource type="PackedScene" uid="uid://sh5kf42pn3y6" path="res://rich_text_box.tscn" id="9_bqcoj"]
 
@@ -18,6 +18,20 @@ size = Vector2(584, 80)
 
 [node name="Main" type="Node"]
 script = ExtResource("1_qydqk")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+z_index = -1
+offset_right = 1920.0
+offset_bottom = 1080.0
+
+[node name="TextBox" parent="CenterContainer" instance=ExtResource("8_sqdn3")]
+visible = false
+layout_mode = 2
+
+[node name="RichTextBox" parent="CenterContainer" instance=ExtResource("9_bqcoj")]
+visible = false
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
 
 [node name="Courtyard" parent="." instance=ExtResource("1_uhtla")]
 
@@ -81,12 +95,18 @@ scroll_active = false
 [node name="MenuElements" type="Node2D" parent="."]
 
 [node name="Logo" type="Sprite2D" parent="MenuElements"]
-position = Vector2(994, 280)
-scale = Vector2(2.28, 2.28)
-texture = ExtResource("4_wfiw2")
+position = Vector2(960, 280)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("7_1vsb7")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="MenuElements/Logo"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="MenuElements/Logo/StaticBody2D"]
+visible = false
+polygon = PackedVector2Array(-811.667, -146.667, -963.333, 80, -951.667, 121.667, -498.333, 126.667, -448.333, 103.333, -376.667, 180, -276.667, 130, 668.333, 128.333, 796.667, 190, 821.667, 136.667, 983.333, 115, 868.333, -173.333, 685, -136.667, -251.667, -150, -343.333, -95, -435, -151.667)
 
 [node name="MultiplayerButton" type="Area2D" parent="MenuElements"]
-position = Vector2(994, 576)
+position = Vector2(960, 576)
 collision_mask = 4
 
 [node name="MultiplayerButtonCollision" type="CollisionShape2D" parent="MenuElements/MultiplayerButton"]
@@ -113,7 +133,7 @@ position = Vector2(2, 0)
 shape = SubResource("RectangleShape2D_ehcgw")
 
 [node name="MultiplayerButton2" type="Area2D" parent="MenuElements"]
-position = Vector2(994, 750)
+position = Vector2(960, 750)
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MenuElements/MultiplayerButton2"]
@@ -136,19 +156,6 @@ wait_time = 5.0
 stream = ExtResource("6_321b4")
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
-
-[node name="CenterContainer" type="CenterContainer" parent="."]
-offset_right = 1920.0
-offset_bottom = 1080.0
-
-[node name="TextBox" parent="CenterContainer" instance=ExtResource("8_sqdn3")]
-visible = false
-layout_mode = 2
-
-[node name="RichTextBox" parent="CenterContainer" instance=ExtResource("9_bqcoj")]
-visible = false
-custom_minimum_size = Vector2(700, 0)
-layout_mode = 2
 
 [connection signal="message_received" from="Controlpads" to="." method="_on_game_nite_controlpads_message_received"]
 [connection signal="body_entered" from="MenuElements/MultiplayerButton" to="." method="_on_multiplayer_button_body_entered"]
