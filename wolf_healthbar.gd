@@ -1,22 +1,13 @@
-extends StaticBody2D
-
+extends ProgressBar
+var wolf = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	print("im alive")
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	global_position = wolf.global_position
 	pass
-
-
-func _on_hitbox_body_entered(body):
-	if !(body is Arrow):
-		return
-	else:
-		print("dummy hit")
-		body.hitEntity()
-		Autoloader.damageNumbers(body.damage, $DamageNumberOrigin.global_position)
-
-

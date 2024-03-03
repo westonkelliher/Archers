@@ -66,7 +66,6 @@ func hitEntity():
 	self.linear_velocity = Vector2(0, 0)
 	self.angular_velocity = 0
 	$Sprite2D.frame = 1
-	queue_free()
 
 
 func clean():

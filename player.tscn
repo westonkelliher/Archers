@@ -1,7 +1,7 @@
-[gd_scene load_steps=17 format=3 uid="uid://dcbqnl0lw5qdg"]
+[gd_scene load_steps=16 format=3 uid="uid://dcbqnl0lw5qdg"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_4wnrd"]
-[ext_resource type="Texture2D" uid="uid://ctecffdj4oytg" path="res://images/Body.png" id="2_2uug1"]
+[ext_resource type="Texture2D" uid="uid://bnnnkorjrefev" path="res://images/Body.png" id="2_2uug1"]
 [ext_resource type="PackedScene" uid="uid://dpvb6ptchtp0j" path="res://bow.tscn" id="2_vx5ds"]
 [ext_resource type="Texture2D" uid="uid://beatf4dji8e40" path="res://images/Head.png" id="4_7edw6"]
 [ext_resource type="AudioStream" uid="uid://bvnpxjgrnelam" path="res://classic_hurt.mp3" id="5_1c8u8"]
@@ -12,19 +12,10 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_1gr7i"]
 radius = 21.7307
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yh5v8"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ps3pm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q8lbc"]
 bg_color = Color(0.156863, 0.901961, 0.392157, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ell6x"]
-bg_color = Color(0.184314, 0.184314, 0.184314, 1)
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
-shadow_color = Color(0, 0, 0, 0.27451)
-shadow_offset = Vector2(0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1g7yd"]
 bg_color = Color(0.686275, 0.184314, 0.168627, 1)
@@ -58,9 +49,9 @@ offset_top = 28.0
 offset_right = 90.0
 offset_bottom = 45.0
 scale = Vector2(0.5, 0.5)
-theme_override_styles/background = SubResource("StyleBoxFlat_yh5v8")
+theme_override_styles/background = SubResource("StyleBoxEmpty_ps3pm")
 theme_override_styles/fill = SubResource("StyleBoxFlat_q8lbc")
-value = 100.0
+value = 50.0
 show_percentage = false
 
 [node name="Damagebar" type="ProgressBar" parent="Healthbar"]
@@ -71,9 +62,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_ell6x")
 theme_override_styles/fill = SubResource("StyleBoxFlat_1g7yd")
-value = 100.0
+value = 70.0
 show_percentage = false
 
 [node name="Timer" type="Timer" parent="Healthbar"]
@@ -126,6 +116,9 @@ scale = Vector2(0.116651, 0.0705882)
 [node name="Eyes" parent="." instance=ExtResource("7_gm42u")]
 position = Vector2(0, -36)
 eyes_radius = 15.0
+
+[node name="DamageNumberOrigin" type="Marker2D" parent="."]
+position = Vector2(0, -53)
 
 [connection signal="timeout" from="Healthbar/Timer" to="." method="_on_timer_timeout"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

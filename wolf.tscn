@@ -13,7 +13,7 @@ size = Vector2(96, 32)
 [node name="Wolf" type="CharacterBody2D"]
 scale = Vector2(0.5, 0.5)
 collision_layer = 16
-collision_mask = 0
+collision_mask = 17
 script = ExtResource("1_mrc20")
 agro = true
 
@@ -44,6 +44,10 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 rotation = -1.5708
 shape = SubResource("CapsuleShape2D_3lv70")
+
+[node name="HealthbarLoc" type="Marker2D" parent="."]
+
+[node name="DamageNumberLoc" type="Marker2D" parent="."]
 
 [connection signal="body_entered" from="Bite" to="." method="_on_bite_body_entered"]
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

@@ -24,8 +24,12 @@ position = Vector2(5, -46.5)
 shape = SubResource("RectangleShape2D_01fj6")
 
 [node name="Hitbox" type="Area2D" parent="."]
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 shape = SubResource("CapsuleShape2D_k7cuo")
+
+[node name="DamageNumberOrigin" type="Marker2D" parent="."]
+position = Vector2(10, -590)
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

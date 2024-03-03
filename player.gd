@@ -126,10 +126,11 @@ func _on_area_2d_body_entered(body):
 
 func playerDamaged(damage):
 	$HurtSound.play()
+	$Healthbar/Damagebar.visible = true
 	#if Autoloader.mainScene.pvpOn:
 	$Healthbar.visible = true
 	$Healthbar.value -= damage
-	Autoloader.damageNumbers(damage, global_position)
+	Autoloader.damageNumbers(damage, $DamageNumberOrigin.global_position)
 	$Healthbar/Timer.start()
 	if $Healthbar.value <= 0:
 		playerDeath()
@@ -208,7 +209,10 @@ func winner():
 	$RoyalCrown.visible = true
 
 func _on_timer_timeout():
+	print($Healthbar/Damagebar.value)
+	
 	$Healthbar/Damagebar.value = $Healthbar.value
+	pass
 
 func sfxManager(effect):
 	$SoundEffects.stream = effect

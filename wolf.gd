@@ -7,15 +7,22 @@ const JUMP_VELOCITY = -400.0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
+var healthbar_scene = preload("res://wolf_healthbar.tscn")
+
 @export var agro = false
 var players = null
 var hitsTaken = 0
 var delta
 var inCooldown = false
+var hitpoints = 65
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	players = Autoloader.mainScene.players
+	var healthbar = healthbar_scene.instantiate()
+	healthbar.global_position = global_position
+	healthbar.wolf = self
+	Autoloader.mainScene.add_child(healthbar)
 
 
 var targetPlayer = null
@@ -44,7 +51,6 @@ func _physics_process(delta):
 func _on_bite_body_entered(body):
 	if body is Player:
 		var knockback_direction = (targetPlayer.global_position - global_position).normalized()
-		#body.velocity += knockback_direction*500
 		body.knockback = knockback_direction*50
 		body.playerDamaged(40)
 		body.hitstun(1.0)
@@ -63,12 +69,13 @@ func _on_hitbox_body_entered(body):
 		return
 	hitsTaken += 1
 	body.hitEntity()
-	gotHit()
+	gotHit(body.damage)
 	pass # Replace with function body.
 	
-func gotHit():
+func gotHit(damage):
+	hitpoints -= damage
 	$Sprite2D.modulate = Color(1, 0, 0, 1)
 	await get_tree().create_timer(0.05).timeout
 	$Sprite2D.modulate = Color(1, 1, 1, 1)
-	if hitsTaken >= 3:
+	if hitpoints <= 0:
 		queue_free()

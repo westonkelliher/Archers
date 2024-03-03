@@ -1,16 +1,6 @@
 extends StaticBody2D
 var hitsTaken = 0
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
+@export var hitLimit = 0
 
 func _on_area_2d_body_entered(body):
 	if !(body is Arrow):
@@ -24,7 +14,7 @@ func gotHit():
 	$Sprite2D.modulate = Color(1, 0, 0, 1)
 	await get_tree().create_timer(0.05).timeout
 	$Sprite2D.modulate = Color(1, 1, 1, 1)
-	if hitsTaken > 0:
+	if hitsTaken > hitLimit:
 		randomSpawn()
 		global_position = Vector2(-500,-500)
 		Autoloader.mainScene.numBarrels -= 1
@@ -37,8 +27,8 @@ func gotHit():
 
 var items = [
 	#{'name': 'nothing', 'weight': 50, 'scene': null},
-	{'name': 'potion', 'weight': 30, 'scene': "res://potion.tscn"},
-	#{'name': 'wolf', 'weight': 10, 'scene': "res://wolf.tscn"},  # Common item
+	#{'name': 'potion', 'weight': 30, 'scene': "res://potion.tscn"},
+	{'name': 'wolf', 'weight': 10, 'scene': "res://wolf.tscn"},  # Common item
 ]
 
 
@@ -59,7 +49,7 @@ func randomSpawn():
 			break
 
 func spawn_item(item_scene):
-	if item_scene == null:
+	if not item_scene:
 		return
 	var prize_scene = load(item_scene)
 	var prize = prize_scene.instantiate()
