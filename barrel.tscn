@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://ch2gfgh2bevr7"]
+[gd_scene load_steps=7 format=3 uid="uid://ch2gfgh2bevr7"]
 
 [ext_resource type="Script" path="res://Barrel.gd" id="1_rn4k6"]
 [ext_resource type="Texture2D" uid="uid://dctnskdwb15cs" path="res://images/barrel.png" id="2_6k7jr"]
+[ext_resource type="Texture2D" uid="uid://ck25gh4sxmqyy" path="res://images/barrel shadow.png" id="3_5gxh0"]
 [ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="3_i51mg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dpgly"]
@@ -18,7 +19,7 @@ collision_layer = 16
 collision_mask = 0
 script = ExtResource("1_rn4k6")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="BarrelSprite" type="Sprite2D" parent="."]
 texture_filter = 1
 scale = Vector2(0.07, 0.07)
 texture = ExtResource("2_6k7jr")
@@ -37,5 +38,10 @@ shape = SubResource("CapsuleShape2D_xk2ek")
 
 [node name="BreakNoise" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_i51mg")
+
+[node name="Shadow" type="Sprite2D" parent="."]
+z_index = -1
+scale = Vector2(0.07, 0.07)
+texture = ExtResource("3_5gxh0")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

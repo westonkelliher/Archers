@@ -22,7 +22,6 @@ size = Vector2(584, 80)
 script = ExtResource("1_qydqk")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
-z_index = -1
 offset_right = 1920.0
 offset_bottom = 1080.0
 

@@ -2,6 +2,22 @@ extends StaticBody2D
 var hitsTaken = 0
 @export var hitLimit = 0
 
+func _ready():
+	#var offset = 20
+	#$BarrelSprite.position.y = position.y - offset
+	#
+	#modulate = Color(0.5,0.5,0.8,0)
+	#var tween = get_tree().create_tween() 
+	#tween.set_parallel(true)
+	#tween.tween_property(
+		#$BarrelSprite, "position.y", self.position.y, 3
+	#).set_ease(Tween.EASE_OUT)
+	#tween.tween_property(
+		#self, "modulate", Color(1,1,1,1), 3
+	#).set_ease(Tween.EASE_IN)
+	pass
+
+
 func _on_area_2d_body_entered(body):
 	if !(body is Arrow):
 		return
@@ -11,9 +27,9 @@ func _on_area_2d_body_entered(body):
 	pass # Replace with function body.
 	
 func gotHit():
-	$Sprite2D.modulate = Color(1, 0, 0, 1)
+	$BarrelSprite.modulate = Color(1, 0, 0, 1)
 	await get_tree().create_timer(0.05).timeout
-	$Sprite2D.modulate = Color(1, 1, 1, 1)
+	$BarrelSprite.modulate = Color(1, 1, 1, 1)
 	if hitsTaken > hitLimit:
 		randomSpawn()
 		global_position = Vector2(-500,-500)
@@ -26,9 +42,9 @@ func gotHit():
 
 
 var items = [
-	#{'name': 'nothing', 'weight': 50, 'scene': null},
-	#{'name': 'potion', 'weight': 30, 'scene': "res://potion.tscn"},
-	{'name': 'wolf', 'weight': 10, 'scene': "res://wolf.tscn"},  # Common item
+	#{'name': 'nothing', 'weight': 45, 'scene': null},
+	#{'name': 'potion', 'weight': 35, 'scene': "res://potion.tscn"},
+	{'name': 'wolf', 'weight': 20, 'scene': "res://wolf.tscn"},  # Common item
 ]
 
 
@@ -45,7 +61,7 @@ func randomSpawn():
 	for item in items:
 		cumulative_weight += item.weight
 		if rand <= cumulative_weight:
-			spawn_item(item.scene)  # Replace this with your actual spawn function
+			spawn_item(item.scene)
 			break
 
 func spawn_item(item_scene):

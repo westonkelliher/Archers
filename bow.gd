@@ -19,6 +19,7 @@ var sfx_loadBow = preload("res://audio/bowLoad.mp3")
 
 ################################################################################
 func _ready():
+	$Arrow.visible = false
 	pass
 
 func _process(delta):
@@ -27,6 +28,7 @@ func _process(delta):
 	time_pulling += delta
 	if time_pulling > draw_time:
 		$Sprite2D.frame = 2
+		$Arrow.visible = true
 		charge_amount = min(1, (time_pulling - draw_time)/charge_time)
 
 
@@ -38,6 +40,7 @@ func pull_back():
 
 func release():
 	is_pulling = false
+	$Arrow.visible = false
 	time_pulling = 0
 	charge_amount = 0
 	$Sprite2D.frame = 0

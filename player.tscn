@@ -51,7 +51,7 @@ offset_bottom = 45.0
 scale = Vector2(0.5, 0.5)
 theme_override_styles/background = SubResource("StyleBoxEmpty_ps3pm")
 theme_override_styles/fill = SubResource("StyleBoxFlat_q8lbc")
-value = 50.0
+value = 100.0
 show_percentage = false
 
 [node name="Damagebar" type="ProgressBar" parent="Healthbar"]
@@ -63,7 +63,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/fill = SubResource("StyleBoxFlat_1g7yd")
-value = 70.0
+value = 100.0
 show_percentage = false
 
 [node name="Timer" type="Timer" parent="Healthbar"]

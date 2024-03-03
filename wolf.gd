@@ -15,11 +15,12 @@ var hitsTaken = 0
 var delta
 var inCooldown = false
 var hitpoints = 65
+var healthbar
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	players = Autoloader.mainScene.players
-	var healthbar = healthbar_scene.instantiate()
+	healthbar = healthbar_scene.instantiate()
 	healthbar.global_position = global_position
 	healthbar.wolf = self
 	Autoloader.mainScene.add_child(healthbar)
@@ -51,13 +52,12 @@ func _physics_process(delta):
 func _on_bite_body_entered(body):
 	if body is Player:
 		var knockback_direction = (targetPlayer.global_position - global_position).normalized()
-		body.knockback = knockback_direction*50
+		body.set_knockback(knockback_direction*500)
 		body.playerDamaged(40)
-		body.hitstun(1.0)
+		body.hitstun(0.3)
 		inCooldown = true
-		await get_tree().create_timer(2.0).timeout
+		await get_tree().create_timer(1.0).timeout
 		inCooldown = false
-		pass # Replace with function body.
 
 
 func clean():
@@ -73,9 +73,13 @@ func _on_hitbox_body_entered(body):
 	pass # Replace with function body.
 	
 func gotHit(damage):
-	hitpoints -= damage
+	healthbar.takeDamage(damage)
 	$Sprite2D.modulate = Color(1, 0, 0, 1)
 	await get_tree().create_timer(0.05).timeout
 	$Sprite2D.modulate = Color(1, 1, 1, 1)
-	if hitpoints <= 0:
-		queue_free()
+	inCooldown = true
+	await get_tree().create_timer(0.5).timeout
+	inCooldown = false
+
+func death():
+	queue_free()

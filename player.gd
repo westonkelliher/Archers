@@ -33,6 +33,8 @@ signal bow_charge()
 signal hit()
 
 var lastPos
+var velocity_move : Vector2 = Vector2.ZERO
+var velocity_knock : Vector2 = Vector2.ZERO
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -51,10 +53,14 @@ func _process(delta):
 
 
 func _physics_process(delta):
-	velocity += knockback
-	knockback = knockback.move_toward(Vector2.ZERO, 200 * delta)
-	knockback = knockback*.5
+	velocity = velocity_move + velocity_knock
+	velocity_knock *= .97
+	if velocity_knock.length() < 5:
+		velocity_knock = Vector2.ZERO
 	move_and_slide()
+
+func set_knockback(kb):
+	velocity_knock = kb
 
 func handle_controlpad_input(message: String):
 	var parts = message.split(":")
@@ -65,7 +71,7 @@ func handle_controlpad_input(message: String):
 		if in_vel.length() > threshhold:
 			in_vel *= threshhold/in_vel.length()
 		#var mult = 15.0;
-		self.velocity = in_vel * speedMultiplier;
+		self.velocity_move = in_vel * speedMultiplier;
 		if in_vel.length() > 0 and !$Bow.is_pulling:
 			var in_angle = in_vel.angle()
 			$Eyes.set_direction(in_angle)
@@ -209,8 +215,6 @@ func winner():
 	$RoyalCrown.visible = true
 
 func _on_timer_timeout():
-	print($Healthbar/Damagebar.value)
-	
 	$Healthbar/Damagebar.value = $Healthbar.value
 	pass
 

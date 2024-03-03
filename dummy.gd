@@ -15,7 +15,6 @@ func _on_hitbox_body_entered(body):
 	if !(body is Arrow):
 		return
 	else:
-		print("dummy hit")
 		body.hitEntity()
 		Autoloader.damageNumbers(body.damage, $DamageNumberOrigin.global_position)
 

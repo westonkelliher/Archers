@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dpvb6ptchtp0j"]
+[gd_scene load_steps=5 format=3 uid="uid://dpvb6ptchtp0j"]
 
 [ext_resource type="Script" path="res://bow.gd" id="1_h7ojm"]
-[ext_resource type="Texture2D" uid="uid://cxf7thjw6n062" path="res://gen_images/bow.png" id="2_w5226"]
-[ext_resource type="AudioStream" uid="uid://bu05g4qtypg83" path="res://audio/barrelBreak.mp3" id="3_cvte8"]
+[ext_resource type="Texture2D" uid="uid://bwmk3qnk50j5e" path="res://gen_images/bow.png" id="2_w5226"]
+[ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="3_cvte8"]
+[ext_resource type="Texture2D" uid="uid://bgquh67bd40ao" path="res://images/Arrow.png" id="4_uo4h0"]
 
 [node name="Bow" type="Node2D"]
 script = ExtResource("1_h7ojm")
@@ -17,3 +18,9 @@ hframes = 3
 
 [node name="SoundEffects" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_cvte8")
+
+[node name="Arrow" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(40, -1.42109e-14)
+scale = Vector2(0.120296, 0.12375)
+texture = ExtResource("4_uo4h0")

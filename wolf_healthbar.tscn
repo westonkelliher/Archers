@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dh8c68cfa26hx"]
+[gd_scene load_steps=5 format=3 uid="uid://dh8c68cfa26hx"]
 
 [ext_resource type="Script" path="res://wolf_healthbar.gd" id="1_jr67k"]
 
@@ -7,14 +7,36 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_60vrf"]
 bg_color = Color(0.156863, 0.901961, 0.392157, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6tk6n"]
+bg_color = Color(0.686275, 0.184314, 0.168627, 1)
+
 [node name="Wolf_Healthbar" type="ProgressBar"]
-offset_left = -64.0
-offset_top = 80.0
-offset_right = 192.0
-offset_bottom = 112.0
+offset_left = -48.0
+offset_top = 240.0
+offset_right = 144.0
+offset_bottom = 272.0
 scale = Vector2(0.5, 0.5)
 theme_override_styles/background = SubResource("StyleBoxEmpty_lkvfq")
 theme_override_styles/fill = SubResource("StyleBoxFlat_60vrf")
-value = 50.0
+max_value = 60.0
+value = 60.0
 show_percentage = false
 script = ExtResource("1_jr67k")
+
+[node name="Damagebar" type="ProgressBar" parent="."]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_6tk6n")
+value = 60.0
+show_percentage = false
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.4
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

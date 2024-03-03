@@ -79,8 +79,6 @@ func _on_player_bow_charge():
 	power += power_increase_rate * delta
 	if power > max_power:
 		power = max_power
-	#print("Bow Charged")
-	pass # Replace with function body.
 
 
 func _on_player_bow_shot(player, power):
@@ -97,10 +95,9 @@ func _on_player_bow_shot(player, power):
 	arrow.originPlayer = player.playerID
 	arrow.damage = player.arrowDamage
 	add_child(arrow)
-	pass # Replace with function body.
+
 
 func multiplayerSetup():
-	print(players)
 	multiplayerStarted = true
 	pvpOn = true
 	menuElemPos = $MenuElements.position
@@ -108,7 +105,7 @@ func multiplayerSetup():
 	for player in players:
 		players[player].resetUpgrades()
 	roundInit()
-	pass
+
 
 func placeEvenly():
 	var angle_increment = 360 / len(players.values())
@@ -155,7 +152,6 @@ func roundInit():
 	textBox.visible = true
 	await get_tree().create_timer(1.5).timeout
 	textBoxLabel.text = "Ready?"
-	#await get_tree().create_timer(2.5).timeout
 	await $SoundEffects.finished
 	textBoxLabel.text = "GO!"
 	sfxManager(battleStart)
@@ -270,23 +266,27 @@ func _on_multiplayer_button_body_entered(body):
 		body.queue_free()
 		multiplayerSetup()
 
+
 var numBarrels = 0
+
 func _on_barrel_timer_timeout():
-	if numBarrels < 3:
+	if numBarrels < 10:
 		barrelLogic()
 
-
 func barrelLogic():
-	var avgPos = Vector2(0,0)
-	var numAlivePlayers = 0
-	for player in players:
-		if !(players[player].isDead):
-			avgPos += players[player].global_position
-			numAlivePlayers += 1
-	avgPos /= numAlivePlayers
+	#var avgPos = Vector2(0,0)
+	#var numAlivePlayers = 0
+	#for player in players:
+		#if !(players[player].isDead):
+			#avgPos += players[player].global_position
+			#numAlivePlayers += 1
+	#avgPos /= numAlivePlayers
 	var barrelPos = Vector2()
-	barrelPos.x = avgPos.x + vpSize.x*randf_range(.1,-.1)
-	barrelPos.y = avgPos.y + vpSize.y*randf_range(.1,-.1)
+	#barrelPos.x = avgPos.x + vpSize.x*randf_range(.1,-.1)
+	#barrelPos.y = avgPos.y + vpSize.y*randf_range(.1,-.1)
+	
+	barrelPos.x = vpSize.x*randf_range(.9,.1)
+	barrelPos.y = vpSize.y*randf_range(.9,.1)
 	var barrel = barrel_scene.instantiate()
 	barrel.global_position = barrelPos
 	add_child(barrel)

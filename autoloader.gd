@@ -32,10 +32,10 @@ func damageNumbers(value : int, position : Vector2):
 	#).set_ease(Tween. EASE_IN).set_delay(0.25)
 	tween.tween_property(
 		number, "scale", Vector2.ZERO, 0.5
-	).set_ease(Tween. EASE_IN).set_delay(0.5)
+	).set_ease(Tween.EASE_IN).set_delay(0.5)
 	tween.tween_property(
 		number, "modulate", Color(1,1,1,0), 0.3
-	).set_ease(Tween. EASE_IN).set_delay(1)
+	).set_ease(Tween.EASE_IN).set_delay(1)
 	
 	
 	await tween.finished
