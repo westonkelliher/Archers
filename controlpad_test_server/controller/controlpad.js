@@ -2,6 +2,16 @@
 /* This file will be replaced by GameNite code once you submit your game so 
    relying on edits you make to this file may break your game.
 */
+var _DEBUG = false;
+
+(async () => {
+  const appModule = await import('./app.js');
+  if ('DEBUG' in appModule) {
+    console.log('DEBUG mode:', appModule.DEBUG);
+    _DEBUG = appModule.DEBUG;
+  }
+})();
+
 
 const url_arg_str = window.location.search;
 const url_params = new URLSearchParams(url_arg_str);
@@ -11,15 +21,20 @@ console.log(subid);
 const ws = new WebSocket("ws://" + box_ip + ":50079");
 
 ws.onclose = () => {
-    console.log("closing");
-}
+    if (_DEBUG) {
+        console.log("websocket closed");
+    }
+};
 
 // wait for websocket to connect
 ws.onopen = (_event) => {
-    console.log("opened websocket");
+    if (_DEBUG) {
+        console.log("opened websocket");
+    }
     let byte_array = new Uint8Array(1);
     byte_array[0] = subid;
     ws.send(byte_array);
+    send_controlpad_message("state-request");
     ws.onmessage = async (event) => {
         if (event.data instanceof Blob) {
             const blobData = new Uint8Array(await event.data.arrayBuffer()); // Read the Blob as a Uint8Array
@@ -46,6 +61,8 @@ ws.onopen = (_event) => {
 
 
 export function send_controlpad_message(msg) {
-    //console.log('sending ' + msg);
+    if (_DEBUG) {
+        console.log('sending ' + msg);
+    }
     ws.send(msg);
 }
