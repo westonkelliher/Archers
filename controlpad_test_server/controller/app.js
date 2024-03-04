@@ -1,5 +1,6 @@
 import { send_controlpad_message } from "./controlpad.js";
 import { layoutMovePad, layoutBowPad } from "./joysticks.js";
+import { layoutUpgrades } from "./upgrades.js";
 
 let upgradePoints = 2;
 
@@ -14,6 +15,7 @@ document.addEventListener("viewport-change", (event) => {
 function layoutElements(viewWidth, viewHeight) {
     layoutMovePad();
     layoutBowPad();
+    layoutUpgrades();
 }
 
                           
