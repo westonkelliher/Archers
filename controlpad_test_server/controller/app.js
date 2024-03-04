@@ -37,9 +37,11 @@ function layoutElements(viewWidth, viewHeight) {
     } else if (STATE == "joining") {
         layoutMovePad();
         layoutBowPad();
+        document.getElementById("mainDi").style.background = "#eeeeee";
     } else if (STATE == "playing") {
         layoutMovePad();
         layoutBowPad();
+        document.getElementById("mainDi").style.background = COLOR;
     } else if (STATE == "upgrading") {
         layoutUpgrades();
     } else {
@@ -58,6 +60,25 @@ document.addEventListener("controlpad-message", (event) => {
     // Split the message by colon
     const parts = msg.split(":");
     // Check if the first part is "upgrade"
+    if (parts[0] !== "state") {
+        console.log("Warning: non state message from game");
+        return;
+    }
+
+    if (parts[1] === "joining") {
+        STATE = "joining";
+        clearElements();
+        layoutElements();
+    } else if (parts[1] === "playing") {
+        STATE = "playing";
+        COLOR = parts[2];
+        clearElements();
+        layoutElements();
+        
+    } else {
+        console.log("TBD");
+    }
+    
     if (parts[0] === "upgrade") {
         // Display the upgrade message
         toggleUpgradePointsMessage(true);

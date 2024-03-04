@@ -57,8 +57,19 @@ func _process(delta):
 		#$MusicPlayer.play()
 	pass
 
+func send_state_message(player):
+	var player_color = player.playerColor
+	var colorString = "#%x%x%xff" % [player_color.r*255, player_color.g*255, player_color.b*255]
+	var state_str = "state:playing:" + colorString;
+	$Controlpads.send_message(player.playerID, state_str)
 
 func _on_game_nite_controlpads_message_received(client, message):
+	if message == "state-request":
+		if client in playersAll:
+			send_state_message(playersAll[client])
+		else:
+			$Controlpads.send_message(client, "state:joining")
+		return
 	if client in playersAll:
 		if multiplayerStarted and client not in players:
 			return
@@ -80,8 +91,7 @@ func _on_game_nite_controlpads_message_received(client, message):
 		players[client] = new_player
 		playersAll[client] = new_player
 		players[client].handle_controlpad_input(message)
-		var colorString = "#%x%x%xff" % [player_color.r*255, player_color.g*255, player_color.b*255]
-		$Controlpads.send_message(client, colorString)
+		send_state_message(players[client])
 		randomize()
 		buttonTextHandler()
 
