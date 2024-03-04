@@ -13,6 +13,8 @@ var readyUp = false
 var savedPosition = null
 var invulnerable = false
 var unspawned : bool = false
+var state = "playing"
+var upgradePoints = 0
 
 var speedMultiplier = 15
 

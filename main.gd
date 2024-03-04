@@ -60,7 +60,12 @@ func _process(delta):
 func send_state_message(player):
 	var player_color = player.playerColor
 	var colorString = "#%x%x%xff" % [player_color.r*255, player_color.g*255, player_color.b*255]
-	var state_str = "state:playing:" + colorString;
+	var state_str = "state:" + player.state
+	if player.state == "playing":
+		state_str += ":" + colorString
+	elif player.state == "upgrading":
+		state_str += ":" + colorString + ":" + str(player.upgradePoints)
+	#
 	$Controlpads.send_message(player.playerID, state_str)
 
 func _on_game_nite_controlpads_message_received(client, message):
@@ -235,9 +240,13 @@ func roundOver(winner):
 		await get_tree().create_timer(2.0).timeout
 		for player in players:
 			if players[player] == winner:
-				$Controlpads.send_message(winner.playerID, "upgrade:2")
+				winner.state = "upgrading"
+				winner.upgradePoints = 2
+				send_state_message(winner)
 			else:
-				$Controlpads.send_message(players[player].playerID, "upgrade:1")
+				players[player].state = "upgrading"
+				players[player].upgradePoints = 1
+				send_state_message(players[player])
 		scoreboard()
 		roundNumber += 1
 		await $SoundEffects.finished

@@ -43,6 +43,7 @@ function layoutElements(viewWidth, viewHeight) {
         layoutBowPad();
         document.getElementById("mainDi").style.background = COLOR;
     } else if (STATE == "upgrading") {
+        console.log("abc");
         layoutUpgrades();
     } else {
         console.log("Warning bad state");
@@ -74,7 +75,11 @@ document.addEventListener("controlpad-message", (event) => {
         COLOR = parts[2];
         clearElements();
         layoutElements();
-        
+    } else if (parts[1] === "upgrading") {
+        STATE = "upgrading";
+        COLOR = parts[2];
+        clearElements();
+        layoutElements();
     } else {
         console.log("TBD");
     }

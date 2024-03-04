@@ -6,6 +6,7 @@ const BORDER = "0px solid #111111";
 
 export function layoutUpgrades() {
     var upgradesDiv = document.getElementById("upgrades");
+    upgradesDiv.style.display = "block";
     upgradesDiv.style.position = "absolute";
     upgradesDiv.style.top = "50%";
     upgradesDiv.style.left = "50%";
