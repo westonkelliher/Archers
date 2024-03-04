@@ -18,6 +18,7 @@ func _ready():
 		#self, "modulate", Color(1,1,1,1), 3
 	#).set_ease(Tween.EASE_IN)
 	if chaosDebug:
+		hitLimit = 0
 		hitsTaken += 1
 		gotHit()
 	pass

@@ -23,7 +23,7 @@ size = Vector2(584, 80)
 
 [node name="Main" type="Node"]
 script = ExtResource("1_qydqk")
-gamesNeeded4Win = 2
+gamesNeeded4Win = 3
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 offset_right = 1920.0
