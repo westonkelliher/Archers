@@ -1,20 +1,24 @@
 import { send_controlpad_message } from "./controlpad.js";
+import { layoutMovePad, layoutBowPad } from "./joysticks.js";
+import { layoutUpgrades } from "./upgrades.js";
 
 let upgradePoints = 2;
 
-/*
-document.addEventListener("controlpad-message", (event) => {
-    
-    var msg = event.detail;
-    console.log("recv: " + msg);
-    let movePad = document.getElementById("movePad");
-    let bowPad = document.getElementById("bowPad");
-    movePad.style.background = msg;
-    bowPad.style.background = msg;
-    
+document.addEventListener("viewport-change", (event) => {
+    if (event.detail.isPortrait) {
+        // TODO: tell player to turn their phone sideways
+        return;
+    }
+    layoutElements(event.detail.viewWidth, event.detail.viewHeight);
 });
-*/
 
+function layoutElements(viewWidth, viewHeight) {
+    layoutMovePad();
+    layoutBowPad();
+    layoutUpgrades();
+}
+
+                          
 document.addEventListener("controlpad-message", (event) => {
     var msg = event.detail;
     console.log("recv: " + msg);
@@ -34,13 +38,11 @@ document.addEventListener("controlpad-message", (event) => {
         toggleUpgradeButtons(false);
         toggleUpgradePointsMessage(false);
     } else {
-        // Set the background for movePad and bowPad if the message is not "upgrade"
-        let movePad = document.getElementById("movePad");
-        let bowPad = document.getElementById("bowPad");
-        movePad.style.background = msg;
-        bowPad.style.background = msg;
+        // Set the background if the message is not "upgrade"
+        document.getElementById("mainDi").style.background = msg;
     }
 });
+
 
 
 function addUpgradeButtons() {
@@ -150,163 +152,6 @@ function toggleUpgradePointsMessage(visible) {
     }
 }
 
-
-// Throttle function to limit the rate of execution
-function throttle(func, limit) {
-    var lastFunc;
-    var lastRan;
-    return function() {
-        const context = this;
-        const args = arguments;
-        if (!lastRan) {
-            func.apply(context, args);
-            lastRan = Date.now();
-        } else {
-            clearTimeout(lastFunc);
-            lastFunc = setTimeout(function() {
-                if ((Date.now() - lastRan) >= limit) {
-                    func.apply(context, args);
-                    lastRan = Date.now();
-                }
-            }, limit - (Date.now() - lastRan));
-        }
-    }
-}
-
-// Movement
-let isTouchActive = false;
-let touchStart = {x: 0, y: 0};
-
-var touchPad = document.getElementById('movePad');
-
-touchPad.addEventListener('touchstart', function(e) {
-    // Prevent the default highlighting behavior
-    e.preventDefault();
-
-    if (isTouchActive) { return; }
-
-    // check for correct touch
-    var touch = null;
-    for (let aTouch of e.changedTouches) {
-        if (aTouch.target.id == "movePad") {
-            touch = aTouch;
-        }
-    }
-    if (touch == null) {
-        return;
-    }
-
-    isTouchActive = true;
-
-    // Get the touch position
-    var touchX = touch.clientX;
-    var touchY = touch.clientY;
-
-    touchStart.x = touchX;
-    touchStart.y = touchY;
-}, false);
-
-touchPad.addEventListener('touchend', function(e) {
-    isTouchActive = false;
-    send_controlpad_message("move:0,0");
-}, false);
-
-touchPad.addEventListener('touchcancel', function(e) {
-    isTouchActive = false;
-    send_controlpad_message("move:0,0");
-}, false);
-
-var throttledDragEvent = throttle(function(e) {
-    // check for correct touch
-    var touch = null;
-    for (let aTouch of e.changedTouches) {
-        if (aTouch.target.id == "movePad") {
-            touch = aTouch;
-        }
-    }
-    if (touch == null) {
-        return;
-    }
-    // Get the touch position
-    var touchX = touch.clientX;
-    var touchY = touch.clientY;
-
-    if (isTouchActive) {
-        let datum = "move:" + String(touchX - touchStart.x) + "," + String(touchY - touchStart.y);
-        send_controlpad_message(datum);
-    }
-}, 33); // Throttle to 30 times per second (33.33 milliseconds)
-
-// Add the throttled touchmove event listener to the element
-touchPad.addEventListener('touchmove', throttledDragEvent, false);
-
-// Movement
-let isBowTouchActive = false;
-let bowTouchStart = {x: 0, y: 0};
-
-var bowPad = document.getElementById('bowPad');
-
-bowPad.addEventListener('touchstart', function(e) {
-    // Prevent the default highlighting behavior
-    e.preventDefault();
-
-    if (isBowTouchActive) { console.log("tried while active"); return; }
-
-    // check for correct touch
-    var touch = null;
-    for (let aTouch of e.changedTouches) {
-        if (aTouch.target.id == "bowPad") {
-            touch = aTouch;
-        }
-    }
-    if (touch == null) {
-        return;
-    }
-
-    isBowTouchActive = true;
-
-    // Get the touch position
-    var touchX = touch.clientX;
-    var touchY = touch.clientY;
-
-    // Print "touch start" and the x,y position
-    console.log("touch start: " + touchX + ", " + touchY);
-    bowTouchStart.x = touchX;
-    bowTouchStart.y = touchY;
-}, false);
-
-bowPad.addEventListener('touchend', function(e) {
-    isBowTouchActive = false;
-    send_controlpad_message("bow:0,0");
-}, false);
-
-bowPad.addEventListener('touchcancel', function(e) {
-    isBowTouchActive = false;
-    send_controlpad_message("bow:0,0");
-}, false);
-
-var bowDrag = throttle(function(e) {
-    // check for correct touch
-    var touch = null;
-    for (let aTouch of e.changedTouches) {
-        if (aTouch.target.id == "bowPad") {
-            touch = aTouch;
-        }
-    }
-    if (touch == null) {
-        return;
-    }
-    var touchX = touch.clientX;
-    var touchY = touch.clientY;
-
-    if (isBowTouchActive) {
-        let datum = "bow:" + String(touchX - bowTouchStart.x) + "," + String(touchY - bowTouchStart.y);
-        send_controlpad_message(datum);
-    }
-}, 33); // Throttle to 30 times per second (33.33 milliseconds)
-
-// Add the throttled touchmove event listener to the element
-bowPad.addEventListener('touchmove', bowDrag, false);
 
 //console.log("sanity");
 addUpgradeButtons();
