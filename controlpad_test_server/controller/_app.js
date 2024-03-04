@@ -12,18 +12,18 @@ let upgradePoints = 2;
 document.addEventListener("viewport-change", (event) => {
     clearElements();
     if (event.detail.isPortrait) {
-        document.getElementById("turn-text").style.display = "block";
+        document.getElementById("turn-text").display = "block";
         return;
     }
     layoutElements(event.detail.viewWidth, event.detail.viewHeight);
 });
 
 function clearElements() {
-    document.getElementById("turn-text").style.display = "none";
-    document.getElementById("wait-text").style.display = "none";
-    document.getElementById("movePad").style.display = "none";
-    document.getElementById("bowPad").style.display = "none";
-    document.getElementById("upgrades").style.display = "none";
+    document.getElementById("turn-text").display = "none";
+    document.getElementById("wait-text").display = "none";
+    document.getElementById("movePad").display = "none";
+    document.getElementById("bowPad").display = "none";
+    document.getElementById("upgrades").display = "none";
     //
     var mainDiv = document.getElementById("mainDi");
     while (mainDiv.firstChild) {
@@ -33,7 +33,7 @@ function clearElements() {
 
 function layoutElements(viewWidth, viewHeight) {
     if (STATE == "none") {
-        document.getElementById("wait-text").style.display = "block";
+        document.getElementById("wait-text").display = "block";
     } else if (STATE == "joining") {
         layoutMovePad();
         layoutBowPad();
@@ -51,9 +51,7 @@ function layoutElements(viewWidth, viewHeight) {
                           
 document.addEventListener("controlpad-message", (event) => {
     var msg = event.detail;
-    if (DEBUG) {
-        console.log("recv: " + msg);
-    }
+    console.log("recv: " + msg);
 
     // Split the message by colon
     const parts = msg.split(":");

@@ -41,6 +41,10 @@ export function layoutUpgrades() {
 
 
 function populateUpDiv(upDiv) {
+    // remove any old children
+    while (upDiv.firstChild) {
+        upDiv.removeChild(upDiv.firstChild);
+    }
     // size it
     upDiv.style.position = "absolute";
     upDiv.style.width = "29%";

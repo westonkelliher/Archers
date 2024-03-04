@@ -16,6 +16,7 @@ let moveStickPosition = {x: 0, y: 0};
 
 export function layoutMovePad() {
     var movePad = document.getElementById('movePad');
+    movePad.style.display = "block";
     movePad.style.zIndex = "1";
     movePad.style.position = "absolute";
     movePad.style.bottom = "12px";
@@ -58,9 +59,6 @@ export function layoutMovePad() {
     stick_img.style.display = "none";
     MOVE_STICK_IMG = stick_img;
     //
-    while (movePad.firstChild) {
-        movePad.removeChild(movePad.firstChild);
-    }
     var mainDiv = document.getElementById('mainDi');
     mainDiv.appendChild(pad_img);
     mainDiv.appendChild(base_img);
@@ -180,6 +178,7 @@ let bowStickPosition = {x: 0, y: 0};
 
 export function layoutBowPad() {
     var bowPad = document.getElementById('bowPad');
+    bowPad.style.display = "block";
     bowPad.style.zIndex = "1";
     bowPad.style.position = "absolute";
     bowPad.style.bottom = "12px";
@@ -222,9 +221,6 @@ export function layoutBowPad() {
     stick_img.style.display = "none";
     BOW_STICK_IMG = stick_img;
     //
-    while (bowPad.firstChild) {
-        bowPad.removeChild(bowPad.firstChild);
-    }
     var mainDiv = document.getElementById('mainDi');
     mainDiv.appendChild(pad_img);
     mainDiv.appendChild(base_img);
