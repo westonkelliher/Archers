@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bp3o11s21hwfo"]
+[gd_scene load_steps=17 format=3 uid="uid://bp3o11s21hwfo"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_qydqk"]
 [ext_resource type="PackedScene" uid="uid://dfdnabg7x326v" path="res://courtyard.tscn" id="1_uhtla"]
@@ -7,10 +7,13 @@
 [ext_resource type="Texture2D" uid="uid://5i2j0kr6qa55" path="res://images/button.png" id="5_sicy3"]
 [ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="6_321b4"]
 [ext_resource type="Texture2D" uid="uid://ykft2u2h50cu" path="res://images/title_fiddled.png" id="7_y6dca"]
+[ext_resource type="Texture2D" uid="uid://24xckh2d8vvb" path="res://images/newButtonblur.png" id="8_dknrm"]
 [ext_resource type="PackedScene" uid="uid://bfdvytebnnfwm" path="res://text_box.tscn" id="8_sqdn3"]
 [ext_resource type="PackedScene" uid="uid://sh5kf42pn3y6" path="res://rich_text_box.tscn" id="9_bqcoj"]
+[ext_resource type="FontFile" uid="uid://bbuyjmeyyk5i" path="res://fonts/Vimland-9YmW2.otf" id="9_dbjdc"]
 [ext_resource type="PackedScene" uid="uid://d4br2o1l1s0x2" path="res://dummy.tscn" id="10_sg6jl"]
 [ext_resource type="Texture2D" uid="uid://dprcwbogpjpnr" path="res://images/walltile 1.png" id="11_iiiut"]
+[ext_resource type="PackedScene" uid="uid://ch2gfgh2bevr7" path="res://barrel.tscn" id="12_l5emi"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j5xsk"]
 size = Vector2(594, 96)
@@ -20,6 +23,7 @@ size = Vector2(584, 80)
 
 [node name="Main" type="Node"]
 script = ExtResource("1_qydqk")
+gamesNeeded4Win = 2
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 offset_right = 1920.0
@@ -49,7 +53,7 @@ layout_mode = 2
 
 [node name="Wall" parent="." instance=ExtResource("4_ol2fr")]
 visible = false
-position = Vector2(284, 1097)
+position = Vector2(288, 1096)
 scale = Vector2(1.185, 1)
 
 [node name="Wall2" parent="." instance=ExtResource("4_ol2fr")]
@@ -79,7 +83,7 @@ scale = Vector2(1.185, 1)
 
 [node name="Wall7" parent="." instance=ExtResource("4_ol2fr")]
 visible = false
-position = Vector2(25, 553)
+position = Vector2(1.90735e-06, 560)
 rotation = -1.5708
 scale = Vector2(1.55, 0.8)
 
@@ -120,7 +124,6 @@ texture = ExtResource("7_y6dca")
 [node name="StaticBody2D" type="StaticBody2D" parent="MenuElements/Logo"]
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="MenuElements/Logo/StaticBody2D"]
-visible = false
 polygon = PackedVector2Array(-811.667, -146.667, -963.333, 80, -951.667, 121.667, -498.333, 126.667, -448.333, 103.333, -376.667, 180, -276.667, 130, 668.333, 128.333, 796.667, 190, 821.667, 136.667, 983.333, 115, 868.333, -173.333, 685, -136.667, -251.667, -150, -343.333, -95, -435, -151.667)
 
 [node name="MultiplayerButton" type="Area2D" parent="MenuElements"]
@@ -132,13 +135,18 @@ position = Vector2(-1, 0)
 shape = SubResource("RectangleShape2D_j5xsk")
 
 [node name="Sprite2D" type="Sprite2D" parent="MenuElements/MultiplayerButton"]
-texture = ExtResource("5_sicy3")
+scale = Vector2(0.45262, 0.34776)
+texture = ExtResource("8_dknrm")
 
 [node name="MultiplayerButtonLabel" type="RichTextLabel" parent="MenuElements/MultiplayerButton"]
+visible = false
 offset_left = -298.0
 offset_top = -48.0
 offset_right = 300.0
 offset_bottom = 48.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 5
 theme_override_fonts/normal_font = ExtResource("4_bcyw0")
 theme_override_font_sizes/normal_font_size = 40
 bbcode_enabled = true
@@ -151,7 +159,26 @@ metadata/_edit_use_anchors_ = true
 position = Vector2(2, 0)
 shape = SubResource("RectangleShape2D_ehcgw")
 
+[node name="CenterContainer" type="CenterContainer" parent="MenuElements/MultiplayerButton"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MultiPLabel" type="Label" parent="MenuElements/MultiplayerButton/CenterContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 5
+theme_override_fonts/font = ExtResource("9_dbjdc")
+theme_override_font_sizes/font_size = 40
+text = "Shoot to Start Game"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
 [node name="MultiplayerButton2" type="Area2D" parent="MenuElements"]
+visible = false
 position = Vector2(960, 750)
 collision_mask = 0
 
@@ -184,6 +211,7 @@ offset_bottom = 1080.0
 position = Vector2(352, 800)
 
 [node name="Walls" type="Node2D" parent="."]
+visible = false
 scale = Vector2(0.063, 0.063)
 
 [node name="TextureRect" type="TextureRect" parent="Walls"]
@@ -211,6 +239,9 @@ offset_right = 30476.0
 offset_bottom = 17286.3
 texture = ExtResource("11_iiiut")
 stretch_mode = 1
+
+[node name="Barrel" parent="." instance=ExtResource("12_l5emi")]
+position = Vector2(440, 624)
 
 [connection signal="message_received" from="Controlpads" to="." method="_on_game_nite_controlpads_message_received"]
 [connection signal="body_entered" from="MenuElements/MultiplayerButton" to="." method="_on_multiplayer_button_body_entered"]

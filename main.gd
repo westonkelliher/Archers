@@ -6,6 +6,7 @@ var barrel_scene = preload("res://barrel.tscn")
 var text_box_scene = preload("res://text_box.tscn")
 
 var players = {}
+var playersAll = {}
 var readiedPlayers = []
 var barrels = []
 
@@ -13,6 +14,8 @@ var power = 0
 var max_power = 1000
 var power_increase_rate = 10
 var delta = 0
+
+@export var gamesNeeded4Win = 1
 
 var multiplayerStarted = false
 var pvpOn =false
@@ -32,12 +35,13 @@ var jaunt = preload("res://audio/dumbassFlute.mp3")
 #OnReady
 @onready var textBoxLabel = $CenterContainer/TextBox/MarginContainer/Label
 @onready var textBox = $CenterContainer/TextBox
-@onready var richTextLabel = $CenterContainer/RichTextBox/MarginContainer/RichLabel
+@onready var richTextLabel = $CenterContainer/RichTextBox/MarginContainer/VBoxContainer/RichLabel
 @onready var richTextBox = $CenterContainer/RichTextBox
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	randomize()
 	vpSize = get_viewport().size
 	Autoloader.mainScene = self
 	musicManager(mainTheme)
@@ -55,8 +59,15 @@ func _process(delta):
 
 
 func _on_game_nite_controlpads_message_received(client, message):
-	if client in players:
-		players[client].handle_controlpad_input(message)
+	if client in playersAll:
+		if multiplayerStarted and client not in players:
+			return
+		playersAll[client].handle_controlpad_input(message)
+		if playersAll[client].unspawned:
+			playersAll[client].unspawned = false
+			players[client] = playersAll[client]
+			players[client].global_position = Vector2(400, 400)
+			buttonTextHandler()
 	elif not multiplayerStarted:
 		var new_player = player_scene.instantiate()
 		new_player.global_position = Vector2(400, 400)
@@ -64,14 +75,42 @@ func _on_game_nite_controlpads_message_received(client, message):
 		new_player.playerID = client
 		var player_color = Color(randf()*0.8 + 0.1, randf()*0.8 + 0.1, randf()*0.8 + 0.1, 1)
 		new_player.playerColor = player_color
-		new_player.playerName = "Player " + str(len(players.values()))
+		new_player.playerName = namePlayer()
 		add_child(new_player)
 		players[client] = new_player
+		playersAll[client] = new_player
 		players[client].handle_controlpad_input(message)
 		var colorString = "#%x%x%xff" % [player_color.r*255, player_color.g*255, player_color.b*255]
-		#print(colorString)
 		$Controlpads.send_message(client, colorString)
-		
+		randomize()
+		buttonTextHandler()
+
+var names = [
+	"Theon", "Sansa", "Jon", "Reek", "Arya", "Tyrion",
+	"Daenerys", "Cersei", "Jaime", "Bran", "Jorah",
+	"Samwell", "Brienne", "Davos", "Sandor", "Gregor",
+	"Varys", "Bronn", "Missandei", "Gendry", "Rickon",
+	"Catelyn", "Eddard", "Robert", "Rhaeger", "Lyanna",
+	"Tywin", "Frodo", "Podrick", "Petyr", "Joffery",
+	"Melisandre", "Ygritte", "Hot Pie", "Margaery",
+	"Stannis", "Ramsay", "Myrcella", "Shae", "Yara",
+	"Gilly", "Olenna", "Oberyn", "HODOR"
+]
+
+var bastardNames = [
+	"Snow", "Rivers", "Sand", "Hill", "Pyke", "Waters", "Stone"
+]
+
+func namePlayer():
+	if names.size() > 0:
+		var index = randi() % names.size()
+		var player_name = names[index]
+		names.erase(names[index])
+		return player_name
+	else:
+		var index = randi() % bastardNames.size()
+		var player_name = bastardNames[index]
+		return player_name
 
 
 func _on_player_bow_charge():
@@ -82,7 +121,6 @@ func _on_player_bow_charge():
 
 
 func _on_player_bow_shot(player, power):
-	#print("Bow Shot")
 	var velocity = Vector2(300+24*power, 0)
 	var bow = player.get_node('Bow')
 	velocity = velocity.rotated(bow.rotation)
@@ -123,8 +161,8 @@ func placeEvenly():
 		var spawn_offset = Vector2(cos(angle_radians), sin(angle_radians)) * level_radius
 		var spawn_position = center + spawn_offset
 		players[player].velocity = Vector2(0, 0)
-		players[player].global_position = spawn_position
 		players[player].refresh()
+		players[player].global_position = spawn_position
 		i += 1
 
 #This is almost certainly bad code
@@ -171,40 +209,71 @@ func roundOver(winner):
 	sfxManager(fanfare)
 	var tempC = winner.playerColor
 	var hex_color = tempC.to_html(false)
-	if winner.gameScore == 3:
+	if winner.gameScore == gamesNeeded4Win:
 		winner.winner()
-		richTextLabel.text = "[center][color=#" + hex_color + "]Player[/color] Wins the Game!"
-		#$InformationLabel.text = "[color=#" + hex_color + "][center]This Color Wins the Game!"
-		#$InformationLabel.visible = true
+		richTextLabel.text = "[center][color=#" + hex_color + "]"+winner.playerName+"[/color] Wins the Game!"
 		richTextBox.visible = true
-		await get_tree().create_timer(3.0).timeout
-		#$InformationLabel.visible = false
+		await get_tree().create_timer(4.0).timeout
+		scoreboard(true)
+		await get_tree().create_timer(4.0).timeout
 		richTextBox.visible = false
 		gameOver()
 	else:
-		richTextLabel.text = "[center][color=#" + hex_color + "]Player[/color] has won the Round!"
+		richTextBox.clearScores()
+		richTextLabel.text = "[center][color=#" + hex_color + "]"+winner.playerName+"[/color] has won the Round!"
 		richTextBox.visible = true
 		await get_tree().create_timer(2.0).timeout
-		#$InformationLabel.text = "[color=#" + hex_color + "]This Color Wins the Round!"
-		richTextLabel.text = "[center]Scores[/center]"
 		for player in players:
 			if players[player] == winner:
 				$Controlpads.send_message(winner.playerID, "upgrade:2")
 			else:
 				$Controlpads.send_message(players[player].playerID, "upgrade:1")
-			tempC = players[player].playerColor
-			hex_color = tempC.to_html(false)
-			richTextLabel.text += "\n[color=#" + hex_color + "]Player				"+str(players[player].gameScore)
-		$InformationLabel.visible = true
-		#await get_tree().create_timer(10.0).timeout
+		scoreboard()
 		roundNumber += 1
 		await $SoundEffects.finished
-		musicManager(jaunt)
+		musicManager(wardrums)
 		await readyUpGamepad()
 		richTextBox.visible = false
+		richTextBox.clearScores()
 		msgToAll("clear:")
 		roundInit()
 	pass
+
+func scoreboard(won = false):
+	richTextBox.clearScores()
+	sortByWins()
+	richTextLabel.text = "[center]Scores[/center]"
+	if len(players.values()) > 5:
+		richTextLabel.text = "[center]Top 5 Scores[/center]"
+	if won:
+		richTextLabel.text = "[center]Final Scores[/center]"
+	var count = 0
+	for player in playersByWins:
+		richTextBox.newScoreLabel(player.playerName, player.playerColor, player.gameScore, won)
+		if won:
+			won = false
+		count += 1
+		if count == 5:
+			break
+
+
+var playersByWins = []
+func sortByWins():
+	playersByWins.clear()
+	for player in players:
+		playersByWins.append(players[player])
+	
+	# Directly sort the playersByWins array based on gameScore in descending order
+	playersByWins.sort_custom(func(a, b):
+		if a.gameScore > b.gameScore:
+			return true
+		return false
+	)
+
+	for player in playersByWins:
+		print(player.playerName + " " + str(player.gameScore))
+	print("----------")
+
 
 func readyUpGamepad():
 	var allReady = false
@@ -229,11 +298,13 @@ func gameOver():
 	universalControl(true)
 	musicManager(mainTheme)
 	readiedPlayers = []
+	bttnLabel.text = "Shoot to Start Game"
 	$MenuElements.position = Vector2(0,0)
 	for player in players:
 		players[player].restoreAll()
-		#Bad code, should fetch viewport size but I'm LAZY
-		players[player].global_position = Vector2(randf_range(100,1000), randf_range(100,1000))
+		players[player].unspawned = true
+		players[player].global_position = Vector2(-5000, -5000)
+	players = {}
 	pass
 
 #Turns controls off or on for all players
@@ -252,6 +323,7 @@ func clearJunk():
 
 
 @onready var buttonLabel = $MenuElements/MultiplayerButton/MultiplayerButtonLabel
+@onready var bttnLabel = $MenuElements/MultiplayerButton/CenterContainer/MultiPLabel
 func _on_multiplayer_button_body_entered(body):
 	if !(body is Arrow):
 		return
@@ -259,12 +331,25 @@ func _on_multiplayer_button_body_entered(body):
 	body.hitButton()
 	if body.originPlayer not in readiedPlayers:
 		readiedPlayers.append(body.originPlayer)
-		buttonLabel.text = "[center] Players Ready:"
-		buttonLabel.text += "[center]("+str(readiedPlayers.size())+"/"+str(numPlayers)+")"
+		if len(players.values()) == 1:
+			bttnLabel.text = "More Players Must Join to Start!"
+		else:
+			bttnLabel.text = "Players Ready"
+			bttnLabel.text += "\n("+str(readiedPlayers.size())+"/"+str(numPlayers)+")"
 		await get_tree().create_timer(0.5).timeout
 	if readiedPlayers.size() == numPlayers and numPlayers > 1:
 		body.queue_free()
 		multiplayerSetup()
+
+func buttonTextHandler():
+	var numPlayers = len(players.values())
+	if bttnLabel.text == "More Players Must Join to Start!" and numPlayers > 1:
+		bttnLabel.text = "Players Ready"
+		bttnLabel.text += "\n("+str(readiedPlayers.size())+"/"+str(numPlayers)+")"
+	if bttnLabel.text.contains("Ready"):
+		bttnLabel.text = "Players Ready"
+		bttnLabel.text += "\n("+str(readiedPlayers.size())+"/"+str(numPlayers)+")"
+	pass
 
 
 var numBarrels = 0
@@ -300,3 +385,5 @@ func musicManager(song):
 func sfxManager(effect):
 	$SoundEffects.stream = effect
 	$SoundEffects.play()
+
+

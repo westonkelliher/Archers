@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dy78fyg8j8lfl"]
+[gd_scene load_steps=6 format=3 uid="uid://dy78fyg8j8lfl"]
 
 [ext_resource type="Texture2D" uid="uid://daw2llelw7p1b" path="res://images/barrelfrag.png" id="1_ea0e4"]
+[ext_resource type="Script" path="res://barrel_explosion.gd" id="2_jeopr"]
 
 [sub_resource type="Curve" id="Curve_pqnmu"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.268817, 1), 0.0, 0.0, 0, 0, Vector2(0.666667, 0), -1.14462, 0.0, 0, 0]
@@ -22,11 +23,12 @@ angular_velocity_max = 310.24
 gravity = Vector3(0, 0, 0)
 damping_min = 89.1
 damping_max = 94.708
-scale_max = 1.5
+scale_min = 0.1
+scale_max = 0.1
 alpha_curve = SubResource("CurveTexture_hhwvi")
 
 [node name="BarrelExplosion" type="GPUParticles2D"]
-scale = Vector2(4.455, 4.455)
+scale = Vector2(0.5, 0.5)
 emitting = false
 amount = 10
 process_material = SubResource("ParticleProcessMaterial_d0b06")
@@ -36,3 +38,4 @@ one_shot = true
 speed_scale = 2.5
 explosiveness = 1.0
 trail_lifetime = 0.39
+script = ExtResource("2_jeopr")

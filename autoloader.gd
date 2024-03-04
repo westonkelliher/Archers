@@ -20,7 +20,6 @@ func damageNumbers(value : int, position : Vector2):
 	await number.resized
 	number.pivot_offset = Vector2(number.size / 2)
 	number.position -= number.pivot_offset
-	print(number.size)
 	
 	var tween = get_tree().create_tween() 
 	tween.set_parallel(true)

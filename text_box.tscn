@@ -2,9 +2,10 @@
 
 [ext_resource type="Texture2D" uid="uid://csl01cssqlrtu" path="res://images/textbox.png" id="1_l4cqf"]
 [ext_resource type="Script" path="res://text_box.gd" id="1_taqi6"]
-[ext_resource type="FontFile" uid="uid://bx1q6glughkkf" path="res://fonts/m6x11plus.ttf" id="2_5mcmx"]
+[ext_resource type="FontFile" uid="uid://bbuyjmeyyk5i" path="res://fonts/Vimland-9YmW2.otf" id="3_cmsve"]
 
 [node name="TextBox" type="MarginContainer"]
+z_index = 10
 offset_right = 334.0
 offset_bottom = 180.0
 size_flags_horizontal = 4
@@ -28,7 +29,9 @@ theme_override_constants/margin_bottom = 30
 
 [node name="Label" type="Label" parent="MarginContainer"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_5mcmx")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("3_cmsve")
 theme_override_font_sizes/font_size = 100
 text = "Ready?"
 horizontal_alignment = 1

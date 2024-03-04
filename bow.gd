@@ -33,18 +33,20 @@ func _process(delta):
 
 
 ################################################################################
-func pull_back():
+func pull_back(dead):
 	is_pulling = true
 	$Sprite2D.frame = 1
-	sfxManager(sfx_loadBow)
+	if !dead:
+		sfxManager(sfx_loadBow)
 
-func release():
+func release(dead):
 	is_pulling = false
 	$Arrow.visible = false
 	time_pulling = 0
 	charge_amount = 0
 	$Sprite2D.frame = 0
-	sfxManager(sfx_shootBow)
+	if !dead:
+		sfxManager(sfx_shootBow)
 
 func get_power():
 	return charge_amount*max_power

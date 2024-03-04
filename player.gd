@@ -5,13 +5,14 @@ var maxHealth = 100
 var currentHealth = maxHealth
 var playerID = null
 var playerColor = null
-var playerName = null
+var playerName = "Player"
 var isDead = false
 var gameScore = 0
 var controllable = true
 var readyUp = false
 var savedPosition = null
 var invulnerable = false
+var unspawned : bool = false
 
 var speedMultiplier = 15
 
@@ -92,7 +93,7 @@ func handle_controlpad_input(message: String):
 		var threshhold = 8.0;
 		if in_aim.length() > threshhold:
 			if !$Bow.is_pulling:
-				$Bow.pull_back()
+				$Bow.pull_back(isDead)
 			#emit_signal("bow_charge")
 		else:
 			notTaught()
@@ -105,6 +106,9 @@ func handle_controlpad_input(message: String):
 		controllable = true
 		if isDead:
 			self.global_position = savedPosition
+	
+	elif parts[0] == "name":
+		playerName = parts[1]
 
 func upgradeHandler(upgrade):
 	if upgrade == "bow":
@@ -118,7 +122,7 @@ func upgradeHandler(upgrade):
 func notTaught():
 	if $Bow.charge_amount > 0 and controllable:
 		emit_signal("bow_shot", self, $Bow.get_power())
-	$Bow.release()
+	$Bow.release(isDead)
 
 
 
@@ -133,7 +137,6 @@ func _on_area_2d_body_entered(body):
 func playerDamaged(damage):
 	$HurtSound.play()
 	$Healthbar/Damagebar.visible = true
-	#if Autoloader.mainScene.pvpOn:
 	$Healthbar.visible = true
 	$Healthbar.value -= damage
 	Autoloader.damageNumbers(damage, $DamageNumberOrigin.global_position)
@@ -160,7 +163,7 @@ func hitstun(stun):
 func playerDeath():
 	deathExplosion()
 	savedPosition = self.global_position
-	self.global_position = Vector2(-100, -100)
+	self.global_position = Vector2(-5000, -5000)
 	if Autoloader.mainScene.multiplayerStarted:
 		isDead = true
 		controllable = false
@@ -187,6 +190,9 @@ func refresh():
 	isDead = false
 	readyUp = false
 	invulnerable = false
+	knockback = Vector2.ZERO
+	velocity_knock = Vector2.ZERO
+	velocity_move = Vector2.ZERO
 
 
 func deathExplosion():

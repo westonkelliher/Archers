@@ -1,6 +1,7 @@
 extends StaticBody2D
 var hitsTaken = 0
 @export var hitLimit = 0
+@export var chaosDebug : bool = false
 var barrel_explosion = preload("res://barrel_explosion.tscn")
 
 func _ready():
@@ -16,6 +17,9 @@ func _ready():
 	#tween.tween_property(
 		#self, "modulate", Color(1,1,1,1), 3
 	#).set_ease(Tween.EASE_IN)
+	if chaosDebug:
+		hitsTaken += 1
+		gotHit()
 	pass
 
 
@@ -33,6 +37,7 @@ func gotHit():
 	$BarrelSprite.modulate = Color(1, 1, 1, 1)
 	if hitsTaken > hitLimit:
 		randomSpawn()
+		explode()
 		global_position = Vector2(-500,-500)
 		Autoloader.mainScene.numBarrels -= 1
 		$BreakNoise.play()
