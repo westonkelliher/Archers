@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://chhpjvwbr85aa" path="res://wall.tscn" id="4_ol2fr"]
 [ext_resource type="Texture2D" uid="uid://5i2j0kr6qa55" path="res://images/button.png" id="5_sicy3"]
 [ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="6_321b4"]
-[ext_resource type="Texture2D" uid="uid://ykft2u2h50cu" path="res://images/title_fiddled.png" id="7_y6dca"]
+[ext_resource type="Texture2D" uid="uid://ykft2u2h50cu" path="res://images/title_blur.png" id="7_y6dca"]
 [ext_resource type="PackedScene" uid="uid://bfdvytebnnfwm" path="res://text_box.tscn" id="8_sqdn3"]
 [ext_resource type="PackedScene" uid="uid://sh5kf42pn3y6" path="res://rich_text_box.tscn" id="9_bqcoj"]
 [ext_resource type="PackedScene" uid="uid://d4br2o1l1s0x2" path="res://dummy.tscn" id="10_sg6jl"]
