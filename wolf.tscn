@@ -51,5 +51,12 @@ position = Vector2(0, 96)
 
 [node name="DamageNumberLoc" type="Marker2D" parent="."]
 
+[node name="SoundEffects" type="AudioStreamPlayer2D" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 7.0
+autostart = true
+
 [connection signal="body_entered" from="Bite" to="." method="_on_bite_body_entered"]
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

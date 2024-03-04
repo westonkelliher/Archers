@@ -8,6 +8,9 @@ func _process(delta):
 		position.y += 40 + 45 * abs(sin(wolf.rotation))
 		pivot_offset = Vector2(size / 2)
 		position -= pivot_offset
+		#max_value += (Autoloader.mainScene.roundNumber - 1)*25
+		#value = max_value
+		#$Damagebar.value = value
 
 func takeDamage(damage):
 	visible = true
@@ -16,6 +19,8 @@ func takeDamage(damage):
 	if value <= 0:
 		wolf.death()
 		queue_free()
+	else:
+		wolf.hurt()
 
 func _on_timer_timeout():
 	$Damagebar.value = value

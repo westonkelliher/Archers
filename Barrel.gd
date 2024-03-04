@@ -49,9 +49,9 @@ func gotHit():
 
 
 var items = [
-	#{'name': 'nothing', 'weight': 45, 'scene': null},
-	#{'name': 'potion', 'weight': 35, 'scene': "res://potion.tscn"},
-	{'name': 'wolf', 'weight': 20, 'scene': "res://wolf.tscn"},  # Common item
+	{'name': 'nothing', 'weight': 35, 'scene': null},
+	{'name': 'potion', 'weight': 20, 'scene': "res://potion.tscn"},
+	{'name': 'wolf', 'weight': 35, 'scene': "res://wolf.tscn"},  # Common item
 ]
 
 

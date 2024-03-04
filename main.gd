@@ -30,7 +30,7 @@ var battleTheme = preload("res://audio/Mage Arena.ogg")
 var battleStart = preload("res://audio/battleHorn.mp3")
 var fanfare = preload("res://audio/fanfare.mp3")
 var wardrums = preload("res://audio/warDrums.wav")
-var jaunt = preload("res://audio/dumbassFlute.mp3")
+var jaunt = preload("res://audio/VictoryJaunt.ogg")
 
 #OnReady
 @onready var textBoxLabel = $CenterContainer/TextBox/MarginContainer/Label
@@ -231,7 +231,7 @@ func roundOver(winner):
 		scoreboard()
 		roundNumber += 1
 		await $SoundEffects.finished
-		musicManager(wardrums)
+		musicManager(jaunt)
 		await readyUpGamepad()
 		richTextBox.visible = false
 		richTextBox.clearScores()
