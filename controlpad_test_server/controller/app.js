@@ -6,6 +6,14 @@ export const DEBUG = true;
 
 var STATE = "none";
 var COLOR = "#eeeeee";
+export var EQUIPMENT = {
+    arrow: "Arrow_I",
+    bow: "Bow_I",
+    armor: "None",
+    new_arrow: "Arrow_V",
+    new_bow: "Bow_V",
+    new_armor: "Armor_IV",
+};
 
 let upgradePoints = 2;
 
@@ -34,6 +42,7 @@ function clearElements() {
 function layoutElements(viewWidth, viewHeight) {
     if (STATE == "none") {
         document.getElementById("wait-text").style.display = "block";
+        //layoutUpgrades();
     } else if (STATE == "joining") {
         layoutMovePad();
         layoutBowPad();

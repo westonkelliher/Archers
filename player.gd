@@ -16,6 +16,24 @@ var unspawned : bool = false
 var state = "playing"
 var upgradePoints = 0
 
+var equipment = {
+	'arrow_tier': 1,
+	'bow_tier': 1,
+	'armor_tier': 1,
+	'arrow': 'Arrow_I',
+	'bow': 'Bow_I',
+	'armor': 'None',
+}
+
+var equipment_upgrades = {
+	'arrow_tier': 2,
+	'bow_tier': 2,
+	'armor_tier': 2,
+	'arrow': 'Arrow_II',
+	'bow': 'Bow_II',
+	'armor': 'Armor_I',
+}
+
 var speedMultiplier = 15
 
 var arrowDamage = 20
@@ -41,6 +59,20 @@ var velocity_knock : Vector2 = Vector2.ZERO
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+
+
+func get_state_string():
+	var player_color = self.playerColor
+	var colorString = "#%x%x%xff" % [player_color.r*255, player_color.g*255, player_color.b*255]
+	var state_str = "state:" + self.state
+	if self.state == "playing":
+		state_str += ":" + colorString
+	elif self.state == "upgrading":
+		state_str += ":" + colorString + ":" + str(self.upgradePoints)
+		state_str +=  ":" + equipment["arrow"] + "," + equipment["bow"] + "," + equipment["armor"] 
+		state_str +=  ":" + equipment_upgrades["arrow"] + "," + equipment_upgrades["bow"] + "," + equipment_upgrades["armor"] 
+	return state_str
+
 
 func _ready():
 	$Body.modulate = playerColor

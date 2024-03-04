@@ -39,6 +39,61 @@ var jaunt = preload("res://audio/VictoryJaunt.ogg")
 @onready var richTextBox = $CenterContainer/RichTextBox
 
 
+## equipment ##
+var later_equip = '''
+var all_equipment = {
+	'arrows': {
+		1: ['Arrow_I'],
+		2: ['Arrow_II', 'Ice_Arrow_I', 'Heavy_Arrow_I'],
+		3: ['Arrow_III', 'Ice_Arrow_II', 'Heavy_Arrow_II'],
+		4: ['Arrow_IV', 'Heavy_Arrow_III'],
+		5: ['Arrow_V', 'Ice_Arrow_III'],
+		6: ['Ice_Arrow_IV', 'Heavy_Arrow_IV'],
+	},
+	'bows': {
+		1: ['Bow_I'],
+		2: ['Bow_II', 'Short_Bow_I', 'Long_Bow_I'],
+		3: ['Bow_III', 'Short_Bow_II', 'Long_Bow_II'],
+		4: ['Bow_IV', 'Long_Bow_III'],
+		5: ['Bow_V', 'Short_Bow_III'],
+		6: ['Short_Bow_IV', 'Long_Bow_IV'],
+	},
+	'armors': {
+		1: ['None'],
+		2: ['Light_Armor_I', 'Medium_Armor_I'],
+		3: ['Heavy_Armor_I', 'Medium_Armor_II'],
+		4: ['Light_Armor_II', 'Heavy_Armor_II', 'Medium_Armor_III'],
+		5: ['Armor_V', 'Ice_Armor_III'],
+		6: ['Ice_Armor_IV', 'Heavy_Armor_IV'],
+	},
+}
+'''
+
+var all_equipment = {
+	'arrows': {
+		1: ['Arrow_I'],
+		2: ['Arrow_II'],
+		3: ['Arrow_III'],
+		4: ['Arrow_IV'],
+		5: ['Arrow_V'],
+	},
+	'bows': {
+		1: ['Bow_I'],
+		2: ['Bow_II'],
+		3: ['Bow_III'],
+		4: ['Bow_IV'],
+		5: ['Bow_V'],
+	},
+	'armors': {
+		1: ['None'],
+		2: ['Armor_I'],
+		3: ['Armor_II'],
+		4: ['Armor_III'],
+		5: ['Armor_IV'],
+	},
+}
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
@@ -58,6 +113,7 @@ func _process(delta):
 	pass
 
 func send_state_message(player):
+	var msg = player.get_state_string()
 	var player_color = player.playerColor
 	var colorString = "#%x%x%xff" % [player_color.r*255, player_color.g*255, player_color.b*255]
 	var state_str = "state:" + player.state
@@ -67,6 +123,12 @@ func send_state_message(player):
 		state_str += ":" + colorString + ":" + str(player.upgradePoints)
 	#
 	$Controlpads.send_message(player.playerID, state_str)
+
+
+func send_all_states():
+	for player in players:
+		send_state_message(players[player])
+
 
 func _on_game_nite_controlpads_message_received(client, message):
 	if message == "state-request":
@@ -254,7 +316,10 @@ func roundOver(winner):
 		await readyUpGamepad()
 		richTextBox.visible = false
 		richTextBox.clearScores()
-		msgToAll("clear:")
+		for player in players:
+			players[player].state = "playing"
+			players[player].upgradePoints = 0
+		send_all_states()
 		roundInit()
 	pass
 
@@ -330,10 +395,6 @@ func gameOver():
 func universalControl(state):
 	for player in players:
 		players[player].controllable = state
-
-func msgToAll(msg):
-	for player in players:
-		$Controlpads.send_message(players[player].playerID, msg)
 
 func clearJunk():
 	for child in get_children():
