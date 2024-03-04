@@ -17,6 +17,8 @@ inherit_velocity_ratio = 1.0
 spread = 180.0
 initial_velocity_min = 334.87
 initial_velocity_max = 334.87
+angular_velocity_min = -310.25
+angular_velocity_max = 310.24
 gravity = Vector3(0, 0, 0)
 damping_min = 89.1
 damping_max = 94.708
@@ -25,10 +27,12 @@ alpha_curve = SubResource("CurveTexture_hhwvi")
 
 [node name="BarrelExplosion" type="GPUParticles2D"]
 scale = Vector2(4.455, 4.455)
+emitting = false
 amount = 10
 process_material = SubResource("ParticleProcessMaterial_d0b06")
 texture = ExtResource("1_ea0e4")
 lifetime = 2.0
+one_shot = true
 speed_scale = 2.5
 explosiveness = 1.0
 trail_lifetime = 0.39

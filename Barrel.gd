@@ -1,6 +1,7 @@
 extends StaticBody2D
 var hitsTaken = 0
 @export var hitLimit = 0
+var barrel_explosion = preload("res://barrel_explosion.tscn")
 
 func _ready():
 	#var offset = 20
@@ -76,3 +77,8 @@ func spawn_item(item_scene):
 func clean():
 	queue_free()
 
+func explode():
+	var explosion = barrel_explosion.instantiate()
+	explosion.global_position = self.global_position
+	explosion.emitting = true
+	Autoloader.mainScene.add_child(explosion)
