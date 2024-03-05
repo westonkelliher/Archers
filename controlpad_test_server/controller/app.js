@@ -10,12 +10,12 @@ export var EQUIPMENT = {
     arrow: "Arrow_I",
     bow: "Bow_I",
     armor: "None",
-    new_arrow: "Arrow_V",
+    new_arrow: "Arrow_II",
     new_bow: "Bow_V",
     new_armor: "Armor_IV",
 };
 
-let upgradePoints = 2;
+export var UP_POINTS = 2;
 
 document.addEventListener("viewport-change", (event) => {
     clearElements();
@@ -26,7 +26,7 @@ document.addEventListener("viewport-change", (event) => {
     layoutElements(event.detail.viewWidth, event.detail.viewHeight);
 });
 
-function clearElements() {
+export function clearElements() {
     document.getElementById("turn-text").style.display = "none";
     document.getElementById("wait-text").style.display = "none";
     document.getElementById("movePad").style.display = "none";
@@ -42,7 +42,7 @@ function clearElements() {
 function layoutElements(viewWidth, viewHeight) {
     if (STATE == "none") {
         document.getElementById("wait-text").style.display = "block";
-        //layoutUpgrades();
+        //layoutUpgrades(); //
     } else if (STATE == "joining") {
         layoutMovePad();
         layoutBowPad();
@@ -58,6 +58,18 @@ function layoutElements(viewWidth, viewHeight) {
         console.log("Warning bad state");
     }
         
+}
+
+
+function update_equipment(old_e, new_e) {
+    var old_parts = old_e.split(",");
+    EQUIPMENT.arrow = old_parts[0];
+    EQUIPMENT.bow = old_parts[1];
+    EQUIPMENT.armor = old_parts[2];
+    var new_parts = new_e.split(",");
+    EQUIPMENT.new_arrow = new_parts[0];
+    EQUIPMENT.new_bow = new_parts[1];
+    EQUIPMENT.new_armor = new_parts[2];
 }
 
                           
@@ -87,12 +99,15 @@ document.addEventListener("controlpad-message", (event) => {
     } else if (parts[1] === "upgrading") {
         STATE = "upgrading";
         COLOR = parts[2];
+        UP_POINTS = parts[3];
+        update_equipment(parts[4], parts[5]);
         clearElements();
         layoutElements();
     } else {
         console.log("TBD");
     }
-    
+
+/*    
     if (parts[0] === "upgrade") {
         // Display the upgrade message
         toggleUpgradePointsMessage(true);
@@ -108,121 +123,7 @@ document.addEventListener("controlpad-message", (event) => {
         // Set the background if the message is not "upgrade"
         document.getElementById("mainDi").style.background = msg;
     }
+*/
+
 });
 
-
-
-function addUpgradeButtons() {
-    const container = document.createElement('div');
-    container.style.position = 'fixed'; // Use fixed positioning
-    container.style.top = '15%'; // Center vertically
-    container.style.left = '50%'; // Center horizontally
-    container.style.transform = 'translate(-50%, -50%)'; // Adjust the exact center
-    container.style.display = 'flex'; // Use flexbox for alignment
-    container.style.gap = '20px'; // Gap between buttons
-
-    const buttonData = [
-        { name: 'Bow Upgrade', imageSrc: 'resources/bowUpgrade.png', msg: 'bow' },
-        { name: 'Arrow Upgrade', imageSrc: 'resources/arrowUpgrade.png', msg: 'arrow' },
-        { name: 'Ability Upgrade', imageSrc: 'resources/abilityUpgrade.png', msg: 'ability' }
-    ];
-
-    // Create and append buttons to the container
-    for (let i = 0; i < 3; i++) {
-        const button = document.createElement('button');
-        button.textContent = buttonData[i].name; // Set button text
-        button.style.border = '3px solid #000000';
-        button.style.width = '120px'; // Set width
-        button.style.height = '120px'; // Set height
-        button.style.borderRadius = '10px'; // Make corners rounded
-        // Create and append image element to the button
-        const img = document.createElement('img');
-        img.src = buttonData[i].imageSrc;
-        img.style.width = '60px'; // Set image width (adjust as needed)
-        img.style.height = '60px'; // Set image height (adjust as needed)
-        img.style.display = 'block'; // Ensure the image is block-level
-        img.style.margin = 'auto'; // Center the image within the button
-        button.appendChild(img);
-
-        // Add event listener to button
-        button.addEventListener('click', function() {
-            // Handle button click
-            handleButtonClick(buttonData[i]);
-        });
-
-        container.appendChild(button); // Add button to container
-    }
-
-    // Append the container to the body of the document
-    document.body.appendChild(container);
-}
-
-// Function to handle button click
-function handleButtonClick(buttonData) {
-    // Check if there are enough upgrade points
-    if (upgradePoints > 0) {
-        // Decrease the number of upgrade points
-        upgradePoints--;
-        // Update the message displaying the number of upgrade points
-        updateUpgradePointsMessage();
-        // Log the upgrade action
-        console.log(`upgrade: ${buttonData.msg}`);
-        // Send the upgrade action
-        send_controlpad_message(`upgrade:${buttonData.msg}`);
-        // Check if upgrade points are exhausted
-        if (upgradePoints === 0) {
-            // Disable and hide the buttons
-            toggleUpgradeButtons(false);
-            console.log(`ready:`);
-            send_controlpad_message(`ready:`);
-        }
-    }
-}
-
-function toggleUpgradeButtons(enabled) {
-    const buttons = document.querySelectorAll('button');
-
-    buttons.forEach(button => {
-        if (enabled) {
-            button.removeAttribute('disabled');
-            button.style.display = 'block';
-        } else {
-            button.setAttribute('disabled', 'disabled');
-            button.style.display = 'none'; // Hide the button
-        }
-    });
-}
-
-function addUpgradePointsMessage() {
-    const messageContainer = document.createElement('div');
-    messageContainer.id = 'upgradePointsMessage';
-    messageContainer.style.position = 'fixed';
-    messageContainer.style.top = '50%';
-    messageContainer.style.left = '50%';
-    messageContainer.style.transform = 'translate(-50%, -50%)';
-    messageContainer.style.fontSize = '20px'; // Adjust the font size as needed
-    messageContainer.style.margin = '10px'; // Adjust the margins as needed
-    document.body.appendChild(messageContainer);
-}
-
-function updateUpgradePointsMessage() {
-    const message = document.getElementById('upgradePointsMessage');
-    message.innerHTML = `Spend upgrade points!<br>You have ${upgradePoints} points.`;
-}
-
-function toggleUpgradePointsMessage(visible) {
-    const message = document.getElementById('upgradePointsMessage');
-    if (visible) {
-        message.style.display = 'block';
-    } else {
-        message.style.display = 'none';
-    }
-}
-
-
-//console.log("sanity");
-addUpgradeButtons();
-toggleUpgradeButtons(false);
-addUpgradePointsMessage();
-updateUpgradePointsMessage();
-toggleUpgradePointsMessage(false);

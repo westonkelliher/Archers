@@ -1,8 +1,6 @@
 extends CharacterBody2D
 class_name Player
 
-var maxHealth = 100
-var currentHealth = maxHealth
 var playerID = null
 var playerColor = null
 var playerName = "Player"
@@ -16,6 +14,59 @@ var unspawned : bool = false
 var state = "playing"
 var upgradePoints = 0
 
+## equipment ##
+var later_equip = '''
+var all_equipment = {
+	'arrows': {
+		1: ['Arrow_I'],
+		2: ['Arrow_II', 'Ice_Arrow_I', 'Heavy_Arrow_I'],
+		3: ['Arrow_III', 'Ice_Arrow_II', 'Heavy_Arrow_II'],
+		4: ['Arrow_IV', 'Heavy_Arrow_III'],
+		5: ['Arrow_V', 'Ice_Arrow_III'],
+		6: ['Ice_Arrow_IV', 'Heavy_Arrow_IV'],
+	},
+	'bows': {
+		1: ['Bow_I'],
+		2: ['Bow_II', 'Short_Bow_I', 'Long_Bow_I'],
+		3: ['Bow_III', 'Short_Bow_II', 'Long_Bow_II'],
+		4: ['Bow_IV', 'Long_Bow_III'],
+		5: ['Bow_V', 'Short_Bow_III'],
+		6: ['Short_Bow_IV', 'Long_Bow_IV'],
+	},
+	'armors': {
+		1: ['None'],
+		2: ['Light_Armor_I', 'Medium_Armor_I'],
+		3: ['Heavy_Armor_I', 'Medium_Armor_II'],
+		4: ['Light_Armor_II', 'Heavy_Armor_II', 'Medium_Armor_III'],
+		5: ['Armor_V', 'Ice_Armor_III'],
+		6: ['Ice_Armor_IV', 'Heavy_Armor_IV'],
+	},
+}
+'''
+
+var all_equipment = {
+	'arrows': {
+		1: ['Arrow_I'],
+		2: ['Arrow_II'],
+		3: ['Arrow_III'],
+		4: ['Arrow_IV'],
+		5: ['Arrow_V'],
+	},
+	'bows': {
+		1: ['Bow_I'],
+		2: ['Bow_II'],
+		3: ['Bow_III'],
+		4: ['Bow_IV'],
+		5: ['Bow_V'],
+	},
+	'armors': {
+		1: ['None'],
+		2: ['Armor_I'],
+		3: ['Armor_II'],
+		4: ['Armor_III'],
+		5: ['Armor_IV'],
+	},
+}
 var equipment = {
 	'arrow_tier': 1,
 	'bow_tier': 1,
@@ -71,6 +122,7 @@ func get_state_string():
 		state_str += ":" + colorString + ":" + str(self.upgradePoints)
 		state_str +=  ":" + equipment["arrow"] + "," + equipment["bow"] + "," + equipment["armor"] 
 		state_str +=  ":" + equipment_upgrades["arrow"] + "," + equipment_upgrades["bow"] + "," + equipment_upgrades["armor"] 
+	print(state_str)
 	return state_str
 
 
@@ -135,7 +187,13 @@ func handle_controlpad_input(message: String):
 			notTaught()
 	
 	elif parts[0] == "upgrade":
-		upgradeHandler(parts[1])
+		if self.upgradePoints > 0:
+			self.upgradePoints -= 1
+			upgradeHandler(parts[1])
+		if self.upgradePoints <= 0:
+			self.upgradePoints = 0
+			self.state = "playing"
+		
 	
 	elif parts[0] == "ready":
 		readyUp = true
@@ -149,13 +207,42 @@ func handle_controlpad_input(message: String):
 
 func upgradeHandler(upgrade):
 	if upgrade == "bow":
-		$Bow.draw_time *= 0.5
+		if equipment['bow_tier'] >= 5:
+			return;
+		$Bow.draw_time *= 0.65
 		$Bow.charge_time *= 0.75
+		equipment['bow_tier'] = equipment_upgrades['bow_tier']
+		equipment['bow'] = equipment_upgrades['bow']
+		if equipment['bow_tier'] < 5:
+			var new_tier = equipment_upgrades['bow_tier']+1
+			equipment_upgrades['bow_tier'] = new_tier
+			equipment_upgrades['bow'] = all_equipment['bows'][new_tier][0] # TODO: choose randomly
+			
 	elif upgrade == "arrow":
-		arrowDamage += arrowDamage*.2 + 10
-	elif upgrade == "ability":
-		speedMultiplier += speedMultiplier*.15
+		if equipment['arrow_tier'] >= 5:
+			return;
+		arrowDamage += arrowDamage*.2 + 10	
+		equipment['arrow_tier'] = equipment_upgrades['arrow_tier']
+		equipment['arrow'] = equipment_upgrades['arrow']
+		if equipment['arrow_tier'] < 5:
+			var new_tier = equipment_upgrades['arrow_tier']+1
+			equipment_upgrades['arrow_tier'] = new_tier
+			equipment_upgrades['arrow'] = all_equipment['arrows'][new_tier][0] # TODO: choose randomly
 
+	elif upgrade == "armor":
+		if equipment['armor_tier'] >= 5:
+			return;
+		speedMultiplier += speedMultiplier*.07
+		$Healthbar.max_value += int($Healthbar.max_value*0.02)*5 + 5
+		$Healthbar/Damagebar.max_value = $Healthbar.max_value
+		equipment['armor_tier'] = equipment_upgrades['armor_tier']
+		equipment['armor'] = equipment_upgrades['armor']
+		if equipment['armor_tier'] < 5:
+			var new_tier = equipment_upgrades['armor_tier']+1
+			equipment_upgrades['armor_tier'] = new_tier
+			equipment_upgrades['armor'] = all_equipment['armors'][new_tier][0] # TODO: choose randomly
+
+			
 func notTaught():
 	if $Bow.charge_amount > 0 and controllable:
 		emit_signal("bow_shot", self, $Bow.get_power())
@@ -246,8 +333,8 @@ func deathExplosion():
 	pass
 	
 func restoreAll():
-	$Healthbar.value = 100
-	$Healthbar/Damagebar.value = 100
+	$Healthbar.value = $Healthbar.max_value
+	$Healthbar/Damagebar.value = $Healthbar/Damagebar.max_value
 	isDead = false
 	readyUp = false
 	gameScore = 0
@@ -257,6 +344,10 @@ func resetUpgrades():
 	speedMultiplier = 15
 	$Bow.draw_time = .5
 	$Bow.charge_time = 4
+	$Healthbar.max_value = 100
+	$Healthbar/Damagebar.max_value = 100
+	$Healthbar.value = 100
+	$Healthbar/Damagebar.value = 100
 
 func winner():
 	$RoyalCrown.visible = true

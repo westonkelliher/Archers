@@ -1,5 +1,5 @@
 import { send_controlpad_message } from "./controlpad.js";
-import { EQUIPMENT } from "./app.js";
+import { EQUIPMENT, clearElements } from "./app.js";
 ////////////////////////////// Upgrades //////////////////////////////
 
 const BORDER = "0px solid #111111";
@@ -23,7 +23,7 @@ export function layoutUpgrades() {
     upDiv1.style.top = "2%";
     upDiv1.style.left = "1%";
     //
-    populateUpDiv(upDiv1, EQUIPMENT.arrow, EQUIPMENT.new_arrow);
+    populateUpDiv(upDiv1, "arrow", EQUIPMENT.arrow, EQUIPMENT.new_arrow);
     
     //// Arrow Upgrade ////
     var upDiv2 = document.getElementById("up2");
@@ -31,18 +31,18 @@ export function layoutUpgrades() {
     upDiv2.style.left = "50%";
     upDiv2.style.transform = "translate(-50%, 0%)";
     //
-    populateUpDiv(upDiv2, EQUIPMENT.bow, EQUIPMENT.new_bow);
+    populateUpDiv(upDiv2, "bow", EQUIPMENT.bow, EQUIPMENT.new_bow);
 
     //// Armor Upgrade ////
     var upDiv3 = document.getElementById("up3");
     upDiv3.style.top = "2%";
     upDiv3.style.right = "1%";
     //
-    populateUpDiv(upDiv3, EQUIPMENT.armor, EQUIPMENT.new_armor);
+    populateUpDiv(upDiv3, "armor", EQUIPMENT.armor, EQUIPMENT.new_armor);
 }
 
 
-function populateUpDiv(upDiv, old_equip_name, new_equip_name) {
+function populateUpDiv(upDiv, type, old_equip_name, new_equip_name) {
     // remove any old children
     while (upDiv.firstChild) {
         upDiv.removeChild(upDiv.firstChild);
@@ -102,6 +102,12 @@ function populateUpDiv(upDiv, old_equip_name, new_equip_name) {
     new_equip.style.transform = "translate(-50%, -50%)";
     new_equip.style.width = "26vh";
     upDiv.appendChild(new_equip);
+    ////
+    upDiv.onclick = () => {
+        send_controlpad_message("upgrade:" + type);
+        clearElements();
+        send_controlpad_message("state-request");
+    };
 }
 
 
