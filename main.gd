@@ -168,7 +168,7 @@ var names = [
 	"Samwell", "Brienne", "Davos", "Sandor", "Gregor",
 	"Varys", "Bronn", "Missandei", "Gendry", "Rickon",
 	"Catelyn", "Eddard", "Robert", "Rhaeger", "Lyanna",
-	"Tywin", "Frodo", "Podrick", "Petyr", "Joffery",
+	"Tywin", "Frodo", "Podrick", "Petyr", "Joffrey",
 	"Melisandre", "Ygritte", "Hot Pie", "Margaery",
 	"Stannis", "Ramsay", "Myrcella", "Shae", "Yara",
 	"Gilly", "Olenna", "Oberyn", "HODOR"
