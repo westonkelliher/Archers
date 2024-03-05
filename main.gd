@@ -396,7 +396,7 @@ func barrelLogic():
 	var barrelPos = Vector2()
 	#barrelPos.x = avgPos.x + vpSize.x*randf_range(.1,-.1)
 	#barrelPos.y = avgPos.y + vpSize.y*randf_range(.1,-.1)
-	
+	randomize()
 	barrelPos.x = vpSize.x*randf_range(.9,.1)
 	barrelPos.y = vpSize.y*randf_range(.9,.1)
 	var barrel = barrel_scene.instantiate()
@@ -407,6 +407,7 @@ func barrelLogic():
 
 func spawnDummy(amount):
 	for i in range(amount):
+		randomize()
 		var dummyPos = Vector2()
 		dummyPos.x = vpSize.x*randf_range(.8,.2)
 		dummyPos.y = vpSize.y*randf_range(.8,.2)
