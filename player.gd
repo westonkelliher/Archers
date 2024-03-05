@@ -196,6 +196,7 @@ func handle_controlpad_input(message: String):
 		if self.upgradePoints <= 0:
 			self.upgradePoints = 0
 			self.state = "playing"
+			playerReady()
 		
 	
 	elif parts[0] == "ready":
@@ -207,6 +208,12 @@ func handle_controlpad_input(message: String):
 	elif parts[0] == "name":
 		playerName = parts[1]
 		$Nametag/Label.text = " " + playerName + " "
+
+func playerReady():
+	readyUp = true
+	controllable = true
+	if isDead:
+		self.global_position = savedPosition
 
 func upgradeHandler(upgrade):
 	if upgrade == "bow":
