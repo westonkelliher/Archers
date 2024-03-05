@@ -16,11 +16,12 @@ var arrow_scene = preload("res://arrow.tscn")
 var sfx_shootBow = preload("res://audio/shootBow.wav")
 var sfx_loadBow = preload("res://audio/bowLoad.mp3")
 
+var arrow_graphic_name = "Arrow_I"
+
 
 ################################################################################
 func _ready():
 	$Arrow.visible = false
-	pass
 
 func _process(delta):
 	if !is_pulling:
@@ -33,6 +34,19 @@ func _process(delta):
 
 
 ################################################################################
+
+func set_graphic(graphic_name):
+	$Sprite2D.texture = load("res://images/" + graphic_name + ".png")
+
+func set_arrow_graphic(graphic_name):
+	arrow_graphic_name = graphic_name
+	$Arrow.texture = load("res://images/" + graphic_name + ".png")
+
+func set_armor_graphic(graphic_name):
+	arrow_graphic_name = graphic_name
+	
+
+
 func pull_back(dead):
 	is_pulling = true
 	$Sprite2D.frame = 1

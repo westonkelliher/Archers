@@ -67,7 +67,7 @@ var all_equipment = {
 		5: ['Armor_IV'],
 	},
 }
-var equipment = {
+var _equipment = {
 	'arrow_tier': 1,
 	'bow_tier': 1,
 	'armor_tier': 1,
@@ -75,8 +75,9 @@ var equipment = {
 	'bow': 'Bow_I',
 	'armor': 'None',
 }
+var equipment = _equipment.duplicate(true)
 
-var equipment_upgrades = {
+var _equipment_upgrades = {
 	'arrow_tier': 2,
 	'bow_tier': 2,
 	'armor_tier': 2,
@@ -84,6 +85,8 @@ var equipment_upgrades = {
 	'bow': 'Bow_II',
 	'armor': 'Armor_I',
 }
+var equipment_upgrades = _equipment_upgrades.duplicate(true)
+
 
 var speedMultiplier = 15
 
@@ -213,6 +216,7 @@ func upgradeHandler(upgrade):
 		$Bow.charge_time *= 0.75
 		equipment['bow_tier'] = equipment_upgrades['bow_tier']
 		equipment['bow'] = equipment_upgrades['bow']
+		$Bow.set_graphic(equipment['bow'])
 		if equipment['bow_tier'] < 5:
 			var new_tier = equipment_upgrades['bow_tier']+1
 			equipment_upgrades['bow_tier'] = new_tier
@@ -224,6 +228,7 @@ func upgradeHandler(upgrade):
 		arrowDamage += arrowDamage*.2 + 10	
 		equipment['arrow_tier'] = equipment_upgrades['arrow_tier']
 		equipment['arrow'] = equipment_upgrades['arrow']
+		$Bow.set_arrow_graphic(equipment['arrow'])
 		if equipment['arrow_tier'] < 5:
 			var new_tier = equipment_upgrades['arrow_tier']+1
 			equipment_upgrades['arrow_tier'] = new_tier
@@ -237,6 +242,7 @@ func upgradeHandler(upgrade):
 		$Healthbar/Damagebar.max_value = $Healthbar.max_value
 		equipment['armor_tier'] = equipment_upgrades['armor_tier']
 		equipment['armor'] = equipment_upgrades['armor']
+		$Armor.texture = load("res://images/" + equipment['armor'] + ".png")
 		if equipment['armor_tier'] < 5:
 			var new_tier = equipment_upgrades['armor_tier']+1
 			equipment_upgrades['armor_tier'] = new_tier
@@ -348,6 +354,11 @@ func resetUpgrades():
 	$Healthbar/Damagebar.max_value = 100
 	$Healthbar.value = 100
 	$Healthbar/Damagebar.value = 100
+	equipment = _equipment.duplicate(true)
+	equipment_upgrades = _equipment_upgrades.duplicate(true)
+	$Bow.set_graphic(equipment['bow'])
+	$Bow.set_arrow_graphic(equipment['arrow'])
+	$Armor.texture = load("res://images/None.png")
 
 func winner():
 	$RoyalCrown.visible = true
