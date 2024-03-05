@@ -6,6 +6,14 @@ export const DEBUG = true;
 
 var STATE = "none";
 var COLOR = "#eeeeee";
+export var EQUIPMENT = {
+    arrow: "Arrow_I",
+    bow: "Bow_I",
+    armor: "None",
+    new_arrow: "Arrow_V",
+    new_bow: "Bow_V",
+    new_armor: "Armor_IV",
+};
 
 let upgradePoints = 2;
 
@@ -34,6 +42,7 @@ function clearElements() {
 function layoutElements(viewWidth, viewHeight) {
     if (STATE == "none") {
         document.getElementById("wait-text").style.display = "block";
+        //layoutUpgrades();
     } else if (STATE == "joining") {
         layoutMovePad();
         layoutBowPad();
@@ -43,6 +52,7 @@ function layoutElements(viewWidth, viewHeight) {
         layoutBowPad();
         document.getElementById("mainDi").style.background = COLOR;
     } else if (STATE == "upgrading") {
+        console.log("abc");
         layoutUpgrades();
     } else {
         console.log("Warning bad state");
@@ -74,7 +84,11 @@ document.addEventListener("controlpad-message", (event) => {
         COLOR = parts[2];
         clearElements();
         layoutElements();
-        
+    } else if (parts[1] === "upgrading") {
+        STATE = "upgrading";
+        COLOR = parts[2];
+        clearElements();
+        layoutElements();
     } else {
         console.log("TBD");
     }
