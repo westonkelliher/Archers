@@ -325,8 +325,8 @@ func respawn():
 	invulnerable = false
 
 func refresh():
-	$Healthbar.value = 100
-	$Healthbar/Damagebar.value = 100
+	$Healthbar.value = $Healthbar.max_value
+	$Healthbar/Damagebar.value = $Healthbar/Damagebar.max_value
 	$RoyalCrown.visible = false
 	isDead = false
 	readyUp = false
