@@ -232,7 +232,7 @@ func upgradeHandler(upgrade):
 	elif upgrade == "arrow":
 		if equipment['arrow_tier'] >= 5:
 			return;
-		arrowDamage += arrowDamage*.2 + 10	
+		arrowDamage += arrowDamage*.2 + 5
 		equipment['arrow_tier'] = equipment_upgrades['arrow_tier']
 		equipment['arrow'] = equipment_upgrades['arrow']
 		$Bow.set_arrow_graphic(equipment['arrow'])
