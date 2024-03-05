@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dcbqnl0lw5qdg"]
+[gd_scene load_steps=17 format=3 uid="uid://dcbqnl0lw5qdg"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_4wnrd"]
 [ext_resource type="Texture2D" uid="uid://bnnnkorjrefev" path="res://images/Body.png" id="2_2uug1"]
@@ -8,6 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="6_4eyak"]
 [ext_resource type="AudioStream" uid="uid://citxyku6u5lwp" path="res://audio/gulp 1.wav" id="7_a2ssf"]
 [ext_resource type="PackedScene" uid="uid://fvj6smd1lsrc" path="res://eyes.tscn" id="7_gm42u"]
+[ext_resource type="FontFile" uid="uid://c71iurigqobs1" path="res://fonts/mainFont.ttf" id="9_12530"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1gr7i"]
 radius = 21.7307
@@ -119,6 +120,33 @@ eyes_radius = 15.0
 
 [node name="DamageNumberOrigin" type="Marker2D" parent="."]
 position = Vector2(0, -53)
+
+[node name="Nametag" type="MarginContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.5
+offset_top = -75.0
+offset_right = 19.5
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+
+[node name="ColorRect" type="ColorRect" parent="Nametag"]
+layout_mode = 2
+color = Color(0.113725, 0.113725, 0.113725, 0.403922)
+
+[node name="Label" type="Label" parent="Nametag"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("9_12530")
+theme_override_font_sizes/font_size = 20
+text = "Luke"
+horizontal_alignment = 1
 
 [connection signal="timeout" from="Healthbar/Timer" to="." method="_on_timer_timeout"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

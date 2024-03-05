@@ -42,6 +42,8 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func _ready():
 	$Body.modulate = playerColor
+	$Nametag/Label.text = playerName
+	$Nametag/Label.add_theme_color_override("font_color", playerColor)
 	pass # Replace with function body.
 
 func _process(delta):
@@ -145,13 +147,17 @@ func playerDamaged(damage):
 		playerDeath()
 
 func playerGainHealth(health, potion = false):
+	var amountHealed = health
+	var originalHealth = $Healthbar.value
 	$Healthbar.value += health
 	$Healthbar/Damagebar.value += health
-	if $Healthbar.value > 100:
+	if $Healthbar.value == 100:
 		$Healthbar.value = 100
 		$Healthbar/Damagebar.value = 100
+		amountHealed = 100 - originalHealth
 	if potion:
 		$DrinkSound.play()
+	Autoloader.damageNumbers(amountHealed, $DamageNumberOrigin.global_position, true)
 
 
 func hitstun(stun):

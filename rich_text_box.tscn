@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://csl01cssqlrtu" path="res://images/textbox.png" id="1_cv5rh"]
 [ext_resource type="Script" path="res://rich_text_box.gd" id="1_wiw5q"]
-[ext_resource type="FontFile" uid="uid://bbuyjmeyyk5i" path="res://fonts/Vimland-9YmW2.otf" id="3_lmoqs"]
+[ext_resource type="FontFile" uid="uid://c71iurigqobs1" path="res://fonts/mainFont.ttf" id="3_rk2m8"]
 
 [node name="RichTextBox" type="MarginContainer"]
 z_index = 10
@@ -34,8 +34,8 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
-theme_override_fonts/normal_font = ExtResource("3_lmoqs")
-theme_override_font_sizes/normal_font_size = 100
+theme_override_fonts/normal_font = ExtResource("3_rk2m8")
+theme_override_font_sizes/normal_font_size = 90
 bbcode_enabled = true
 text = "[center][color=red]Player[/color] Wins the Game!"
 fit_content = true

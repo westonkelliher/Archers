@@ -9,8 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://ykft2u2h50cu" path="res://images/title_fiddled.png" id="7_y6dca"]
 [ext_resource type="Texture2D" uid="uid://24xckh2d8vvb" path="res://images/newButtonblur.png" id="8_dknrm"]
 [ext_resource type="PackedScene" uid="uid://bfdvytebnnfwm" path="res://text_box.tscn" id="8_sqdn3"]
+[ext_resource type="FontFile" uid="uid://c71iurigqobs1" path="res://fonts/mainFont.ttf" id="9_2y2j5"]
 [ext_resource type="PackedScene" uid="uid://sh5kf42pn3y6" path="res://rich_text_box.tscn" id="9_bqcoj"]
-[ext_resource type="FontFile" uid="uid://bbuyjmeyyk5i" path="res://fonts/Vimland-9YmW2.otf" id="9_dbjdc"]
 [ext_resource type="PackedScene" uid="uid://d4br2o1l1s0x2" path="res://dummy.tscn" id="10_sg6jl"]
 [ext_resource type="Texture2D" uid="uid://dprcwbogpjpnr" path="res://images/walltile 1.png" id="11_iiiut"]
 [ext_resource type="PackedScene" uid="uid://ch2gfgh2bevr7" path="res://barrel.tscn" id="12_l5emi"]
@@ -147,7 +147,7 @@ offset_bottom = 48.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_outline_size = 5
-theme_override_fonts/normal_font = ExtResource("4_bcyw0")
+theme_override_fonts/normal_font = ExtResource("9_2y2j5")
 theme_override_font_sizes/normal_font_size = 40
 bbcode_enabled = true
 text = "[center]Start Multiplayer [center]()"
@@ -168,10 +168,11 @@ grow_vertical = 2
 
 [node name="MultiPLabel" type="Label" parent="MenuElements/MultiplayerButton/CenterContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.568627, 0.568627, 0.568627, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_outline_size = 5
-theme_override_fonts/font = ExtResource("9_dbjdc")
+theme_override_fonts/font = ExtResource("9_2y2j5")
 theme_override_font_sizes/font_size = 40
 text = "Shoot to Start Game"
 horizontal_alignment = 1

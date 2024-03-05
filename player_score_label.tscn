@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bo7p4kolfwra5"]
 
 [ext_resource type="Script" path="res://player_score_label.gd" id="1_eyssk"]
-[ext_resource type="FontFile" uid="uid://bbuyjmeyyk5i" path="res://fonts/Vimland-9YmW2.otf" id="2_oprav"]
+[ext_resource type="FontFile" uid="uid://c71iurigqobs1" path="res://fonts/mainFont.ttf" id="2_mr80c"]
 
 [node name="PlayerScoreLabel" type="MarginContainer"]
 script = ExtResource("1_eyssk")
@@ -13,9 +13,8 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
-theme_override_fonts/font = ExtResource("2_oprav")
-theme_override_font_sizes/font_size = 100
-horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("2_mr80c")
+theme_override_font_sizes/font_size = 90
 vertical_alignment = 1
 
 [node name="Spacer" type="Control" parent="HBoxContainer2"]
@@ -27,7 +26,6 @@ size_flags_vertical = 4
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
-theme_override_fonts/font = ExtResource("2_oprav")
-theme_override_font_sizes/font_size = 100
-horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("2_mr80c")
+theme_override_font_sizes/font_size = 90
 vertical_alignment = 1
