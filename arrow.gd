@@ -9,6 +9,14 @@ var damage = 20
 
 signal hit()
 
+
+
+
+
+func set_graphic(graphic_name):
+	$Sprite2D.texture = load("res://images/" + graphic_name + ".png")
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	

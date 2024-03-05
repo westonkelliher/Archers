@@ -144,6 +144,7 @@ func _on_player_bow_shot(player, power):
 	velocity = velocity.rotated(bow.rotation)
 	velocity += player.velocity
 	var arrow = arrow_scene.instantiate()
+	arrow.set_graphic(bow.arrow_graphic_name)
 	arrow.global_position = bow.global_position + Vector2(29,0).rotated(bow.rotation)
 	arrow.linear_velocity = velocity
 	arrow.rotation = bow.rotation

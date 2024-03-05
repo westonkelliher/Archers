@@ -41,6 +41,7 @@ func set_graphic(graphic_name):
 func set_arrow_graphic(graphic_name):
 	arrow_graphic_name = graphic_name
 	$Arrow.texture = load("res://images/" + graphic_name + ".png")
+	
 
 func set_armor_graphic(graphic_name):
 	arrow_graphic_name = graphic_name
