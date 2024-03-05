@@ -76,8 +76,8 @@ func get_state_string():
 
 func _ready():
 	$Body.modulate = playerColor
-	$Nametag/Label.text = playerName
-	$Nametag/Label.add_theme_color_override("font_color", playerColor)
+	$Nametag/Label.text = " " + playerName + " "
+	#$Nametag/Label.add_theme_color_override("font_color", playerColor)
 	pass # Replace with function body.
 
 func _process(delta):
@@ -145,6 +145,7 @@ func handle_controlpad_input(message: String):
 	
 	elif parts[0] == "name":
 		playerName = parts[1]
+		$Nametag/Label.text = " " + playerName + " "
 
 func upgradeHandler(upgrade):
 	if upgrade == "bow":

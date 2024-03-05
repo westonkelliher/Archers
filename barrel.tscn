@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://ch2gfgh2bevr7"]
 
 [ext_resource type="Script" path="res://Barrel.gd" id="1_rn4k6"]
-[ext_resource type="Texture2D" uid="uid://dctnskdwb15cs" path="res://images/barrel.png" id="2_6k7jr"]
+[ext_resource type="Texture2D" uid="uid://chkln84y842q7" path="res://images/barrelLight.png" id="2_5qp1y"]
 [ext_resource type="Texture2D" uid="uid://ck25gh4sxmqyy" path="res://images/barrel shadow.png" id="3_5gxh0"]
 [ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="3_i51mg"]
 
@@ -22,9 +22,10 @@ script = ExtResource("1_rn4k6")
 [node name="BarrelSprite" type="Sprite2D" parent="."]
 texture_filter = 1
 scale = Vector2(0.07, 0.07)
-texture = ExtResource("2_6k7jr")
+texture = ExtResource("2_5qp1y")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(0, -2.33333)
 shape = SubResource("RectangleShape2D_dpgly")
 
@@ -33,6 +34,7 @@ collision_layer = 8
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+visible = false
 position = Vector2(0, -3.33333)
 shape = SubResource("CapsuleShape2D_xk2ek")
 
@@ -40,7 +42,7 @@ shape = SubResource("CapsuleShape2D_xk2ek")
 stream = ExtResource("3_i51mg")
 
 [node name="Shadow" type="Sprite2D" parent="."]
-z_index = -1
+z_index = -5
 scale = Vector2(0.07, 0.07)
 texture = ExtResource("3_5gxh0")
 

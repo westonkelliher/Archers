@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bp3o11s21hwfo"]
+[gd_scene load_steps=16 format=3 uid="uid://bp3o11s21hwfo"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_qydqk"]
 [ext_resource type="PackedScene" uid="uid://dfdnabg7x326v" path="res://courtyard.tscn" id="1_uhtla"]
@@ -13,7 +13,6 @@
 [ext_resource type="PackedScene" uid="uid://sh5kf42pn3y6" path="res://rich_text_box.tscn" id="9_bqcoj"]
 [ext_resource type="PackedScene" uid="uid://d4br2o1l1s0x2" path="res://dummy.tscn" id="10_sg6jl"]
 [ext_resource type="Texture2D" uid="uid://dprcwbogpjpnr" path="res://images/walltile 1.png" id="11_iiiut"]
-[ext_resource type="PackedScene" uid="uid://ch2gfgh2bevr7" path="res://barrel.tscn" id="12_l5emi"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j5xsk"]
 size = Vector2(594, 96)
@@ -208,9 +207,6 @@ stream = ExtResource("6_321b4")
 offset_right = 1920.0
 offset_bottom = 1080.0
 
-[node name="Dummy" parent="." instance=ExtResource("10_sg6jl")]
-position = Vector2(352, 800)
-
 [node name="Walls" type="Node2D" parent="."]
 visible = false
 scale = Vector2(0.063, 0.063)
@@ -241,8 +237,19 @@ offset_bottom = 17286.3
 texture = ExtResource("11_iiiut")
 stretch_mode = 1
 
-[node name="Barrel" parent="." instance=ExtResource("12_l5emi")]
-position = Vector2(440, 624)
+[node name="Dummies" type="Node2D" parent="."]
+
+[node name="Dummy" parent="Dummies" instance=ExtResource("10_sg6jl")]
+position = Vector2(256, 800)
+
+[node name="Dummy2" parent="Dummies" instance=ExtResource("10_sg6jl")]
+position = Vector2(1664, 800)
+
+[node name="Dummy3" parent="Dummies" instance=ExtResource("10_sg6jl")]
+position = Vector2(1664, 504)
+
+[node name="Dummy4" parent="Dummies" instance=ExtResource("10_sg6jl")]
+position = Vector2(257, 520)
 
 [connection signal="message_received" from="Controlpads" to="." method="_on_game_nite_controlpads_message_received"]
 [connection signal="body_entered" from="MenuElements/MultiplayerButton" to="." method="_on_multiplayer_button_body_entered"]

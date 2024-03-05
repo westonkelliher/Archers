@@ -4,6 +4,7 @@ var arrow_scene = preload("res://arrow.tscn")
 var player_scene = preload("res://player.tscn")
 var barrel_scene = preload("res://barrel.tscn")
 var text_box_scene = preload("res://text_box.tscn")
+var dummy_scene = preload("res://dummy.tscn")
 
 var players = {}
 var playersAll = {}
@@ -256,9 +257,12 @@ func winCheck():
 			roundOver(winningPlayer)
 			#$Controlpads.send_message(winningPlayer.playerID, "upgrade:2")
 
+@export var numDummy = 3
 func roundInit():
+	$Dummies.position = Vector2(-5000,-5000)
 	$MusicPlayer.stop()
 	clearJunk()
+	spawnDummy(numDummy)
 	universalControl(false)
 	pvpOn = true
 	placeEvenly()
@@ -279,6 +283,7 @@ func roundInit():
 	pass
 
 func roundOver(winner):
+	$Dummies.position = Vector2(0,0)
 	pvpOn = false
 	clearJunk()
 	$BarrelTimer.stop()
@@ -384,6 +389,7 @@ func gameOver():
 	readiedPlayers = []
 	bttnLabel.text = "Shoot to Start Game"
 	$MenuElements.position = Vector2(0,0)
+	$Dummies.position = Vector2(0,0)
 	for player in players:
 		players[player].restoreAll()
 		players[player].unspawned = true
@@ -457,6 +463,17 @@ func barrelLogic():
 	add_child(barrel)
 	numBarrels += 1
 	pass
+
+func spawnDummy(amount):
+	for i in range(amount):
+		var dummyPos = Vector2()
+		dummyPos.x = vpSize.x*randf_range(.8,.2)
+		dummyPos.y = vpSize.y*randf_range(.8,.2)
+		var dummy = dummy_scene.instantiate()
+		dummy.global_position = dummyPos
+		dummy.temp = true
+		add_child(dummy)
+	
 
 func musicManager(song):
 	$MusicPlayer.stream = song
