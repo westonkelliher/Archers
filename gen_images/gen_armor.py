@@ -103,7 +103,7 @@ def draw_basic(path_spec, color, highlight, name):
 
 def draw_doubled(path_spec, color, highlight, name):
     DWG = svgwrite.Drawing("armor.svg", size=('500px', '300px'))
-    sq_a = lambda p: squinch(p, 0.9, 1.1, 0, 20)
+    sq_a = lambda p: squinch(p, 0.7, 1.1, 30, 10)
     sq_b = lambda p: squinch(p, 1.25, 0.65, 0, -30)
     r_q_a = [right_flection(sq_a(p)) for p in path_spec]
     r_q_b = [right_flection(sq_b(p)) for p in path_spec]
@@ -116,13 +116,38 @@ def draw_doubled(path_spec, color, highlight, name):
     save_out(DWG, name)
 
     
+def draw_tripled(path_spec, color, highlight, name):
+    DWG = svgwrite.Drawing("armor.svg", size=('500px', '300px'))
+    sq_a = lambda p: squinch(p, 0.45, 1.3, 30, 50)
+    sq_b = lambda p: squinch(p, 0.75, 0.9, 20, 20)
+    sq_c = lambda p: squinch(p, 1.25, 0.5, 0, -30)
+    r_q_a = [right_flection(sq_a(p)) for p in path_spec]
+    r_q_b = [right_flection(sq_b(p)) for p in path_spec]
+    r_q_c = [right_flection(sq_c(p)) for p in path_spec]
+    l_q_a = [left_flection(sq_a(p)) for p in path_spec]
+    l_q_b = [left_flection(sq_b(p)) for p in path_spec]
+    l_q_c = [left_flection(sq_c(p)) for p in path_spec]
+    add_plate(DWG, r_q_a, color, highlight)
+    add_plate(DWG, r_q_b, color, highlight)
+    add_plate(DWG, r_q_c, color, highlight)
+    add_plate(DWG, l_q_a, color, highlight)
+    add_plate(DWG, l_q_b, color, highlight)
+    add_plate(DWG, l_q_c, color, highlight)
+    save_out(DWG, name)
+    
+    
 #### Spec ####
 C_LEATHER = 'rgb(160, 115, 55)'
 C_LEATHER_LIGHT = 'rgb(170, 125, 65)'
+C_LEATHER_DARK = 'rgb(130, 90, 45)'
 C_IRON = 'rgb(160, 160, 160)'
 C_IRON_LIGHT = 'rgb(200, 200, 200)'
+C_IRON_DARK = 'rgb(120, 120, 120)'
 C_CFIBER = 'rgb(60, 60, 60)'
 C_CFIBER_LIGHT = 'rgb(80, 80, 80)'
+C_CFIBER_DARK = 'rgb(30, 30, 30)'
+C_RED = 'rgb(45, 35, 35)'
+C_RED_LIGHT = 'rgb(120, 60, 60)'
 
 
 a_pinch = Vector2(-100, 0) 
@@ -144,20 +169,41 @@ draw_doubled(a_path_spec, C_IRON, C_IRON_LIGHT, 'Armor_III')
 draw_doubled(a_path_spec, C_CFIBER, C_CFIBER_LIGHT, 'Armor_IV')
 
 
-a_pinch = Vector2(-100, 0) 
-a_bumper = Vector2(90, 20)
-a_spike = Vector2(95, 70)
-a_notch = Vector2(0, 70)
-a_pinch_top_control = move_vector(a_pinch, -85, 115) 
-a_bumper_top_control = move_vector(a_bumper, -90, 120)
-a_pinch_bottom_control = move_vector(a_pinch, 15, 40)
-a_notch_side_control = move_vector(a_notch, -100, 25)
+b_pinch = Vector2(-100, -50) 
+b_bumper = Vector2(80, 0)
+b_spike = Vector2(140, 105)
+b_notch = Vector2(5, 90)
+b_pinch_top_control = move_vector(b_pinch, -10, 70) 
+b_bumper_top_control = move_vector(b_bumper, -150, 50)
+b_pinch_bottom_control = move_vector(b_pinch, 80, 70)
+b_notch_side_control = move_vector(b_notch, -160, 0)
 
-a_path_spec = [a_pinch, a_bumper, a_spike, a_notch,
-             a_pinch_top_control, a_bumper_top_control,
-             a_pinch_bottom_control, a_notch_side_control]
+b_path_spec = [b_pinch, b_bumper, b_spike, b_notch,
+             b_pinch_top_control, b_bumper_top_control,
+             b_pinch_bottom_control, b_notch_side_control]
     
-draw_basic(a_path_spec, C_LEATHER, C_LEATHER_LIGHT, 'Armor_I')
-draw_basic(a_path_spec, C_IRON, C_IRON_LIGHT, 'Armor_II')
-draw_doubled(a_path_spec, C_IRON, C_IRON_LIGHT, 'Armor_III')
-draw_doubled(a_path_spec, C_CFIBER, C_CFIBER_LIGHT, 'Armor_IV')
+draw_basic(b_path_spec, C_IRON, C_IRON_LIGHT, 'Heavy_Armor_I')
+draw_doubled(b_path_spec, C_IRON, C_IRON_LIGHT, 'Heavy_Armor_II')
+draw_tripled(b_path_spec, C_IRON, C_IRON_LIGHT, 'Heavy_Armor_III')
+draw_tripled(b_path_spec, C_CFIBER, C_CFIBER_LIGHT, 'Heavy_Armor_IV')
+draw_tripled(b_path_spec, C_RED, C_RED_LIGHT, 'Heavy_Armor_V')
+
+
+c_pinch = Vector2(90, -50) 
+c_bumper = Vector2(0, 60)
+c_spike = Vector2(-50, 70)
+c_notch = Vector2(-100, -50)
+c_pinch_top_control = move_vector(c_pinch, 150, 40) 
+c_bumper_top_control = move_vector(c_bumper, -60, 60)
+c_pinch_bottom_control = move_vector(c_pinch, -100, 40)
+c_notch_side_control = move_vector(c_notch, -80, 100)
+
+c_path_spec = [c_pinch, c_bumper, c_spike, c_notch,
+             c_pinch_top_control, c_bumper_top_control,
+             c_pinch_bottom_control, c_notch_side_control]
+    
+draw_basic(c_path_spec, C_LEATHER, C_LEATHER_DARK, 'Light_Armor_I')
+draw_basic(c_path_spec, C_IRON_LIGHT, C_IRON, 'Light_Armor_II')
+draw_doubled(c_path_spec, C_IRON_LIGHT, C_IRON, 'Light_Armor_III')
+draw_doubled(c_path_spec, C_CFIBER_LIGHT, C_CFIBER_DARK, 'Light_Armor_IV')
+draw_tripled(c_path_spec, C_RED_LIGHT, C_RED, 'Light_Armor_V')
