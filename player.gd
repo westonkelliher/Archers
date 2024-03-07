@@ -15,35 +15,6 @@ var state = "playing"
 var upgradePoints = 0
 
 ## equipment ##
-var later_equip = '''
-var all_equipment = {
-	'arrows': {
-		1: ['Arrow_I'],
-		2: ['Arrow_II', 'Ice_Arrow_I', 'Heavy_Arrow_I'],
-		3: ['Arrow_III', 'Ice_Arrow_II', 'Heavy_Arrow_II'],
-		4: ['Arrow_IV', 'Heavy_Arrow_III'],
-		5: ['Arrow_V', 'Ice_Arrow_III'],
-		6: ['Ice_Arrow_IV', 'Heavy_Arrow_IV'],
-	},
-	'bows': {
-		1: ['Bow_I'],
-		2: ['Bow_II', 'Short_Bow_I', 'Long_Bow_I'],
-		3: ['Bow_III', 'Short_Bow_II', 'Long_Bow_II'],
-		4: ['Bow_IV', 'Long_Bow_III'],
-		5: ['Bow_V', 'Short_Bow_III'],
-		6: ['Short_Bow_IV', 'Long_Bow_IV'],
-	},
-	'armors': {
-		1: ['None'],
-		2: ['Light_Armor_I', 'Medium_Armor_I'],
-		3: ['Heavy_Armor_I', 'Medium_Armor_II'],
-		4: ['Light_Armor_II', 'Heavy_Armor_II', 'Medium_Armor_III'],
-		5: ['Armor_V', 'Ice_Armor_III'],
-		6: ['Ice_Armor_IV', 'Heavy_Armor_IV'],
-	},
-}
-'''
-
 var all_equipment = {
 	'arrows': {
 		1: ['Arrow_I'],
