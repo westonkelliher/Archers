@@ -1,3 +1,4 @@
+import copy
 import svgwrite
 import cairosvg
 from PIL import Image, ImageFilter
@@ -28,7 +29,7 @@ class RecurveDef:
     def __init__(self, wing_len, wing_angle, bend_mag, bend_angle,
                  attach_depth, attach_mag, attach_angle, handle_len=30,
                  handle_dist=100, thickness=30, height=400, push=0, pull=0,
-                 staff_color=C_MAPLE, handle_color=C_GRAY, backstring=False):
+                 staff_color=C_MAPLE, handle_color=C_GRAY, backstring=True):
         self.wing_len = wing_len
         self.wing_angle = wing_angle
         self.bend_mag = bend_mag
@@ -164,6 +165,8 @@ def p_pushed_bow(b, p):
 
 def generate_spritesheet(bow_def, name):
     global DWG
+
+    ## Draw Spritesheet ##
     DWG = svgwrite.Drawing("bow.svg", size=('1800px', '600px'))
     bow_b = p_pushed_bow(bow_def, 30)
     bow_c = p_pushed_bow(bow_def, 55)
@@ -171,58 +174,77 @@ def generate_spritesheet(bow_def, name):
     draw_bow(bow_def, Vector2(100, 0))
     draw_bow(bow_b, Vector2(700, 0))
     draw_bow(bow_c, Vector2(1300, 0))
-    
-    # Save the drawing
+
     DWG.save()
     cairosvg.svg2png(url='./bow.svg', write_to='./temp.png')
     
     image = Image.open('./temp.png')
     blurred = image.filter(ImageFilter.GaussianBlur(2))
     
-    blurred.save('./' + name + '.png')
+    blurred.save('../images/bows/' + name + '.png')
+
+    ## Draw Controlpad Icon ##
+    center_x =  600/2 - bow_def.attach_depth/2 - BASEX
+    DWG = svgwrite.Drawing("bow.svg", size=('600px', '600px'))
+    draw_bow(bow_def, Vector2(center_x, 0))
+    
+    DWG.save()
+    cairosvg.svg2png(url='./bow.svg', write_to='./temp.png')
+    
+    image = Image.open('./temp.png')
+    blurred = image.filter(ImageFilter.GaussianBlur(2))
+    
+    blurred.save('../controlpad_test_server/controller/resources/bows/' + name + '.png')
+
+    
+    
     
 
 C_MAPLE =    "rgb(220, 130, 75)"
 C_ELM =      "rgb(210, 150, 95)"
 C_MAHAGONY = "rgb(155, 95, 65)"
-C_IVORY =    "rgb(210, 180, 150)"
+C_IVORY =    "rgb(210, 190, 160)"
 C_CFIBER =   "rgb(80, 80, 80)"
 #
 C_GRAY = "rgb(110, 100, 100)"
 C_BLACK = "rgb(50, 50, 50)"
 C_RED = "rgb(170, 90, 70)"
 
-#### draw long bows ####
+
+
+#### draw basic bows ####
 bow_I = RecurveDef(wing_len=0, wing_angle=0, bend_mag=65, bend_angle=70,
                    attach_depth=125, attach_mag=155, attach_angle=0,
-                   handle_len=0, height=450, thickness=30)
+                   handle_len=0, height=450, thickness=30, backstring=False,
+)
 generate_spritesheet(bow_I, "Bow_I")
 
-bow_II = RecurveDef(wing_len=0, wing_angle=30, bend_mag=60, bend_angle=0,
-                    attach_depth=100, attach_mag=120, attach_angle=0,
-                    handle_len=30, height=430, thickness=30,
-                    staff_color=C_ELM)
+bow_II = RecurveDef(wing_len=0, wing_angle=0, bend_mag=60, bend_angle=60,
+                   attach_depth=120, attach_mag=120, attach_angle=0,
+                    handle_len=30, height=450, thickness=30, backstring=False,
+                    staff_color=C_ELM, handle_color=C_GRAY)
 generate_spritesheet(bow_II, "Bow_II")
 
-bow_III = RecurveDef(wing_len=0, wing_angle=40, bend_mag=60, bend_angle=0,
-                     attach_depth=90, attach_mag=120, attach_angle=10,
-                     handle_len=30, height=430, thickness=30,
+bow_III = RecurveDef(wing_len=0, wing_angle=40, bend_mag=60, bend_angle=50,
+                     attach_depth=115, attach_mag=130, attach_angle=5,
+                     handle_len=30, height=450, thickness=30, backstring=False,
                      staff_color=C_MAHAGONY, handle_color=C_BLACK)
 generate_spritesheet(bow_III, "Bow_III")
 
-bow_IV = RecurveDef(wing_len=0, wing_angle=10, bend_mag=60, bend_angle=20,
-                    attach_depth=70, attach_mag=120, attach_angle=20,
-                    handle_len=30, height=430, thickness=30,
+bow_IV = RecurveDef(wing_len=0, wing_angle=40, bend_mag=60, bend_angle=40,
+                     attach_depth=110, attach_mag=130, attach_angle=10,
+                     handle_len=30, height=450, thickness=30, backstring=False,
                     staff_color=C_IVORY, handle_color=C_BLACK)
 generate_spritesheet(bow_IV, "Bow_IV")
 
-bow_V = RecurveDef(wing_len=0, wing_angle=30, bend_mag=60, bend_angle=20,
-                   attach_depth=55, attach_mag=140, attach_angle=20,
-                   handle_len=30, height=450, thickness=30,
+bow_V = RecurveDef(wing_len=0, wing_angle=40, bend_mag=60, bend_angle=30,
+                     attach_depth=105, attach_mag=130, attach_angle=15,
+                     handle_len=30, height=450, thickness=30, backstring=False,
                    staff_color=C_CFIBER, handle_color=C_RED)
 generate_spritesheet(bow_V, "Bow_V")
 
-    
+
+
 #### draw short bows ####
 shortbow_I = RecurveDef(wing_len=20, wing_angle=20, bend_mag=70, bend_angle=0,
                    attach_depth=110, attach_mag=170, attach_angle=0,
@@ -255,32 +277,33 @@ generate_spritesheet(shortbow_V, "Shortbow_V")
 
 
 
-#### draw long bows ####
-longbow_I = RecurveDef(wing_len=20, wing_angle=20, bend_mag=70, bend_angle=0,
-                   attach_depth=110, attach_mag=170, attach_angle=0,
-                   handle_len=0, height=430, thickness=30)
+#### draw longbows ####
+longbow_I = RecurveDef(wing_len=0, wing_angle=0, bend_mag=40, bend_angle=70,
+                       attach_depth=90, attach_mag=165, attach_angle=0,
+                       handle_len=0, height=500, thickness=22, 
+                       staff_color=C_MAPLE, handle_color=C_GRAY)
 generate_spritesheet(longbow_I, "Longbow_I")
 
-longbow_II = RecurveDef(wing_len=30, wing_angle=30, bend_mag=60, bend_angle=0,
-                    attach_depth=100, attach_mag=120, attach_angle=0,
-                    handle_len=30, height=430, thickness=30,
-                    staff_color=C_ELM)
+longbow_II = RecurveDef(wing_len=0, wing_angle=0, bend_mag=40, bend_angle=50,
+                        attach_depth=85, attach_mag=130, attach_angle=0,
+                        handle_len=30, height=500, thickness=22,
+                        staff_color=C_ELM, handle_color=C_GRAY)
 generate_spritesheet(longbow_II, "Longbow_II")
 
-longbow_III = RecurveDef(wing_len=35, wing_angle=40, bend_mag=60, bend_angle=0,
-                     attach_depth=90, attach_mag=120, attach_angle=10,
-                     handle_len=30, height=430, thickness=30,
+longbow_III = RecurveDef(wing_len=0, wing_angle=40, bend_mag=60, bend_angle=30,
+                     attach_depth=75, attach_mag=120, attach_angle=5,
+                     handle_len=30, height=500, thickness=22,
                      staff_color=C_MAHAGONY, handle_color=C_BLACK)
 generate_spritesheet(longbow_III, "Longbow_III")
 
-longbow_IV = RecurveDef(wing_len=40, wing_angle=10, bend_mag=60, bend_angle=20,
-                    attach_depth=70, attach_mag=120, attach_angle=20,
-                    handle_len=30, height=430, thickness=30,
+longbow_IV = RecurveDef(wing_len=0, wing_angle=40, bend_mag=60, bend_angle=15,
+                     attach_depth=65, attach_mag=120, attach_angle=10,
+                     handle_len=30, height=500, thickness=22,
                     staff_color=C_IVORY, handle_color=C_BLACK)
 generate_spritesheet(longbow_IV, "Longbow_IV")
 
-longbow_V = RecurveDef(wing_len=20, wing_angle=30, bend_mag=60, bend_angle=20,
-                   attach_depth=55, attach_mag=140, attach_angle=20,
-                   handle_len=30, height=450, thickness=30,
+longbow_V = RecurveDef(wing_len=0, wing_angle=40, bend_mag=30, bend_angle=0,
+                     attach_depth=55, attach_mag=120, attach_angle=15,
+                     handle_len=30, height=500, thickness=22,
                    staff_color=C_CFIBER, handle_color=C_RED)
 generate_spritesheet(longbow_V, "Longbow_V")

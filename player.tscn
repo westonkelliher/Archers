@@ -1,15 +1,16 @@
-[gd_scene load_steps=18 format=3 uid="uid://dcbqnl0lw5qdg"]
+[gd_scene load_steps=19 format=3 uid="uid://dcbqnl0lw5qdg"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_4wnrd"]
-[ext_resource type="Texture2D" uid="uid://bnnnkorjrefev" path="res://images/Body.png" id="2_2uug1"]
+[ext_resource type="Texture2D" uid="uid://b4ppi0ms8odnw" path="res://images/Body.png" id="2_2uug1"]
 [ext_resource type="PackedScene" uid="uid://dpvb6ptchtp0j" path="res://bow.tscn" id="2_vx5ds"]
-[ext_resource type="Texture2D" uid="uid://beatf4dji8e40" path="res://images/Head.png" id="4_7edw6"]
-[ext_resource type="Texture2D" uid="uid://bs5xb8s83h3sv" path="res://images/None.png" id="4_8a36w"]
-[ext_resource type="AudioStream" uid="uid://bvnpxjgrnelam" path="res://classic_hurt.mp3" id="5_1c8u8"]
-[ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="6_4eyak"]
-[ext_resource type="AudioStream" uid="uid://citxyku6u5lwp" path="res://audio/gulp 1.wav" id="7_a2ssf"]
+[ext_resource type="Texture2D" uid="uid://3475vcyj8omv" path="res://images/Head.png" id="4_7edw6"]
+[ext_resource type="Texture2D" uid="uid://c74puter5tk3y" path="res://images/None.png" id="4_8a36w"]
+[ext_resource type="AudioStream" uid="uid://b64l0bfxij7kj" path="res://classic_hurt.mp3" id="5_1c8u8"]
+[ext_resource type="AudioStream" uid="uid://bu05g4qtypg83" path="res://audio/barrelBreak.mp3" id="6_4eyak"]
+[ext_resource type="AudioStream" uid="uid://bgxcwkv8lvp1m" path="res://audio/gulp 1.wav" id="7_a2ssf"]
 [ext_resource type="PackedScene" uid="uid://fvj6smd1lsrc" path="res://eyes.tscn" id="7_gm42u"]
-[ext_resource type="FontFile" uid="uid://c71iurigqobs1" path="res://fonts/mainFont.ttf" id="9_12530"]
+[ext_resource type="FontFile" uid="uid://den7me5gox72e" path="res://fonts/mainFont.ttf" id="9_12530"]
+[ext_resource type="Script" path="res://Equipment.gd" id="11_xghg4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1gr7i"]
 radius = 21.7307
@@ -154,6 +155,9 @@ theme_override_fonts/font = ExtResource("9_12530")
 theme_override_font_sizes/font_size = 20
 text = "Luke"
 horizontal_alignment = 1
+
+[node name="Equipment" type="Node" parent="."]
+script = ExtResource("11_xghg4")
 
 [connection signal="timeout" from="Healthbar/Timer" to="." method="_on_timer_timeout"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
