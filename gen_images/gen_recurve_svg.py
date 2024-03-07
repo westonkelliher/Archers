@@ -181,7 +181,7 @@ def generate_spritesheet(bow_def, name):
     image = Image.open('./temp.png')
     blurred = image.filter(ImageFilter.GaussianBlur(2))
     
-    blurred.save('../images/bows/' + name + '.png')
+    blurred.save('../images/equipment/' + name + '.png')
 
     ## Draw Controlpad Icon ##
     center_x =  600/2 - bow_def.attach_depth/2 - BASEX
@@ -194,7 +194,7 @@ def generate_spritesheet(bow_def, name):
     image = Image.open('./temp.png')
     blurred = image.filter(ImageFilter.GaussianBlur(2))
     
-    blurred.save('../controlpad_test_server/controller/resources/bows/' + name + '.png')
+    blurred.save('../controlpad_test_server/controller/resources/equipment/' + name + '.png')
 
     
     
