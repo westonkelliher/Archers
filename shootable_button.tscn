@@ -1,0 +1,50 @@
+[gd_scene load_steps=6 format=3 uid="uid://cfy0dhxkt466t"]
+
+[ext_resource type="Script" path="res://ShootableButton.gd" id="1_rn484"]
+[ext_resource type="Texture2D" uid="uid://24xckh2d8vvb" path="res://images/newButtonblur.png" id="2_nuqwc"]
+[ext_resource type="FontFile" uid="uid://c71iurigqobs1" path="res://fonts/mainFont.ttf" id="3_xfbtj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fnle6"]
+size = Vector2(594, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o204k"]
+size = Vector2(584, 80)
+
+[node name="ShootableButton" type="Area2D"]
+collision_mask = 4
+script = ExtResource("1_rn484")
+
+[node name="ShootableCollision" type="CollisionShape2D" parent="."]
+position = Vector2(-1, 0)
+shape = SubResource("RectangleShape2D_fnle6")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+scale = Vector2(0.45262, 0.34776)
+texture = ExtResource("2_nuqwc")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(2, 0)
+shape = SubResource("RectangleShape2D_o204k")
+
+[node name="CenterContainer2" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ButtonText" type="Label" parent="CenterContainer2"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.568627, 0.568627, 0.568627, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 5
+theme_override_fonts/font = ExtResource("3_xfbtj")
+theme_override_font_sizes/font_size = 40
+text = "I am a general button"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

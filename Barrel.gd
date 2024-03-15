@@ -2,6 +2,7 @@ extends StaticBody2D
 var hitsTaken = 0
 @export var hitLimit = 0
 @export var chaosDebug : bool = false
+@export var debugBarrel : bool = false
 var barrel_explosion = preload("res://barrel_explosion.tscn")
 
 func _ready():
@@ -21,6 +22,8 @@ func _ready():
 		hitLimit = 0
 		hitsTaken += 1
 		gotHit()
+	#if not debugBarrel:
+		#$LifespanTimer.start
 	pass
 
 
@@ -40,8 +43,9 @@ func gotHit():
 		randomSpawn()
 		explode()
 		global_position = Vector2(-500,-500)
-		Autoloader.mainScene.numBarrels -= 1
 		$BreakNoise.play()
+		Autoloader.mainScene.numBarrels -= 1
+		Autoloader.mainScene.activeBarrels.erase(self)
 		await $BreakNoise.finished
 		queue_free()
 	else:
@@ -49,9 +53,10 @@ func gotHit():
 
 
 var items = [
-	{'name': 'nothing', 'weight': 35, 'scene': null},
+	#{'name': 'nothing', 'weight': 35, 'scene': null},
 	{'name': 'potion', 'weight': 20, 'scene': "res://potion.tscn"},
-	{'name': 'wolf', 'weight': 35, 'scene': "res://wolf.tscn"},  # Common item
+	#{'name': 'wolf', 'weight': 35, 'scene': "res://wolf.tscn"},  # Common item
+	#{'name': 'explosion', 'weight': 1, 'scene': "res://explosion.tscn"}
 ]
 
 
@@ -88,3 +93,21 @@ func explode():
 	explosion.global_position = self.global_position
 	explosion.emitting = true
 	Autoloader.mainScene.add_child(explosion)
+
+
+func _on_lifespan_timer_timeout():
+	despawn()
+	pass
+
+@export var fadetime = 0.5
+func despawn():
+	while fadetime > 0.05:
+		$BarrelSprite.modulate = Color(1, 1, 1, 0.5)
+		await get_tree().create_timer(fadetime).timeout
+		$BarrelSprite.modulate = Color(1, 1, 1, 1)
+		await get_tree().create_timer(fadetime).timeout
+		fadetime *= 0.9
+	Autoloader.mainScene.numBarrels -= 1
+	Autoloader.mainScene.activeBarrels.erase(self)
+	queue_free()
+	pass

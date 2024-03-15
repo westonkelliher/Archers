@@ -1,8 +1,9 @@
 extends Node
 var mainScene = null
+var buttonRef = null
 var font = preload("res://fonts/mainFont.ttf")
 
-func damageNumbers(value : int, position : Vector2, health : bool = false):
+func damageNumbers(value : int, position : Vector2, type : String = "general"):
 	var number = Label.new()
 	number.global_position = position
 	number.text = str(value)
@@ -10,8 +11,13 @@ func damageNumbers(value : int, position : Vector2, health : bool = false):
 	number.label_settings = LabelSettings.new()
 	
 	number.label_settings.font_color = Color.DARK_RED
-	if health:
+	if type == "health":
 		number.label_settings.font_color = Color.LIME_GREEN
+		number.text = "+" + number.text
+	if type == "fire":
+		number.label_settings.font_color = Color.ORANGE
+	if type == "poison":
+		number.label_settings.font_color = Color.LAWN_GREEN
 	number.label_settings.font_size = 32
 	number.label_settings.outline_color = Color.BLACK
 	number.label_settings.outline_size = 3

@@ -5,6 +5,7 @@ var player_scene = preload("res://player.tscn")
 var barrel_scene = preload("res://barrel.tscn")
 var text_box_scene = preload("res://text_box.tscn")
 var dummy_scene = preload("res://dummy.tscn")
+var button_scene = preload("res://shootable_button.tscn")
 
 var players = {}
 var playersAll = {}
@@ -16,7 +17,8 @@ var max_power = 1000
 var power_increase_rate = 10
 var delta = 0
 
-@export var gamesNeeded4Win = 1
+@export var gamesNeeded4Win = 3
+@export var maxBarrelCount = 10
 
 var multiplayerStarted = false
 var pvpOn =false
@@ -49,6 +51,8 @@ func _ready():
 	vpSize = get_viewport().size
 	Autoloader.mainScene = self
 	musicManager(mainTheme)
+	$BarrelTimer.wait_time = barrelWaitTime
+	createButton("Free for All", settingsButtonHandler)
 	pass # Replace with function body.
 
 
@@ -198,7 +202,7 @@ func winCheck():
 			roundOver(winningPlayer)
 			#$Controlpads.send_message(winningPlayer.playerID, "upgrade:2")
 
-@export var numDummy = 3
+@export var numDummy = 2
 func roundInit():
 	$Dummies.position = Vector2(-5000,-5000)
 	$MusicPlayer.stop()
@@ -299,10 +303,10 @@ func sortByWins():
 			return true
 		return false
 	)
-
-	for player in playersByWins:
-		print(player.playerName + " " + str(player.gameScore))
-	print("----------")
+#This code just print the scoreboard in console. Might be useful for debugging one day.
+	#for player in playersByWins:
+		#print(player.playerName + " " + str(player.gameScore))
+	#print("----------")
 
 
 func readyUpGamepad():
@@ -365,7 +369,6 @@ func _on_multiplayer_button_body_entered(body):
 			bttnLabel.text += "\n("+str(readiedPlayers.size())+"/"+str(numPlayers)+")"
 		await get_tree().create_timer(0.5).timeout
 	if readiedPlayers.size() == numPlayers and numPlayers > 1:
-		body.queue_free()
 		multiplayerSetup()
 
 func buttonTextHandler():
@@ -380,29 +383,29 @@ func buttonTextHandler():
 
 
 var numBarrels = 0
-
+@export var barrelWaitTime = 5
 func _on_barrel_timer_timeout():
-	if numBarrels < 10:
+	if numBarrels < maxBarrelCount:
 		barrelLogic()
 
+var activeBarrels = []
 func barrelLogic():
-	#var avgPos = Vector2(0,0)
-	#var numAlivePlayers = 0
-	#for player in players:
-		#if !(players[player].isDead):
-			#avgPos += players[player].global_position
-			#numAlivePlayers += 1
-	#avgPos /= numAlivePlayers
+	if numBarrels == 0:
+		activeBarrels.clear()
 	var barrelPos = Vector2()
-	#barrelPos.x = avgPos.x + vpSize.x*randf_range(.1,-.1)
-	#barrelPos.y = avgPos.y + vpSize.y*randf_range(.1,-.1)
 	randomize()
 	barrelPos.x = vpSize.x*randf_range(.9,.1)
 	barrelPos.y = vpSize.y*randf_range(.9,.1)
+	# Checks if barrel is close to other barrels and trys again
+	for barrels in activeBarrels:
+		if barrels.global_position.distance_to(barrelPos) < 100:
+			barrelLogic()
+			return
 	var barrel = barrel_scene.instantiate()
 	barrel.global_position = barrelPos
 	add_child(barrel)
 	numBarrels += 1
+	activeBarrels.append(barrel)
 	pass
 
 func spawnDummy(amount):
@@ -415,7 +418,26 @@ func spawnDummy(amount):
 		dummy.global_position = dummyPos
 		dummy.temp = true
 		add_child(dummy)
-	
+
+func settingsButtonHandler():
+	var button = Autoloader.buttonRef
+	Autoloader.buttonRef = null
+	if button.getText() == "Free for All":
+		button.setText("Survival")
+		return
+	if button.getText() == "Survival":
+		button.setText("Story")
+		return
+	if button.getText() == "Story":
+		button.setText("Free for All")
+		return
+
+func createButton(text : String, function : Callable):
+	var new_button = button_scene.instantiate()
+	new_button.buttonText = text
+	new_button.connect("buttonFunction", function)
+	$MenuElements/VBoxContainer.add_child(new_button)
+	pass
 
 func musicManager(song):
 	$MusicPlayer.stream = song

@@ -1,0 +1,52 @@
+[gd_scene load_steps=8 format=3 uid="uid://18qy2cf0e85y"]
+
+[ext_resource type="Texture2D" uid="uid://c7q18du5aiem1" path="res://images/explosion particle.png" id="1_fpxvg"]
+[ext_resource type="Script" path="res://explosion.gd" id="2_w3w8d"]
+[ext_resource type="Texture2D" uid="uid://8q25ixyus6tf" path="res://icon.svg" id="2_xyb15"]
+
+[sub_resource type="Curve" id="Curve_gdgt7"]
+_data = [Vector2(0.060241, 1), 0.0, 0.0, 0, 0, Vector2(0.240964, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_r3lql"]
+curve = SubResource("Curve_gdgt7")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xjvsw"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 1.0
+angle_max = 180.0
+inherit_velocity_ratio = 1.0
+spread = 180.0
+initial_velocity_min = 500.0
+initial_velocity_max = 500.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+gravity = Vector3(0, 0, 0)
+scale_max = 1.5
+alpha_curve = SubResource("CurveTexture_r3lql")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_uh8xm"]
+radius = 102.956
+
+[node name="Explosion" type="GPUParticles2D"]
+amount = 50
+process_material = SubResource("ParticleProcessMaterial_xjvsw")
+texture = ExtResource("1_fpxvg")
+lifetime = 2.0
+explosiveness = 1.0
+trail_lifetime = 0.39
+script = ExtResource("2_w3w8d")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_uh8xm")
+
+[node name="Icon" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-1.5, 1.5)
+scale = Vector2(1.22656, 1.28906)
+texture = ExtResource("2_xyb15")

@@ -46,4 +46,8 @@ z_index = -5
 scale = Vector2(0.07, 0.07)
 texture = ExtResource("3_5gxh0")
 
+[node name="LifespanTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="LifespanTimer" to="." method="_on_lifespan_timer_timeout"]

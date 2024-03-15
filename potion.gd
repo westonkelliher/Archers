@@ -3,6 +3,7 @@ var target
 var playerRef
 var isDrank
 var speed = 300
+@export var healAmount : int = 30
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -34,5 +35,5 @@ func _on_body_entered(body):
 
 func drank():
 	isDrank = true
-	playerRef.playerGainHealth(30, true)
+	playerRef.playerGainHealth(healAmount, true)
 	clean()

@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://dfdnabg7x326v" path="res://courtyard.tscn" id="1_uhtla"]
 [ext_resource type="FontFile" uid="uid://bx1q6glughkkf" path="res://fonts/m6x11plus.ttf" id="4_bcyw0"]
 [ext_resource type="PackedScene" uid="uid://chhpjvwbr85aa" path="res://wall.tscn" id="4_ol2fr"]
-[ext_resource type="Texture2D" uid="uid://5i2j0kr6qa55" path="res://images/button.png" id="5_sicy3"]
 [ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="6_321b4"]
 [ext_resource type="Texture2D" uid="uid://ykft2u2h50cu" path="res://images/title_fiddled.png" id="7_y6dca"]
 [ext_resource type="Texture2D" uid="uid://24xckh2d8vvb" path="res://images/newButtonblur.png" id="8_dknrm"]
@@ -13,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://sh5kf42pn3y6" path="res://rich_text_box.tscn" id="9_bqcoj"]
 [ext_resource type="PackedScene" uid="uid://d4br2o1l1s0x2" path="res://dummy.tscn" id="10_sg6jl"]
 [ext_resource type="Texture2D" uid="uid://dprcwbogpjpnr" path="res://images/walltile 1.png" id="11_iiiut"]
+[ext_resource type="PackedScene" uid="uid://ch2gfgh2bevr7" path="res://barrel.tscn" id="13_vxele"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j5xsk"]
 size = Vector2(594, 96)
@@ -22,7 +22,6 @@ size = Vector2(584, 80)
 
 [node name="Main" type="Node"]
 script = ExtResource("1_qydqk")
-gamesNeeded4Win = 3
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 offset_right = 1920.0
@@ -177,23 +176,12 @@ text = "Shoot to Start Game"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="MultiplayerButton2" type="Area2D" parent="MenuElements"]
-visible = false
-position = Vector2(960, 750)
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="MenuElements/MultiplayerButton2"]
-shape = SubResource("RectangleShape2D_j5xsk")
-
-[node name="Sprite2D" type="Sprite2D" parent="MenuElements/MultiplayerButton2"]
-texture = ExtResource("5_sicy3")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="MenuElements/MultiplayerButton2"]
-offset_left = -298.0
-offset_top = -48.0
-offset_right = 300.0
-offset_bottom = 48.0
-bbcode_enabled = true
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuElements"]
+offset_left = 959.0
+offset_top = 688.0
+offset_right = 1088.0
+offset_bottom = 753.0
+theme_override_constants/separation = 10
 
 [node name="BarrelTimer" type="Timer" parent="."]
 wait_time = 5.0
@@ -250,6 +238,10 @@ position = Vector2(1664, 504)
 
 [node name="Dummy4" parent="Dummies" instance=ExtResource("10_sg6jl")]
 position = Vector2(257, 520)
+
+[node name="Barrel" parent="." instance=ExtResource("13_vxele")]
+position = Vector2(464, 856)
+debugBarrel = true
 
 [connection signal="message_received" from="Controlpads" to="." method="_on_game_nite_controlpads_message_received"]
 [connection signal="body_entered" from="MenuElements/MultiplayerButton" to="." method="_on_multiplayer_button_body_entered"]

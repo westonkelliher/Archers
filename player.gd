@@ -125,7 +125,7 @@ func get_state_string():
 		state_str += ":" + colorString + ":" + str(self.upgradePoints)
 		state_str +=  ":" + equipment["arrow"] + "," + equipment["bow"] + "," + equipment["armor"] 
 		state_str +=  ":" + equipment_upgrades["arrow"] + "," + equipment_upgrades["bow"] + "," + equipment_upgrades["armor"] 
-	print(state_str)
+	#print(state_str)
 	return state_str
 
 
@@ -141,6 +141,11 @@ func _process(delta):
 		$Chargebar.value = $Bow.charge_amount*100
 	else:
 		$Chargebar.visible = false
+	
+	if $Healthbar.value == $Healthbar.max_value:
+		$Healthbar.visible = false
+	else:
+		$Healthbar.visible = true
 
 
 
@@ -270,13 +275,15 @@ func _on_area_2d_body_entered(body):
 	if body.originPlayer != self.playerID and not invulnerable:
 		playerDamaged(body.damage)
 		body.hitPlayer(self)
+		if body.specialProperty:
+			print("This arrow has a special property")
 
-func playerDamaged(damage):
+func playerDamaged(damage, damageType = "general"):
 	$HurtSound.play()
 	$Healthbar/Damagebar.visible = true
 	$Healthbar.visible = true
 	$Healthbar.value -= damage
-	Autoloader.damageNumbers(damage, $DamageNumberOrigin.global_position)
+	Autoloader.damageNumbers(damage, $DamageNumberOrigin.global_position, damageType)
 	$Healthbar/Timer.start()
 	if $Healthbar.value <= 0:
 		playerDeath()
@@ -286,13 +293,13 @@ func playerGainHealth(health, potion = false):
 	var originalHealth = $Healthbar.value
 	$Healthbar.value += health
 	$Healthbar/Damagebar.value += health
-	if $Healthbar.value == 100:
-		$Healthbar.value = 100
-		$Healthbar/Damagebar.value = 100
-		amountHealed = 100 - originalHealth
+	if $Healthbar.value == $Healthbar.max_value:
+		#$Healthbar.value = $Healthbar.max_value
+		#$Healthbar/Damagebar.value = $Healthbar.max_value
+		amountHealed = $Healthbar.max_value - originalHealth
 	if potion:
 		$DrinkSound.play()
-	Autoloader.damageNumbers(amountHealed, $DamageNumberOrigin.global_position, true)
+	Autoloader.damageNumbers(amountHealed, $DamageNumberOrigin.global_position, "health")
 
 
 func hitstun(stun):
@@ -371,7 +378,12 @@ func winner():
 	$RoyalCrown.visible = true
 
 func _on_timer_timeout():
-	$Healthbar/Damagebar.value = $Healthbar.value
+	#$Healthbar/Damagebar.value = $Healthbar.value
+	var tween = get_tree().create_tween() 
+	tween.set_parallel(true)
+	tween.tween_property(
+		$Healthbar/Damagebar, "value", $Healthbar.value, 0.3
+	).set_ease(Tween.EASE_OUT)
 	pass
 
 func sfxManager(effect):
