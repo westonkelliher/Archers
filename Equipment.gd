@@ -107,10 +107,10 @@ class EntityAbility:
 
 var ARMOR_SPECS = {
 	'None':      ArmorSpec.new(),
-	'Basic_Armor_I':   ArmorSpec.new(20),
-	'Basic_Armor_II':  ArmorSpec.new(50),
-	'Basic_Armor_III': ArmorSpec.new(80),
-	'Basic_Armor_IV':  ArmorSpec.new(120),
+	'Armor_I':   ArmorSpec.new(20),
+	'Armor_II':  ArmorSpec.new(50),
+	'Armor_III': ArmorSpec.new(80),
+	'Armor_IV':  ArmorSpec.new(120),
 	#
 	'Heavy_Armor_I':   ArmorSpec.new(40, -0.12),
 	'Heavy_Armor_II':  ArmorSpec.new(85, -0.14),

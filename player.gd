@@ -21,7 +21,7 @@ var _equipment = {
 	'armor_tier': 1,
 	'arrow': 'Arrow_I',
 	'bow': 'Bow_I',
-	'armor': 'Basic_Armor_IV',
+	'armor': 'None',
 }
 var equipment = _equipment.duplicate(true)
 
@@ -31,7 +31,7 @@ var _equipment_upgrades = {
 	'armor_tier': 2,
 	'arrow': 'Arrow_II',
 	'bow': 'Bow_II',
-	'armor': 'Basic_Armor_I',
+	'armor': 'Armor_I',
 }
 var equipment_upgrades = _equipment_upgrades.duplicate(true)
 

@@ -37,11 +37,11 @@ func _process(delta):
 ################################################################################
 
 func set_graphic(graphic_name):
-	$Sprite2D.texture = load("res://images/" + graphic_name + ".png")
+	$Sprite2D.texture = load("res://images/equipment/" + graphic_name + ".png")
 
 func set_arrow_graphic(graphic_name):
 	arrow_graphic_name = graphic_name
-	$Arrow.texture = load("res://images/" + graphic_name + ".png")
+	$Arrow.texture = load("res://images/equipment/" + graphic_name + ".png")
 	
 
 func set_armor_graphic(graphic_name):
