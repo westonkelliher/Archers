@@ -18,6 +18,7 @@ scale = Vector2(1.7, 1.7)
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("1_rn4k6")
+chaosDebug = true
 
 [node name="BarrelSprite" type="Sprite2D" parent="."]
 texture_filter = 1

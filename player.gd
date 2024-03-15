@@ -15,36 +15,13 @@ var state = "playing"
 var upgradePoints = 0
 
 ## equipment ##
-var all_equipment = {
-	'arrows': {
-		1: ['Arrow_I'],
-		2: ['Arrow_II'],
-		3: ['Arrow_III'],
-		4: ['Arrow_IV'],
-		5: ['Arrow_V'],
-	},
-	'bows': {
-		1: ['Bow_I'],
-		2: ['Bow_II'],
-		3: ['Bow_III'],
-		4: ['Bow_IV'],
-		5: ['Bow_V'],
-	},
-	'armors': {
-		1: ['None'],
-		2: ['Armor_I'],
-		3: ['Armor_II'],
-		4: ['Armor_III'],
-		5: ['Armor_IV'],
-	},
-}
 var _equipment = {
 	'arrow_tier': 1,
 	'bow_tier': 1,
 	'armor_tier': 1,
 	'arrow': 'Arrow_I',
 	'bow': 'Bow_I',
-	'armor': 'None',
+	'armor': 'Basic_Armor_IV',
 }
 var equipment = _equipment.duplicate(true)
 
@@ -54,14 +31,21 @@ var _equipment_upgrades = {
 	'armor_tier': 2,
 	'arrow': 'Arrow_II',
 	'bow': 'Bow_II',
-	'armor': 'Armor_I',
+	'armor': 'Basic_Armor_I',
 }
 var equipment_upgrades = _equipment_upgrades.duplicate(true)
 
 
 var speedMultiplier = 15
+var baseSpeedMultiplier = 15
+
+var armorHealth = 0
+var health = 100
+var baseHealth = 100
 
 var arrowDamage = 20
+var arrowDrag 
+var arrowEffect = null
 
 var knockback = Vector2.ZERO
 
@@ -103,6 +87,8 @@ func get_state_string():
 func _ready():
 	$Body.modulate = playerColor
 	$Nametag/Label.text = " " + playerName + " "
+	$Bow.set_graphic(equipment['bow'])
+	$Armor.texture = load("res://images/equipment/" + equipment['armor'] + ".png")
 	#$Nametag/Label.add_theme_color_override("font_color", playerColor)
 	pass # Replace with function body.
 
@@ -195,41 +181,67 @@ func upgradeHandler(upgrade):
 	if upgrade == "bow":
 		if equipment['bow_tier'] >= 5:
 			return;
-		$Bow.draw_time *= 0.65
-		$Bow.charge_time *= 0.75
+		#$Bow.draw_time *= 0.65
+		#$Bow.charge_time *= 0.75
+		
 		equipment['bow_tier'] = equipment_upgrades['bow_tier']
 		equipment['bow'] = equipment_upgrades['bow']
+		
+		var bow_name = equipment['bow']
+		var bow_spec = $Equipment.BOW_SPECS[bow_name]
+		
+		$Bow.draw_time = bow_spec.drawTime
+		$Bow.charge_time = bow_spec.chargeTime
+		
 		$Bow.set_graphic(equipment['bow'])
 		if equipment['bow_tier'] < 5:
 			var new_tier = equipment_upgrades['bow_tier']+1
 			equipment_upgrades['bow_tier'] = new_tier
-			equipment_upgrades['bow'] = all_equipment['bows'][new_tier][0] # TODO: choose randomly
+			equipment_upgrades['bow'] = $Equipment.ALL_EQUIPMENT['bows'][new_tier][0] # TODO: choose randomly
 			
 	elif upgrade == "arrow":
 		if equipment['arrow_tier'] >= 5:
 			return;
-		arrowDamage += arrowDamage*.2 + 5
+		#arrowDamage += arrowDamage*.2 + 5
 		equipment['arrow_tier'] = equipment_upgrades['arrow_tier']
 		equipment['arrow'] = equipment_upgrades['arrow']
+		
+		var arrow_name = equipment['arrow']
+		var arrow_spec = $Equipment.ARROW_SPECS[arrow_name]
+		
+		arrowDamage = arrow_spec.baseDamage
+		#arrowDrag = arrow_spec.drag
+		
 		$Bow.set_arrow_graphic(equipment['arrow'])
 		if equipment['arrow_tier'] < 5:
 			var new_tier = equipment_upgrades['arrow_tier']+1
 			equipment_upgrades['arrow_tier'] = new_tier
-			equipment_upgrades['arrow'] = all_equipment['arrows'][new_tier][0] # TODO: choose randomly
+			equipment_upgrades['arrow'] = $Equipment.ALL_EQUIPMENT['arrows'][new_tier][0] # TODO: choose randomly
 
 	elif upgrade == "armor":
 		if equipment['armor_tier'] >= 5:
 			return;
-		speedMultiplier += speedMultiplier*.07
-		$Healthbar.max_value += int($Healthbar.max_value*0.02)*5 + 5
-		$Healthbar/Damagebar.max_value = $Healthbar.max_value
+		
+		#speedMultiplier += speedMultiplier*.07
+		#$Healthbar.max_value += int($Healthbar.max_value*0.02)*5 + 5
+		#$Healthbar/Damagebar.max_value = $Healthbar.max_value
+		
 		equipment['armor_tier'] = equipment_upgrades['armor_tier']
 		equipment['armor'] = equipment_upgrades['armor']
-		$Armor.texture = load("res://images/" + equipment['armor'] + ".png")
+		
+		var armor_name = equipment['armor']
+		var armor_spec = $Equipment.ARMOR_SPECS[armor_name]
+		
+		speedMultiplier = baseSpeedMultiplier * (1 + armor_spec.speedBonus)
+		$Healthbar.max_value = baseHealth + armor_spec.healthBonus
+		$Healthbar/Damagebar.max_value = $Healthbar.max_value
+		
+		
+		$Armor.texture = load("res://images/equipment/" + equipment['armor'] + ".png")
 		if equipment['armor_tier'] < 5:
 			var new_tier = equipment_upgrades['armor_tier']+1
 			equipment_upgrades['armor_tier'] = new_tier
-			equipment_upgrades['armor'] = all_equipment['armors'][new_tier][0] # TODO: choose randomly
+			equipment_upgrades['armor'] = $Equipment.ALL_EQUIPMENT['armors'][new_tier][0] # TODO: choose randomly
 
 			
 func notTaught():
