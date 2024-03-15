@@ -33,6 +33,7 @@ func _process(delta):
 		charge_amount = min(1, (time_pulling - draw_time)/charge_time)
 
 
+
 ################################################################################
 
 func set_graphic(graphic_name):

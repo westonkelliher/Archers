@@ -1,0 +1,88 @@
+diff --git a/controlpad_test_server/controller/resources/Bow_I.png b/controlpad_test_server/controller/resources/Bow_I.png
+deleted file mode 100644
+index d7fb31d..0000000
+Binary files a/controlpad_test_server/controller/resources/Bow_I.png and /dev/null differ
+diff --git a/controlpad_test_server/controller/resources/Bow_II.png b/controlpad_test_server/controller/resources/Bow_II.png
+deleted file mode 100644
+index 6e7f1f3..0000000
+Binary files a/controlpad_test_server/controller/resources/Bow_II.png and /dev/null differ
+diff --git a/controlpad_test_server/controller/resources/Bow_III.png b/controlpad_test_server/controller/resources/Bow_III.png
+deleted file mode 100644
+index 67e765f..0000000
+Binary files a/controlpad_test_server/controller/resources/Bow_III.png and /dev/null differ
+diff --git a/controlpad_test_server/controller/resources/Bow_IV.png b/controlpad_test_server/controller/resources/Bow_IV.png
+deleted file mode 100644
+index f047404..0000000
+Binary files a/controlpad_test_server/controller/resources/Bow_IV.png and /dev/null differ
+diff --git a/controlpad_test_server/controller/resources/Bow_V.png b/controlpad_test_server/controller/resources/Bow_V.png
+deleted file mode 100644
+index 20b8334..0000000
+Binary files a/controlpad_test_server/controller/resources/Bow_V.png and /dev/null differ
+diff --git a/controlpad_test_server/controller/resources/bowUpgrade.png b/controlpad_test_server/controller/resources/bowUpgrade.png
+deleted file mode 100644
+index 9715cc6..0000000
+Binary files a/controlpad_test_server/controller/resources/bowUpgrade.png and /dev/null differ
+diff --git a/controlpad_test_server/controller/resources/bows/Bow_I.png b/controlpad_test_server/controller/resources/bows/Bow_I.png
+new file mode 100644
+index 0000000..16d0fe5
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Bow_I.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Bow_II.png b/controlpad_test_server/controller/resources/bows/Bow_II.png
+new file mode 100644
+index 0000000..4e012c8
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Bow_II.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Bow_III.png b/controlpad_test_server/controller/resources/bows/Bow_III.png
+new file mode 100644
+index 0000000..b326b60
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Bow_III.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Bow_IV.png b/controlpad_test_server/controller/resources/bows/Bow_IV.png
+new file mode 100644
+index 0000000..722272d
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Bow_IV.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Bow_V.png b/controlpad_test_server/controller/resources/bows/Bow_V.png
+new file mode 100644
+index 0000000..df0b16e
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Bow_V.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Longbow_I.png b/controlpad_test_server/controller/resources/bows/Longbow_I.png
+new file mode 100644
+index 0000000..0431759
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Longbow_I.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Longbow_II.png b/controlpad_test_server/controller/resources/bows/Longbow_II.png
+new file mode 100644
+index 0000000..0662fff
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Longbow_II.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Longbow_III.png b/controlpad_test_server/controller/resources/bows/Longbow_III.png
+new file mode 100644
+index 0000000..cee19cb
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Longbow_III.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Longbow_IV.png b/controlpad_test_server/controller/resources/bows/Longbow_IV.png
+new file mode 100644
+index 0000000..b8669e0
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Longbow_IV.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Longbow_V.png b/controlpad_test_server/controller/resources/bows/Longbow_V.png
+new file mode 100644
+index 0000000..025bb0c
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Longbow_V.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Shortbow_I.png b/controlpad_test_server/controller/resources/bows/Shortbow_I.png
+new file mode 100644
+index 0000000..a5aabed
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Shortbow_I.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Shortbow_II.png b/controlpad_test_server/controller/resources/bows/Shortbow_II.png
+new file mode 100644
+index 0000000..764b04f
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Shortbow_II.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Shortbow_III.png b/controlpad_test_server/controller/resources/bows/Shortbow_III.png
+new file mode 100644
+index 0000000..859c7e0
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Shortbow_III.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Shortbow_IV.png b/controlpad_test_server/controller/resources/bows/Shortbow_IV.png
+new file mode 100644
+index 0000000..2ee0f8c
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Shortbow_IV.png differ
+diff --git a/controlpad_test_server/controller/resources/bows/Shortbow_V.png b/controlpad_test_server/controller/resources/bows/Shortbow_V.png
+new file mode 100644
+index 0000000..9704bc3
+Binary files /dev/null and b/controlpad_test_server/controller/resources/bows/Shortbow_V.png differ
+diff --git a/controlpad_test_server/controller/resources/joystick_pad_bow.png b/controlpad_test_server/controller/resources/joystick_pad_bow.png
+deleted file mode 100644
+index d302411..0000000
+Binary files a/controlpad_test_server/controller/resources/joystick_pad_bow.png and /dev/null differ

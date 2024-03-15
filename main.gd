@@ -96,7 +96,7 @@ func _on_game_nite_controlpads_message_received(client, message):
 		new_player.global_position = Vector2(400, 400)
 		new_player.connect("bow_shot", _on_player_bow_shot)
 		new_player.playerID = client
-		var player_color = Color(randf()*0.8 + 0.1, randf()*0.8 + 0.1, randf()*0.8 + 0.1, 1)
+		var player_color = Color(randf()*0.7 + 0.2, randf()*0.7 + 0.2, randf()*0.7 + 0.2, 1)
 		new_player.playerColor = player_color
 		new_player.playerName = namePlayer()
 		add_child(new_player)

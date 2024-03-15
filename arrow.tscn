@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cuil4gqxlaq1c"]
 
 [ext_resource type="Script" path="res://arrow.gd" id="1_nrblj"]
-[ext_resource type="Texture2D" uid="uid://c24qangxq41qw" path="res://images/Arrow3.png" id="2_t7ps2"]
+[ext_resource type="Texture2D" uid="uid://ovgjvplipq6r" path="res://images/Arrow3.png" id="2_t7ps2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dpp57"]
 radius = 2.0
