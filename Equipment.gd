@@ -101,7 +101,7 @@ var BOW_SPECS = {
 	'Shortbow_IV':  BowSpec.new(0.07, 0.8, 36.0,  48.0,
 								 4.0, 7.0),
 	'Shortbow_V':   BowSpec.new(0.05, 0.6, 38.0,  50.0,
-								 4.0, 7.0),
+								 4.0, 10.0),
 	#
 	'Longbow_I':   BowSpec.new(0.5, 4.0, 25.0,  60.0,
 								8.0, 16.0),
@@ -159,7 +159,7 @@ class ArrowSpec:
 								# second)
 	var effect:     EntityEffect
 
-	func _init(baseDamage = 20, drag = 0, effect = null):
+	func _init(baseDamage = 20, drag = 0.1, effect = null):
 		self.baseDamage = baseDamage
 		self.drag = drag
 		self.effect = effect
@@ -212,11 +212,11 @@ var ARROW_SPECS = {
 	'Arrow_IV':  ArrowSpec.new(60),
 	'Arrow_V':   ArrowSpec.new(75),
 	#
-	'Heavy_Arrow_I':   ArrowSpec.new(45, 0.7),
-	'Heavy_Arrow_II':  ArrowSpec.new(65, 0.8),
-	'Heavy_Arrow_III': ArrowSpec.new(90, 0.9),
-	'Heavy_Arrow_IV':  ArrowSpec.new(120, 1.0),
-	'Heavy_Arrow_V' :  ArrowSpec.new(160, 1.1),
+	'Heavy_Arrow_I':   ArrowSpec.new(45, 0.8),
+	'Heavy_Arrow_II':  ArrowSpec.new(65, 1.2),
+	'Heavy_Arrow_III': ArrowSpec.new(90, 1.6),
+	'Heavy_Arrow_IV':  ArrowSpec.new(120, 2.0),
+	'Heavy_Arrow_V' :  ArrowSpec.new(160, 2.4),
 	#
 	'Ice_Arrow_I':   ArrowSpec.new(20, 0.1, IceEffect_I),
 	'Ice_Arrow_II':  ArrowSpec.new(30, 0.1, IceEffect_I),

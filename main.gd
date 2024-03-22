@@ -92,20 +92,33 @@ func _on_game_nite_controlpads_message_received(client, message):
 			players[client].global_position = Vector2(400, 400)
 			buttonTextHandler()
 	elif not multiplayerStarted:
-		var new_player = player_scene.instantiate()
-		new_player.global_position = Vector2(400, 400)
-		new_player.connect("bow_shot", _on_player_bow_shot)
-		new_player.playerID = client
-		var player_color = Color(randf()*0.7 + 0.2, randf()*0.7 + 0.2, randf()*0.7 + 0.2, 1)
-		new_player.playerColor = player_color
-		new_player.playerName = namePlayer()
-		add_child(new_player)
-		players[client] = new_player
-		playersAll[client] = new_player
-		players[client].handle_controlpad_input(message)
-		send_state_message(players[client])
-		randomize()
-		buttonTextHandler()
+		new_player(client)
+		if client == "0x1-1":
+			players[client].set_equipment('Shortbow_V', 'Arrow_I', 'Armor_I')
+		if client == "0x1-2":
+			players[client].set_equipment('Shortbow_V', 'Heavy_Arrow_I', 'Armor_II')
+		if client == "0x1-3":
+			players[client].set_equipment('Shortbow_V', 'Heavy_Arrow_II', 'Armor_III')
+		if client == "0x1-4":
+			players[client].set_equipment('Shortbow_V', 'Heavy_Arrow_IV', 'Armor_IV')
+		players[client].handle_controlpad_input(client)
+		
+
+
+func new_player(client):
+	var new_player = player_scene.instantiate()
+	new_player.global_position = Vector2(400, 400)
+	new_player.connect("bow_shot", _on_player_bow_shot)
+	new_player.playerID = client
+	var player_color = Color(randf()*0.7 + 0.2, randf()*0.7 + 0.2, randf()*0.7 + 0.2, 1)
+	new_player.playerColor = player_color
+	new_player.playerName = namePlayer()
+	add_child(new_player)
+	players[client] = new_player
+	playersAll[client] = new_player
+	send_state_message(players[client])
+	randomize()
+	buttonTextHandler()
 
 var names = [
 	"Theon", "Sansa", "Jon", "Reek", "Arya", "Tyrion",

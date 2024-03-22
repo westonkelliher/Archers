@@ -83,12 +83,14 @@ func get_state_string():
 	#print(state_str)
 	return state_str
 
+func set_equipment(bow, arrow, armor):
+	setBow(bow)
+	setArrow(arrow)
+	setArmor(armor)
 
 func _ready():
 	$Body.modulate = playerColor
 	$Nametag/Label.text = " " + playerName + " "
-	$Bow.set_graphic(equipment['bow'])
-	$Armor.texture = load("res://images/equipment/" + equipment['armor'] + ".png")
 	setBow(equipment['bow'])
 	setArrow(equipment['arrow'])
 	setArmor(equipment['armor'])
