@@ -21,19 +21,19 @@ var ALL_EQUIPMENT = {
 	},
 	'bows': {
 		1: ['Bow_I'],
-		2: ['Bow_II', 'Short_Bow_I', 'Long_Bow_I'],
-		3: ['Bow_III', 'Short_Bow_II', 'Long_Bow_II'],
-		4: ['Bow_IV', 'Long_Bow_III'],
-		5: ['Bow_V', 'Short_Bow_III'],
-		6: ['Short_Bow_IV', 'Long_Bow_IV'],
+		2: ['Bow_II', 'Shortbow_I', 'Longbow_I'],
+		3: ['Bow_III', 'Shortbow_II', 'Longbow_II'],
+		4: ['Bow_IV', 'Shortbow_III', 'Longbow_III'],
+		5: ['Bow_V', 'Shortbow_IV', 'Longbow_III'],
+		6: ['Shortbow_V', 'Longbow_V'],
 	},
 	'armors': {
 		1: ['None'],
-		2: ['Light_Armor_I', 'Medium_Armor_I'],
-		3: ['Heavy_Armor_I', 'Medium_Armor_II'],
-		4: ['Light_Armor_II', 'Heavy_Armor_II', 'Medium_Armor_III'],
-		5: ['Armor_V', 'Ice_Armor_III'],
-		6: ['Ice_Armor_IV', 'Heavy_Armor_IV'],
+		2: ['Armor_I', 'Light_Armor_I', 'Heavy_Armor_I'],
+		3: ['Armor_II',  'Light_Armor_II', 'Heavy_Armor_II'],
+		4: ['Armor_III', 'Light_Armor_III', 'Heavy_Armor_III'],
+		5: ['Armor_IV', 'Light_Armor_IV', 'Heavy_Armor_IV'],
+		6: ['Armor_V', 'Light_Armor_V', 'Heavy_Armor_V'],
 	},
 }
 
@@ -201,11 +201,14 @@ var ARROW_SPECS = {
 	
 
 #NOTE will break if tier goes beyonf max tier, this breaks
-func chooseUpgrade(category, prevTier, prevName):
+func setUpgradeChoice(category, prevTier, prevName):
 	var newTier = prevTier + 1
 	#NOTE: prevName will be used to make you more likely to follow upgrade path e.g. ice -> ice 2
 	#NOTE: There are some gaps in paths currently, fix later
 	var choices = ALL_EQUIPMENT[category][newTier]
+	#if newTier > 2 && category != 'bows':
+		#for choice in choices:
+			#pass
 	return choices[randi() % choices.size()]
 	pass
 

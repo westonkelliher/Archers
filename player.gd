@@ -181,11 +181,11 @@ func playerReady():
 
 #Sets the possible upgrades for the player randomly/current equipment
 func randomizeUpgradeOptions():
-	equipment_upgrades['bow'] = $Equipment.chooseUpgrade('bows', equipment['bow_tier'], equipment['bow'])
+	equipment_upgrades['bow'] = $Equipment.setUpgradeChoice('bows', equipment['bow_tier'], equipment['bow'])
 	equipment_upgrades['bow_tier'] = equipment['bow_tier']+1
-	equipment_upgrades['arrow'] = $Equipment.chooseUpgrade('arrows', equipment['arrow_tier'], equipment['arrow'])
+	equipment_upgrades['arrow'] = $Equipment.setUpgradeChoice('arrows', equipment['arrow_tier'], equipment['arrow'])
 	equipment_upgrades['arrow_tier'] = equipment['arrow_tier']+1
-	equipment_upgrades['armor'] = $Equipment.chooseUpgrade('armors', equipment['armor_tier'], equipment['armor'])
+	equipment_upgrades['armor'] = $Equipment.setUpgradeChoice('armors', equipment['armor_tier'], equipment['armor'])
 	equipment_upgrades['armor_tier'] = equipment['armor_tier']+1
 
 func upgradeHandler(upgrade):
