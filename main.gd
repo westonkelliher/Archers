@@ -251,14 +251,13 @@ func roundOver(winner):
 		richTextBox.visible = true
 		await get_tree().create_timer(2.0).timeout
 		for player in players:
+			players[player].randomizeUpgradeOptions()
+			players[player].state = "upgrading"
 			if players[player] == winner:
-				winner.state = "upgrading"
 				winner.upgradePoints = 2
-				send_state_message(winner)
 			else:
-				players[player].state = "upgrading"
 				players[player].upgradePoints = 1
-				send_state_message(players[player])
+			send_state_message(players[player])
 		scoreboard()
 		roundNumber += 1
 		await $SoundEffects.finished

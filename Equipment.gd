@@ -200,6 +200,14 @@ var ARROW_SPECS = {
 
 	
 
+#NOTE will break if tier goes beyonf max tier, this breaks
+func chooseUpgrade(category, prevTier, prevName):
+	var newTier = prevTier + 1
+	#NOTE: prevName will be used to make you more likely to follow upgrade path e.g. ice -> ice 2
+	#NOTE: There are some gaps in paths currently, fix later
+	var choices = ALL_EQUIPMENT[category][newTier]
+	return choices[randi() % choices.size()]
+	pass
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

@@ -153,12 +153,14 @@ func handle_controlpad_input(message: String):
 	
 	elif parts[0] == "upgrade":
 		if self.upgradePoints > 0:
-			self.upgradePoints -= 1
 			upgradeHandler(parts[1])
+			self.upgradePoints -= 1
 		if self.upgradePoints <= 0:
 			self.upgradePoints = 0
 			self.state = "playing"
 			playerReady()
+		else:
+			randomizeUpgradeOptions()
 		
 	
 	elif parts[0] == "ready":
@@ -177,73 +179,48 @@ func playerReady():
 	if isDead:
 		self.global_position = savedPosition
 
+#Sets the possible upgrades for the player randomly/current equipment
+func randomizeUpgradeOptions():
+	equipment_upgrades['bow'] = $Equipment.chooseUpgrade('bows', equipment['bow_tier'], equipment['bow'])
+	equipment_upgrades['bow_tier'] = equipment['bow_tier']+1
+	equipment_upgrades['arrow'] = $Equipment.chooseUpgrade('arrows', equipment['arrow_tier'], equipment['arrow'])
+	equipment_upgrades['arrow_tier'] = equipment['arrow_tier']+1
+	equipment_upgrades['armor'] = $Equipment.chooseUpgrade('armors', equipment['armor_tier'], equipment['armor'])
+	equipment_upgrades['armor_tier'] = equipment['armor_tier']+1
+
 func upgradeHandler(upgrade):
 	if upgrade == "bow":
-		if equipment['bow_tier'] >= 5:
-			return;
-		#$Bow.draw_time *= 0.65
-		#$Bow.charge_time *= 0.75
-		
 		equipment['bow_tier'] = equipment_upgrades['bow_tier']
 		equipment['bow'] = equipment_upgrades['bow']
-		
 		var bow_name = equipment['bow']
 		var bow_spec = $Equipment.BOW_SPECS[bow_name]
-		
+		#NOTE: Sets new bow stats and graphic
 		$Bow.draw_time = bow_spec.drawTime
 		$Bow.charge_time = bow_spec.chargeTime
-		
 		$Bow.set_graphic(equipment['bow'])
-		if equipment['bow_tier'] < 5:
-			var new_tier = equipment_upgrades['bow_tier']+1
-			equipment_upgrades['bow_tier'] = new_tier
-			equipment_upgrades['bow'] = $Equipment.ALL_EQUIPMENT['bows'][new_tier][0] # TODO: choose randomly
-			
+	#
 	elif upgrade == "arrow":
-		if equipment['arrow_tier'] >= 5:
-			return;
-		#arrowDamage += arrowDamage*.2 + 5
 		equipment['arrow_tier'] = equipment_upgrades['arrow_tier']
 		equipment['arrow'] = equipment_upgrades['arrow']
-		
 		var arrow_name = equipment['arrow']
 		var arrow_spec = $Equipment.ARROW_SPECS[arrow_name]
-		
+		#NOTE: Sets new arrow stats and graphic
 		arrowDamage = arrow_spec.baseDamage
 		#arrowDrag = arrow_spec.drag
-		
 		$Bow.set_arrow_graphic(equipment['arrow'])
-		if equipment['arrow_tier'] < 5:
-			var new_tier = equipment_upgrades['arrow_tier']+1
-			equipment_upgrades['arrow_tier'] = new_tier
-			equipment_upgrades['arrow'] = $Equipment.ALL_EQUIPMENT['arrows'][new_tier][0] # TODO: choose randomly
-
+	#
 	elif upgrade == "armor":
-		if equipment['armor_tier'] >= 5:
-			return;
-		
-		#speedMultiplier += speedMultiplier*.07
-		#$Healthbar.max_value += int($Healthbar.max_value*0.02)*5 + 5
-		#$Healthbar/Damagebar.max_value = $Healthbar.max_value
-		
 		equipment['armor_tier'] = equipment_upgrades['armor_tier']
 		equipment['armor'] = equipment_upgrades['armor']
-		
 		var armor_name = equipment['armor']
 		var armor_spec = $Equipment.ARMOR_SPECS[armor_name]
-		
+		#NOTE: Sets new arrow stats and graphic
 		speedMultiplier = baseSpeedMultiplier * (1 + armor_spec.speedBonus)
 		$Healthbar.max_value = baseHealth + armor_spec.healthBonus
 		$Healthbar/Damagebar.max_value = $Healthbar.max_value
-		
-		
 		$Armor.texture = load("res://images/equipment/" + equipment['armor'] + ".png")
-		if equipment['armor_tier'] < 5:
-			var new_tier = equipment_upgrades['armor_tier']+1
-			equipment_upgrades['armor_tier'] = new_tier
-			equipment_upgrades['armor'] = $Equipment.ALL_EQUIPMENT['armors'][new_tier][0] # TODO: choose randomly
 
-			
+
 func notTaught():
 	if $Bow.charge_amount > 0 and controllable:
 		emit_signal("bow_shot", self, $Bow.get_power())
