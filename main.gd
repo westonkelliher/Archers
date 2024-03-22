@@ -155,6 +155,7 @@ func _on_player_bow_shot(player, power):
 	arrow.z_velo = 4+0.1*power
 	arrow.originPlayer = player.playerID
 	arrow.damage = player.arrowDamage
+	arrow.drag = player.arrowDrag
 	add_child(arrow)
 
 

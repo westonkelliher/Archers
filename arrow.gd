@@ -7,22 +7,13 @@ var originPlayer = null
 var playerHit = false
 var specialProperty = null #Can be used for special effects like poison later
 var damage = 20
+var drag = 0
 
 signal hit()
 
 
-
-
-
 func set_graphic(graphic_name):
-	$Sprite2D.texture = load("res://images/" + graphic_name + ".png")
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	
-	
-	pass # Replace with function body.
+	$Sprite2D.texture = load("res://images/equipment/" + graphic_name + ".png")
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -32,6 +23,7 @@ func _process(delta):
 	arrowScale = 0.9+0.05*z
 	self.scale = Vector2(arrowScale, arrowScale)
 	
+	self.linear_velocity *= (1-delta*drag)
 	
 	if z < 0:
 		z_velo = 0

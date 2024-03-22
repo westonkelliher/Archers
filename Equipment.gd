@@ -13,6 +13,33 @@ extends Node
 var ALL_EQUIPMENT = {
 	'arrows': {
 		1: ['Arrow_I'],
+		2: ['Arrow_II', 'Heavy_Arrow_I'],
+		3: ['Arrow_III', 'Heavy_Arrow_II'],
+		4: ['Arrow_IV', 'Heavy_Arrow_III'],
+		5: ['Arrow_V', 'Heavy_Arrow_IV'],
+		6: ['Heavy_Arrow_V']
+	},
+	'bows': {
+		1: ['Bow_I'],
+		2: ['Bow_II', 'Shortbow_I', 'Longbow_I'],
+		3: ['Bow_III', 'Shortbow_II', 'Longbow_II'],
+		4: ['Bow_IV', 'Shortbow_III', 'Longbow_III'],
+		5: ['Bow_V', 'Shortbow_IV', 'Longbow_III'],
+		6: ['Shortbow_V', 'Longbow_V'],
+	},
+	'armors': {
+		1: ['None'],
+		2: ['Armor_I', 'Light_Armor_I', 'Heavy_Armor_I'],
+		3: ['Armor_II',  'Light_Armor_II', 'Heavy_Armor_II'],
+		4: ['Armor_III', 'Light_Armor_III', 'Heavy_Armor_III'],
+		5: ['Armor_IV', 'Light_Armor_IV', 'Heavy_Armor_IV'],
+		6: ['Armor_V', 'Light_Armor_V', 'Heavy_Armor_V'],
+	},
+}
+
+var full_ALL_EQUIPMENT = {
+	'arrows': {
+		1: ['Arrow_I'],
 		2: ['Arrow_II', 'Ice_Arrow_I', 'Heavy_Arrow_I'],
 		3: ['Arrow_III', 'Ice_Arrow_II', 'Heavy_Arrow_II'],
 		4: ['Arrow_IV', 'Heavy_Arrow_III'],
@@ -33,7 +60,7 @@ var ALL_EQUIPMENT = {
 		3: ['Armor_II',  'Light_Armor_II', 'Heavy_Armor_II'],
 		4: ['Armor_III', 'Light_Armor_III', 'Heavy_Armor_III'],
 		5: ['Armor_IV', 'Light_Armor_IV', 'Heavy_Armor_IV'],
-		6: ['Armor_V', 'Light_Armor_V', 'Heavy_Armor_V'],
+		6: ['Light_Armor_V', 'Heavy_Armor_V'],
 	},
 }
 
@@ -132,7 +159,7 @@ class ArrowSpec:
 								# second)
 	var effect:     EntityEffect
 
-	func _init(baseDamage = 20, drag = 0.1, effect = null):
+	func _init(baseDamage = 20, drag = 0, effect = null):
 		self.baseDamage = baseDamage
 		self.drag = drag
 		self.effect = effect

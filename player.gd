@@ -44,7 +44,7 @@ var health = 100
 var baseHealth = 100
 
 var arrowDamage = 20
-var arrowDrag 
+var arrowDrag = 0
 var arrowEffect = null
 
 var knockback = Vector2.ZERO
@@ -89,7 +89,9 @@ func _ready():
 	$Nametag/Label.text = " " + playerName + " "
 	$Bow.set_graphic(equipment['bow'])
 	$Armor.texture = load("res://images/equipment/" + equipment['armor'] + ".png")
-	#$Nametag/Label.add_theme_color_override("font_color", playerColor)
+	setBow(equipment['bow'])
+	setArrow(equipment['arrow'])
+	setArmor(equipment['armor'])
 	pass # Replace with function body.
 
 func _process(delta):
@@ -191,42 +193,46 @@ func randomizeUpgradeOptions():
 func upgradeHandler(upgrade):
 	if upgrade == "bow":
 		equipment['bow_tier'] = equipment_upgrades['bow_tier']
-		equipment['bow'] = equipment_upgrades['bow']
-		var bow_name = equipment['bow']
-		var bow_spec = $Equipment.BOW_SPECS[bow_name]
-		#NOTE: Sets new bow stats and graphic
-		$Bow.draw_time = bow_spec.drawTime
-		$Bow.charge_time = bow_spec.chargeTime
-		$Bow.set_graphic(equipment['bow'])
+		var newBowName = equipment_upgrades['bow']
+		setBow(newBowName)
 	#
 	elif upgrade == "arrow":
 		equipment['arrow_tier'] = equipment_upgrades['arrow_tier']
-		equipment['arrow'] = equipment_upgrades['arrow']
-		var arrow_name = equipment['arrow']
-		var arrow_spec = $Equipment.ARROW_SPECS[arrow_name]
-		#NOTE: Sets new arrow stats and graphic
-		arrowDamage = arrow_spec.baseDamage
-		#arrowDrag = arrow_spec.drag
-		$Bow.set_arrow_graphic(equipment['arrow'])
+		var newArrowName = equipment_upgrades['arrow']
+		setArrow(newArrowName)
 	#
 	elif upgrade == "armor":
 		equipment['armor_tier'] = equipment_upgrades['armor_tier']
-		equipment['armor'] = equipment_upgrades['armor']
-		var armor_name = equipment['armor']
-		var armor_spec = $Equipment.ARMOR_SPECS[armor_name]
-		#NOTE: Sets new arrow stats and graphic
-		speedMultiplier = baseSpeedMultiplier * (1 + armor_spec.speedBonus)
-		$Healthbar.max_value = baseHealth + armor_spec.healthBonus
-		$Healthbar/Damagebar.max_value = $Healthbar.max_value
-		$Armor.texture = load("res://images/equipment/" + equipment['armor'] + ".png")
+		var newArmorName = equipment_upgrades['armor']
+		setArmor(newArmorName)
+
+func setBow(name):
+	equipment['bow'] = name
+	var bow_spec = $Equipment.BOW_SPECS[name]
+	$Bow.draw_time = bow_spec.drawTime
+	$Bow.charge_time = bow_spec.chargeTime
+	$Bow.set_graphic(equipment['bow'])
+
+func setArrow(name):
+	equipment['arrow'] = name
+	var arrow_spec = $Equipment.ARROW_SPECS[name]
+	self.arrowDamage = arrow_spec.baseDamage
+	self.arrowDrag = arrow_spec.drag
+	$Bow.set_arrow_graphic(equipment['arrow'])
+
+func setArmor(name):
+	equipment['armor'] = name
+	var armor_spec = $Equipment.ARMOR_SPECS[name]
+	speedMultiplier = baseSpeedMultiplier * (1 + armor_spec.speedBonus)
+	$Healthbar.max_value = baseHealth + armor_spec.healthBonus
+	$Healthbar/Damagebar.max_value = $Healthbar.max_value
+	$Armor.texture = load("res://images/equipment/" + equipment['armor'] + ".png")
 
 
 func notTaught():
 	if $Bow.charge_amount > 0 and controllable:
 		emit_signal("bow_shot", self, $Bow.get_power())
 	$Bow.release(isDead)
-
-
 
 
 func _on_area_2d_body_entered(body):
