@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://di4hicwy0k416" path="res://images/Arrow_I.png" id="4_riwdy"]
 
 [node name="Bow" type="Node2D"]
+z_index = 2
+z_as_relative = false
 script = ExtResource("1_h7ojm")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

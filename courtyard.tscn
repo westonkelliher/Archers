@@ -33,6 +33,8 @@ texture = ExtResource("1_mqwc8")
 centered = false
 
 [node name="TileMap" type="TileMap" parent="."]
+z_index = 1
+z_as_relative = false
 scale = Vector2(0.089, 0.09)
 tile_set = SubResource("TileSet_pr6ot")
 format = 2

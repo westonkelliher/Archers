@@ -86,7 +86,7 @@ func get_state_string():
 
 func _ready():
 	$Body.modulate = playerColor
-	$Nametag/Label.text = " " + playerName + " "
+	$Nametag/Label.text = playerName
 	setBow(equipment['bow'])
 	setArrow(equipment['arrow'])
 	setArmor(equipment['armor'])
@@ -170,7 +170,7 @@ func handle_controlpad_input(message: String):
 	
 	elif parts[0] == "name":
 		playerName = parts[1]
-		$Nametag/Label.text = " " + playerName + " "
+		$Nametag/Label.text = playerName
 
 func playerReady():
 	readyUp = true
@@ -319,6 +319,8 @@ func refresh():
 	knockback = Vector2.ZERO
 	velocity_knock = Vector2.ZERO
 	velocity_move = Vector2.ZERO
+	if $Nametag/Label.text.ends_with("★"):
+		$Nametag/Label.text = playerName
 
 
 func deathExplosion():
@@ -336,24 +338,31 @@ func restoreAll():
 	isDead = false
 	readyUp = false
 	gameScore = 0
+	
+
 
 func resetUpgrades():
-	arrowDamage = 20
-	speedMultiplier = 15
-	$Bow.draw_time = .5
-	$Bow.charge_time = 4
-	$Healthbar.max_value = 100
-	$Healthbar/Damagebar.max_value = 100
-	$Healthbar.value = 100
-	$Healthbar/Damagebar.value = 100
+	#arrowDamage = 20
+	#speedMultiplier = 15
+	#$Bow.draw_time = .5
+	#$Bow.charge_time = 4
+	#$Healthbar.max_value = 100
+	#$Healthbar/Damagebar.max_value = 100
+	#$Healthbar.value = 100
+	#$Healthbar/Damagebar.value = 100
+	
+	#NOTE This is a sanity check
+	speedMultiplier = baseSpeedMultiplier
+	
+	#Resets equipment and equipment upgrades table.
+	#Should work but probably needs to be tested more
+	set_equipment('Bow_I', 'Arrow_I', 'None')
 	equipment = _equipment.duplicate(true)
 	equipment_upgrades = _equipment_upgrades.duplicate(true)
-	$Bow.set_graphic(equipment['bow'])
-	$Bow.set_arrow_graphic(equipment['arrow'])
-	$Armor.texture = load("res://images/None.png")
+
 
 func winner():
-	$RoyalCrown.visible = true
+	$Nametag/Label.text += "★"
 
 func _on_timer_timeout():
 	#$Healthbar/Damagebar.value = $Healthbar.value

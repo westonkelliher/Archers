@@ -53,8 +53,7 @@ func _ready():
 	Autoloader.mainScene = self
 	musicManager(mainTheme)
 	$BarrelTimer.wait_time = barrelWaitTime
-	createButton("Free for All", settingsButtonHandler)
-	pass # Replace with function body.
+	#createButton("Free for All", settingsButtonHandler)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -64,7 +63,7 @@ func _process(delta):
 		multiplayerSetup()
 	#if not $MusicPlayer.is_playing():
 		#$MusicPlayer.play()
-	pass
+
 
 func send_state_message(player):
 	var msg = player.get_state_string()
@@ -277,7 +276,7 @@ func roundOver(winner):
 			players[player].randomizeUpgradeOptions()
 			players[player].state = "upgrading"
 			if players[player] == winner:
-				winner.upgradePoints = 6
+				winner.upgradePoints = 2
 			else:
 				players[player].upgradePoints = 1
 			send_state_message(players[player])

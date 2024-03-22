@@ -43,7 +43,6 @@ scale = Vector2(0.07, 0.07)
 texture = ExtResource("2_2uug1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource("CircleShape2D_1gr7i")
 
 [node name="Healthbar" type="ProgressBar" parent="."]
@@ -129,6 +128,8 @@ eyes_radius = 15.0
 position = Vector2(0, -53)
 
 [node name="Nametag" type="MarginContainer" parent="."]
+z_index = 2
+z_as_relative = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

@@ -22,8 +22,8 @@ func _ready():
 		hitLimit = 0
 		hitsTaken += 1
 		gotHit()
-	#if not debugBarrel:
-		#$LifespanTimer.start
+	if not debugBarrel:
+		$LifespanTimer.start
 	pass
 
 
