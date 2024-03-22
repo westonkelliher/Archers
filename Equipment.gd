@@ -64,6 +64,8 @@ var full_ALL_EQUIPMENT = {
 	},
 }
 
+
+
 ######## Bows ########
 class BowSpec:
 	var drawTime:   float
@@ -85,6 +87,9 @@ class BowSpec:
 		self.maxLift = maxLift
 		self.numShots = numShots
 
+	func clone() -> BowSpec:
+		return BowSpec.new()
+
 var BOW_SPECS = {
 	'Bow_I':   BowSpec.new(),
 	'Bow_II':  BowSpec.new(0.32, 3.2, 25.0,  55.0),
@@ -101,7 +106,7 @@ var BOW_SPECS = {
 	'Shortbow_IV':  BowSpec.new(0.07, 0.8, 36.0,  48.0,
 								 4.0, 7.0),
 	'Shortbow_V':   BowSpec.new(0.05, 0.6, 38.0,  50.0,
-								 4.0, 10.0),
+								 4.0, 7.0),
 	#
 	'Longbow_I':   BowSpec.new(0.5, 4.0, 25.0,  60.0,
 								8.0, 16.0),
@@ -125,6 +130,9 @@ class ArmorSpec:
 		self.healthBonus = healthBonus
 		self.speedBonus = speedBonus
 		self.ability = ability
+		
+	func clone() -> ArmorSpec:
+			return ArmorSpec.new()
 		
 class EntityAbility:
 	var isAvailableFunc:   Callable
@@ -163,6 +171,9 @@ class ArrowSpec:
 		self.baseDamage = baseDamage
 		self.drag = drag
 		self.effect = effect
+	
+	func clone() -> ArrowSpec:
+		return ArrowSpec.new()
 
 class EntityEffect:
 	#### functions are applied to the victim of the arrow
@@ -229,6 +240,8 @@ var ARROW_SPECS = {
 
 #NOTE will break if tier goes beyonf max tier, this breaks
 func setUpgradeChoice(category, prevTier, prevName):
+	if prevTier == 6:
+		return "nothing"
 	var newTier = prevTier + 1
 	#NOTE: prevName will be used to make you more likely to follow upgrade path e.g. ice -> ice 2
 	#NOTE: There are some gaps in paths currently, fix later
@@ -239,11 +252,37 @@ func setUpgradeChoice(category, prevTier, prevName):
 	return choices[randi() % choices.size()]
 	pass
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func customEquipment(equipment_type: String, base_type: String, override_stats: Dictionary = {}) -> Object:
+	# Dictionaries mapping equipment types to their specs dictionaries and classes
+	var specs_mapping = {
+		'bow': {"specs": BOW_SPECS, "class": BowSpec},
+		'armor': {"specs": ARMOR_SPECS, "class": ArmorSpec},
+		'arrow': {"specs": ARROW_SPECS, "class": ArrowSpec}
+	}
+	
+	# Check if the equipment type is valid
+	if equipment_type in specs_mapping:
+		var equipment_specs = specs_mapping[equipment_type]["specs"]
+		var equipment_class = specs_mapping[equipment_type]["class"]
+		
+		# Ensure the base type exists in the specified equipment specs dictionary
+		if base_type in equipment_specs:
+			# Get the base equipment spec to use as a template
+			var base_spec = equipment_specs[base_type].clone()
+			
+			# Apply overrides, if any
+			for key in override_stats.keys():
+				if key in base_spec:
+					base_spec.set(key, override_stats[key])
+				else:
+					print("Warning: Attempt to override non-existing attribute '%s'." % key)
+			
+			# Return the customized equipment spec
+			return base_spec
+		else:
+			print("Error: '%s' is not a valid base type for %s." % [base_type, equipment_type])
+			return null
+	else:
+		print("Error: Invalid equipment type '%s'." % equipment_type)
+		return null

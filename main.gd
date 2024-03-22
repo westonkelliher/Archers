@@ -19,6 +19,7 @@ var delta = 0
 
 @export var gamesNeeded4Win = 3
 @export var maxBarrelCount = 10
+@export var debugEquipment = false
 
 var multiplayerStarted = false
 var pvpOn =false
@@ -93,16 +94,24 @@ func _on_game_nite_controlpads_message_received(client, message):
 			buttonTextHandler()
 	elif not multiplayerStarted:
 		new_player(client)
-		if client == "0x1-1":
-			players[client].set_equipment('Shortbow_V', 'Arrow_I', 'Armor_I')
-		if client == "0x1-2":
-			players[client].set_equipment('Shortbow_V', 'Heavy_Arrow_I', 'Armor_II')
-		if client == "0x1-3":
-			players[client].set_equipment('Shortbow_V', 'Heavy_Arrow_II', 'Armor_III')
-		if client == "0x1-4":
-			players[client].set_equipment('Shortbow_V', 'Heavy_Arrow_IV', 'Armor_IV')
+		if debugEquipment:
+			setDebugEquipment(client)
 		players[client].handle_controlpad_input(client)
-		
+
+func setDebugEquipment(client):
+	if client == "0x1-1":
+		players[client].set_equipment('Shortbow_V', 'Arrow_I', 'Armor_I')
+	if client == "0x1-2":
+		players[client].set_equipment('Shortbow_V', 'Heavy_Arrow_I', 'Armor_II')
+	if client == "0x1-3":
+		players[client].set_equipment('Shortbow_V', 'Heavy_Arrow_II', 'Armor_III')
+	if client == "0x1-4":
+		players[client].set_equipment('Shortbow_V', 'Heavy_Arrow_IV', 'Armor_IV')
+	#this guy has custom equipment, wow
+	if client == "0x1-5":
+		players[client].setBow('Bow_I', {'chargeTime': 0.5})
+		players[client].setArmor('Armor_I', {'healthBonus': 240, 'speedBonus': 0.45})
+		players[client].equipment['bow_tier'] = 5
 
 
 func new_player(client):
@@ -166,7 +175,6 @@ func _on_player_bow_shot(player, power, lift):
 	arrow.linear_velocity = velocity
 	arrow.rotation = bow.rotation
 	arrow.z_velo = lift #4+0.1*power
-	print(arrow.z_velo)
 	arrow.originPlayer = player.playerID
 	arrow.damage = player.arrowDamage
 	arrow.drag = player.arrowDrag
@@ -269,7 +277,7 @@ func roundOver(winner):
 			players[player].randomizeUpgradeOptions()
 			players[player].state = "upgrading"
 			if players[player] == winner:
-				winner.upgradePoints = 2
+				winner.upgradePoints = 6
 			else:
 				players[player].upgradePoints = 1
 			send_state_message(players[player])

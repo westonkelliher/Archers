@@ -82,11 +82,7 @@ func get_state_string():
 		state_str +=  ":" + equipment_upgrades["arrow"] + "," + equipment_upgrades["bow"] + "," + equipment_upgrades["armor"] 
 	#print(state_str)
 	return state_str
-
-func set_equipment(bow, arrow, armor):
-	setBow(bow)
-	setArrow(arrow)
-	setArmor(armor)
+	
 
 func _ready():
 	$Body.modulate = playerColor
@@ -94,8 +90,6 @@ func _ready():
 	setBow(equipment['bow'])
 	setArrow(equipment['arrow'])
 	setArmor(equipment['armor'])
-	#setArrow('Heavy_Arrow_V')
-	#setBow('Longbow_V')
 	pass # Replace with function body.
 
 func _process(delta):
@@ -109,7 +103,6 @@ func _process(delta):
 		$Healthbar.visible = false
 	else:
 		$Healthbar.visible = true
-
 
 
 func _physics_process(delta):
@@ -210,9 +203,16 @@ func upgradeHandler(upgrade):
 		var newArmorName = equipment_upgrades['armor']
 		setArmor(newArmorName)
 
-func setBow(name):
+func set_equipment(bow, arrow, armor):
+	setBow(bow)
+	setArrow(arrow)
+	setArmor(armor)
+
+func setBow(name, overrides: Dictionary = {}):
 	equipment['bow'] = name
 	var bow_spec = $Equipment.BOW_SPECS[name]
+	if overrides.size() > 0:
+		bow_spec = $Equipment.customEquipment('bow', name, overrides)
 	$Bow.draw_time = bow_spec.drawTime
 	$Bow.charge_time = bow_spec.chargeTime
 	$Bow.max_power = bow_spec.maxPower
@@ -221,16 +221,20 @@ func setBow(name):
 	$Bow.base_lift = bow_spec.baseLift
 	$Bow.set_graphic(equipment['bow'])
 
-func setArrow(name):
+func setArrow(name, overrides: Dictionary = {}):
 	equipment['arrow'] = name
 	var arrow_spec = $Equipment.ARROW_SPECS[name]
+	if overrides.size() > 0:
+		arrow_spec = $Equipment.customEquipment('arrow', name, overrides)
 	self.arrowDamage = arrow_spec.baseDamage
 	self.arrowDrag = arrow_spec.drag
 	$Bow.set_arrow_graphic(equipment['arrow'])
 
-func setArmor(name):
+func setArmor(name, overrides: Dictionary = {}):
 	equipment['armor'] = name
 	var armor_spec = $Equipment.ARMOR_SPECS[name]
+	if overrides.size() > 0:
+		armor_spec = $Equipment.customEquipment('armor', name, overrides)
 	speedMultiplier = baseSpeedMultiplier * (1 + armor_spec.speedBonus)
 	$Healthbar.max_value = baseHealth + armor_spec.healthBonus
 	$Healthbar/Damagebar.max_value = $Healthbar.max_value
