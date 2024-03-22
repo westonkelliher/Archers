@@ -142,8 +142,8 @@ func _on_player_bow_charge():
 		power = max_power
 
 
-func _on_player_bow_shot(player, power):
-	var velocity = Vector2(300+24*power, 0)
+func _on_player_bow_shot(player, power, lift):
+	var velocity = Vector2(30*power, 0)
 	var bow = player.get_node('Bow')
 	velocity = velocity.rotated(bow.rotation)
 	velocity += player.velocity
@@ -152,7 +152,8 @@ func _on_player_bow_shot(player, power):
 	arrow.global_position = bow.global_position + Vector2(29,0).rotated(bow.rotation)
 	arrow.linear_velocity = velocity
 	arrow.rotation = bow.rotation
-	arrow.z_velo = 4+0.1*power
+	arrow.z_velo = lift #4+0.1*power
+	print(arrow.z_velo)
 	arrow.originPlayer = player.playerID
 	arrow.damage = player.arrowDamage
 	arrow.drag = player.arrowDrag

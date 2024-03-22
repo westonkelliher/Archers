@@ -212,11 +212,11 @@ var ARROW_SPECS = {
 	'Arrow_IV':  ArrowSpec.new(60),
 	'Arrow_V':   ArrowSpec.new(75),
 	#
-	'Heavy_Arrow_I':   ArrowSpec.new(45, 0.4),
-	'Heavy_Arrow_II':  ArrowSpec.new(65, 0.5),
-	'Heavy_Arrow_III': ArrowSpec.new(90, 0.58),
-	'Heavy_Arrow_IV':  ArrowSpec.new(120, 0.65),
-	'Heavy_Arrow_V' :  ArrowSpec.new(160, 0.7),
+	'Heavy_Arrow_I':   ArrowSpec.new(45, 0.7),
+	'Heavy_Arrow_II':  ArrowSpec.new(65, 0.8),
+	'Heavy_Arrow_III': ArrowSpec.new(90, 0.9),
+	'Heavy_Arrow_IV':  ArrowSpec.new(120, 1.0),
+	'Heavy_Arrow_V' :  ArrowSpec.new(160, 1.1),
 	#
 	'Ice_Arrow_I':   ArrowSpec.new(20, 0.1, IceEffect_I),
 	'Ice_Arrow_II':  ArrowSpec.new(30, 0.1, IceEffect_I),

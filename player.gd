@@ -58,7 +58,7 @@ var bow_angle = null
 
 var sfx_shootBow = preload("res://audio/shootBow.mp3")
 
-signal bow_shot(player, chargeLevel)
+signal bow_shot(player, chargeLevel, lift)
 signal bow_charge()
 signal hit()
 
@@ -92,6 +92,8 @@ func _ready():
 	setBow(equipment['bow'])
 	setArrow(equipment['arrow'])
 	setArmor(equipment['armor'])
+	#setArrow('Heavy_Arrow_V')
+	#setBow('Longbow_V')
 	pass # Replace with function body.
 
 func _process(delta):
@@ -211,6 +213,10 @@ func setBow(name):
 	var bow_spec = $Equipment.BOW_SPECS[name]
 	$Bow.draw_time = bow_spec.drawTime
 	$Bow.charge_time = bow_spec.chargeTime
+	$Bow.max_power = bow_spec.maxPower
+	$Bow.base_power = bow_spec.basePower
+	$Bow.max_lift = bow_spec.maxLift
+	$Bow.base_lift = bow_spec.baseLift
 	$Bow.set_graphic(equipment['bow'])
 
 func setArrow(name):
@@ -231,7 +237,7 @@ func setArmor(name):
 
 func notTaught():
 	if $Bow.charge_amount > 0 and controllable:
-		emit_signal("bow_shot", self, $Bow.get_power())
+		emit_signal("bow_shot", self, $Bow.get_power(), $Bow.get_lift())
 	$Bow.release(isDead)
 
 

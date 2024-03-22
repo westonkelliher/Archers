@@ -4,6 +4,9 @@ extends Node2D
 @export var draw_time: float = .5
 @export var charge_time: float = 4
 @export var max_power: float = 50.0
+var base_power: float
+var max_lift: float
+var base_lift: float
 
 
 var is_pulling = false
@@ -65,7 +68,12 @@ func release(dead):
 		sfxManager(sfx_shootBow)
 
 func get_power():
-	return charge_amount*max_power
+	var q = max_power - base_power
+	return base_power + charge_amount*q
+
+func get_lift():
+	var q = max_lift - base_lift
+	return base_lift + charge_amount*q
 
 func sfxManager(effect):
 	$SoundEffects.stream = effect

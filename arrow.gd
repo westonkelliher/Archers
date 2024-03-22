@@ -17,7 +17,7 @@ func set_graphic(graphic_name):
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _physics_process(delta):
 	z += z_velo*delta
 	z_velo -= 40*delta
 	arrowScale = 0.9+0.05*z
