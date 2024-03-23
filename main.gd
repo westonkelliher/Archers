@@ -20,6 +20,8 @@ var delta = 0
 @export var gamesNeeded4Win = 3
 @export var maxBarrelCount = 10
 @export var debugEquipment = false
+@export var winnerUpgradePoints = 2
+@export var defaultUpgradePoints = 1
 
 var multiplayerStarted = false
 var pvpOn =false
@@ -276,9 +278,9 @@ func roundOver(winner):
 			players[player].randomizeUpgradeOptions()
 			players[player].state = "upgrading"
 			if players[player] == winner:
-				winner.upgradePoints = 2
+				winner.upgradePoints = winnerUpgradePoints #default = 2
 			else:
-				players[player].upgradePoints = 1
+				players[player].upgradePoints = defaultUpgradePoints #default = 1
 			send_state_message(players[player])
 		scoreboard()
 		roundNumber += 1
@@ -409,26 +411,27 @@ func _on_barrel_timer_timeout():
 	if numBarrels < maxBarrelCount:
 		barrelLogic()
 
-var activeBarrels = []
+var existingBodies = []
 func barrelLogic():
 	if numBarrels == 0:
-		activeBarrels.clear()
+		existingBodies.clear()
 	var barrelPos = Vector2()
 	randomize()
 	barrelPos.x = vpSize.x*randf_range(.9,.1)
 	barrelPos.y = vpSize.y*randf_range(.9,.1)
 	# Checks if barrel is close to other barrels and trys again
-	for barrels in activeBarrels:
-		if barrels.global_position.distance_to(barrelPos) < 100:
+	for body in existingBodies:
+		if body.global_position.distance_to(barrelPos) < 100:
 			barrelLogic()
 			return
 	var barrel = barrel_scene.instantiate()
 	barrel.global_position = barrelPos
 	add_child(barrel)
 	numBarrels += 1
-	activeBarrels.append(barrel)
+	existingBodies.append(barrel)
 	pass
 
+#TODO: dummies spawn on each other. Fix later.
 func spawnDummy(amount):
 	for i in range(amount):
 		randomize()
@@ -438,6 +441,7 @@ func spawnDummy(amount):
 		var dummy = dummy_scene.instantiate()
 		dummy.global_position = dummyPos
 		dummy.temp = true
+		existingBodies.append(dummy)
 		add_child(dummy)
 
 func settingsButtonHandler():

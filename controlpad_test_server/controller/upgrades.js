@@ -19,32 +19,29 @@ export function layoutUpgrades() {
     upgradesDiv.style.borderRadius = "30px";
     
     //// Bow Upgrade ////
-    if (EQUIPMENT.new_bow !== "nothing"){
     var upDiv1 = document.getElementById("up1");
     upDiv1.style.top = "2%";
     upDiv1.style.left = "1%";
     //
     populateUpDiv(upDiv1, "arrow", EQUIPMENT.arrow, EQUIPMENT.new_arrow);
-    }
+    
 
     //// Arrow Upgrade ////
-    if (EQUIPMENT.new_arrow !== "nothing"){
     var upDiv2 = document.getElementById("up2");
     upDiv2.style.top = "2%";
     upDiv2.style.left = "50%";
     upDiv2.style.transform = "translate(-50%, 0%)";
     //
     populateUpDiv(upDiv2, "bow", EQUIPMENT.bow, EQUIPMENT.new_bow);
-    }
+    
 
     //// Armor Upgrade ////
-    if (EQUIPMENT.new_armor !== "nothing"){
     var upDiv3 = document.getElementById("up3");
     upDiv3.style.top = "2%";
     upDiv3.style.right = "1%";
     //
     populateUpDiv(upDiv3, "armor", EQUIPMENT.armor, EQUIPMENT.new_armor);
-    }
+    
 }
 
 
@@ -79,6 +76,11 @@ function populateUpDiv(upDiv, type, old_equip_name, new_equip_name) {
     old_equip.style.transform = "translate(-50%, -50%)";
     old_equip.style.width = "26vh";
     upDiv.appendChild(old_equip);
+    //// Return if no available upgrade
+    if (new_equip_name == "nothing") {
+        upDiv.onclick = () => {};
+        return;
+    }
     //// Downward Graphic
     var arrow = document.createElement('img');
     arrow.src = "./resources/arrow_down.png";

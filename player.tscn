@@ -1,7 +1,7 @@
-[gd_scene load_steps=19 format=3 uid="uid://dcbqnl0lw5qdg"]
+[gd_scene load_steps=20 format=3 uid="uid://dcbqnl0lw5qdg"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_4wnrd"]
-[ext_resource type="Texture2D" uid="uid://bnnnkorjrefev" path="res://images/Body.png" id="2_2uug1"]
+[ext_resource type="Texture2D" uid="uid://csh5jc38xkj3p" path="res://images/body_no_shadow.png" id="2_b71vk"]
 [ext_resource type="PackedScene" uid="uid://dpvb6ptchtp0j" path="res://bow.tscn" id="2_vx5ds"]
 [ext_resource type="Texture2D" uid="uid://beatf4dji8e40" path="res://images/Head.png" id="4_7edw6"]
 [ext_resource type="Texture2D" uid="uid://bubohat2cswlx" path="res://images/equipment/Armor_II.png" id="4_lgm16"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://fvj6smd1lsrc" path="res://eyes.tscn" id="7_gm42u"]
 [ext_resource type="FontFile" uid="uid://c71iurigqobs1" path="res://fonts/mainFont.ttf" id="9_12530"]
 [ext_resource type="Script" path="res://Equipment.gd" id="11_xghg4"]
+[ext_resource type="Texture2D" uid="uid://ck25gh4sxmqyy" path="res://images/barrel shadow.png" id="12_1j0r4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1gr7i"]
 radius = 21.7307
@@ -39,8 +40,9 @@ collision_mask = 17
 script = ExtResource("1_4wnrd")
 
 [node name="Body" type="Sprite2D" parent="."]
-scale = Vector2(0.07, 0.07)
-texture = ExtResource("2_2uug1")
+position = Vector2(0, -0.999999)
+scale = Vector2(0.07, 0.0675)
+texture = ExtResource("2_b71vk")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_1gr7i")
@@ -159,6 +161,12 @@ horizontal_alignment = 1
 
 [node name="Equipment" type="Node" parent="."]
 script = ExtResource("11_xghg4")
+
+[node name="Shadow" type="Sprite2D" parent="."]
+z_index = -5
+position = Vector2(7.10543e-15, 7)
+scale = Vector2(0.0692065, 0.0520975)
+texture = ExtResource("12_1j0r4")
 
 [connection signal="timeout" from="Healthbar/Timer" to="." method="_on_timer_timeout"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

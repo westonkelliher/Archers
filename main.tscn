@@ -18,7 +18,7 @@
 size = Vector2(594, 96)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ehcgw"]
-size = Vector2(584, 80)
+size = Vector2(590, 96)
 
 [node name="Main" type="Node"]
 script = ExtResource("1_qydqk")
@@ -126,9 +126,11 @@ polygon = PackedVector2Array(-811.667, -146.667, -963.333, 80, -951.667, 121.667
 
 [node name="MultiplayerButton" type="Area2D" parent="MenuElements"]
 position = Vector2(960, 576)
+collision_layer = 16
 collision_mask = 4
 
 [node name="MultiplayerButtonCollision" type="CollisionShape2D" parent="MenuElements/MultiplayerButton"]
+visible = false
 position = Vector2(-1, 0)
 shape = SubResource("RectangleShape2D_j5xsk")
 
@@ -154,10 +156,11 @@ metadata/_edit_use_anchors_ = true
 [node name="StaticBody2D" type="StaticBody2D" parent="MenuElements/MultiplayerButton"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MenuElements/MultiplayerButton/StaticBody2D"]
-position = Vector2(2, 0)
+position = Vector2(-1, 0)
 shape = SubResource("RectangleShape2D_ehcgw")
 
 [node name="CenterContainer" type="CenterContainer" parent="MenuElements/MultiplayerButton"]
+z_index = 2
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -241,7 +244,6 @@ position = Vector2(257, 520)
 
 [node name="Barrel" parent="." instance=ExtResource("13_vxele")]
 position = Vector2(464, 856)
-debugBarrel = true
 
 [connection signal="message_received" from="Controlpads" to="." method="_on_game_nite_controlpads_message_received"]
 [connection signal="body_entered" from="MenuElements/MultiplayerButton" to="." method="_on_multiplayer_button_body_entered"]

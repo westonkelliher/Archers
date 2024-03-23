@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://01qpl02am565" path="res://images/barrelTop.png" id="3_vkutl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dpgly"]
-size = Vector2(45.3333, 40.6667)
+size = Vector2(45.3333, 35.6471)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xk2ek"]
 radius = 22.6667
@@ -20,7 +20,7 @@ scale = Vector2(1.7, 1.7)
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("1_rn4k6")
-debugBarrel = true
+chaosDebug = true
 
 [node name="BarrelSprite" type="Sprite2D" parent="."]
 texture_filter = 1
@@ -35,7 +35,8 @@ scale = Vector2(0.07, 0.07)
 texture = ExtResource("3_vkutl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -2.33333)
+position = Vector2(0, 0.17648)
+scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_dpgly")
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -55,6 +56,7 @@ scale = Vector2(0.07, 0.07)
 texture = ExtResource("3_5gxh0")
 
 [node name="LifespanTimer" type="Timer" parent="."]
+wait_time = 60.0
 one_shot = true
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

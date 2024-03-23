@@ -2,6 +2,7 @@ extends Node
 var mainScene = null
 var buttonRef = null
 var font = preload("res://fonts/mainFont.ttf")
+var barrelDespawning = false
 
 func damageNumbers(value : int, position : Vector2, type : String = "general"):
 	var number = Label.new()

@@ -3,6 +3,10 @@ var hitsTaken = 0
 @export var hitLimit = 0
 @export var chaosDebug : bool = false
 @export var debugBarrel : bool = false
+@export var wolfProbabilityWeight = 35
+@export var nothingProbabilityWeight = 35
+@export var potionProbabilityWeight = 25
+@export var defaultProbabilityWeight = 25
 var barrel_explosion = preload("res://barrel_explosion.tscn")
 
 func _ready():
@@ -19,12 +23,28 @@ func _ready():
 		#self, "modulate", Color(1,1,1,1), 3
 	#).set_ease(Tween.EASE_IN)
 	if chaosDebug:
+		wolfProbabilityWeight = 100
+		potionProbabilityWeight = 0
+		nothingProbabilityWeight = 0
+		defaultProbabilityWeight = 0
 		hitLimit = 0
 		hitsTaken += 1
 		gotHit()
+	
+	$BarrelTopHalf.visible = false
+	self.modulate = Color(1, 1, 1, 0)
+	var tween = get_tree().create_tween() 
+	tween.set_parallel(true)
+	tween.tween_property(
+		self, "modulate", Color(1,1,1,1), 0.3
+	).set_ease(Tween.EASE_IN)
+	
 	if not debugBarrel:
-		$LifespanTimer.start
+		$LifespanTimer.start()
 	pass
+	
+	await tween.finished
+	$BarrelTopHalf.visible = true
 
 
 func _on_area_2d_body_entered(body):
@@ -53,9 +73,9 @@ func gotHit():
 
 
 var items = [
-	#{'name': 'nothing', 'weight': 35, 'scene': null},
-	#{'name': 'potion', 'weight': 20, 'scene': "res://potion.tscn"},
-	{'name': 'wolf', 'weight': 35, 'scene': "res://wolf.tscn"},  # Common item
+	{'name': 'nothing', 'weight': nothingProbabilityWeight, 'scene': null},
+	{'name': 'potion', 'weight': potionProbabilityWeight, 'scene': "res://potion.tscn"},
+	{'name': 'wolf', 'weight': wolfProbabilityWeight, 'scene': "res://wolf.tscn"},  # Common item
 	#{'name': 'explosion', 'weight': 1, 'scene': "res://explosion.tscn"}
 ]
 
@@ -96,11 +116,18 @@ func explode():
 
 
 func _on_lifespan_timer_timeout():
-	despawn()
+	if Autoloader.barrelDespawning == true:
+		$LifespanTimer.wait_time = 20
+		$LifespanTimer.start()
+		return
+	else:
+		despawn()
 	pass
 
 @export var fadetime = 0.5
 func despawn():
+	$BarrelTopHalf.visible = false
+	Autoloader.barrelDespawning = true
 	while fadetime > 0.05:
 		$BarrelSprite.modulate = Color(1, 1, 1, 0.5)
 		await get_tree().create_timer(fadetime).timeout
@@ -109,5 +136,6 @@ func despawn():
 		fadetime *= 0.9
 	Autoloader.mainScene.numBarrels -= 1
 	Autoloader.mainScene.activeBarrels.erase(self)
+	Autoloader.barrelDespawning = false
 	queue_free()
 	pass

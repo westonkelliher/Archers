@@ -171,6 +171,9 @@ func handle_controlpad_input(message: String):
 	elif parts[0] == "name":
 		playerName = parts[1]
 		$Nametag/Label.text = playerName
+	
+	elif parts[0] == "debug":
+		print("Debug from client: " + playerID + " - " + playerName + ": " + str(parts[1]))
 
 func playerReady():
 	readyUp = true
