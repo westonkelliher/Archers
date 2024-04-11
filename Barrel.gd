@@ -65,7 +65,7 @@ func gotHit():
 		global_position = Vector2(-500,-500)
 		$BreakNoise.play()
 		Autoloader.mainScene.numBarrels -= 1
-		Autoloader.mainScene.activeBarrels.erase(self)
+		Autoloader.mainScene.existingBodies.erase(self)
 		await $BreakNoise.finished
 		queue_free()
 	else:
@@ -135,7 +135,7 @@ func despawn():
 		await get_tree().create_timer(fadetime).timeout
 		fadetime *= 0.9
 	Autoloader.mainScene.numBarrels -= 1
-	Autoloader.mainScene.activeBarrels.erase(self)
+	Autoloader.mainScene.existingBodies.erase(self)
 	Autoloader.barrelDespawning = false
 	queue_free()
 	pass
