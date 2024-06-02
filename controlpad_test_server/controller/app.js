@@ -40,24 +40,29 @@ export function clearElements() {
 }
 
 function layoutElements(viewWidth, viewHeight) {
-    if (STATE == "none") {
-        document.getElementById("wait-text").style.display = "block";
-        //layoutUpgrades(); //
-    } else if (STATE == "joining") {
-        layoutMovePad();
-        layoutBowPad();
-        document.getElementById("mainDi").style.background = "#eeeeee";
-    } else if (STATE == "playing") {
-        layoutMovePad();
-        layoutBowPad();
-        document.getElementById("mainDi").style.background = COLOR;
-    } else if (STATE == "upgrading") {
-        console.log("abc");
-        layoutUpgrades();
-    } else {
-        console.log("Warning bad state");
+    // this is necessary for when the game receives a state message before the viewport-change event
+    if (viewWidth < viewHeight) {
+        document.getElementById("turn-text").style.display = "block";        
     }
-        
+    else {
+        if (STATE == "none") {
+            document.getElementById("wait-text").style.display = "block";
+            //layoutUpgrades(); //
+        } else if (STATE == "joining") {
+            layoutMovePad();
+            layoutBowPad();
+            document.getElementById("mainDi").style.background = "#eeeeee";
+        } else if (STATE == "playing") {
+            layoutMovePad();
+            layoutBowPad();
+            document.getElementById("mainDi").style.background = COLOR;
+        } else if (STATE == "upgrading") {
+            console.log("abc");
+            layoutUpgrades();
+        } else {
+            console.log("Warning bad state");
+        }
+    }        
 }
 
 
@@ -90,19 +95,19 @@ document.addEventListener("controlpad-message", (event) => {
     if (parts[1] === "joining") {
         STATE = "joining";
         clearElements();
-        layoutElements();
+        layoutElements(window.innerWidth, window.innerHeight);
     } else if (parts[1] === "playing") {
         STATE = "playing";
         COLOR = parts[2];
         clearElements();
-        layoutElements();
+        layoutElements(window.innerWidth, window.innerHeight);
     } else if (parts[1] === "upgrading") {
         STATE = "upgrading";
         COLOR = parts[2];
         UP_POINTS = parts[3];
         update_equipment(parts[4], parts[5]);
         clearElements();
-        layoutElements();
+        layoutElements(window.innerWidth, window.innerHeight);
     } else {
         console.log("TBD");
     }
