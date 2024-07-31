@@ -1,0 +1,2 @@
+* add QR code
+  - make QR code a pattern in the grass?

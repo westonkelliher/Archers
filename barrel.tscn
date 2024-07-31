@@ -1,10 +1,10 @@
 [gd_scene load_steps=8 format=3 uid="uid://ch2gfgh2bevr7"]
 
 [ext_resource type="Script" path="res://Barrel.gd" id="1_rn4k6"]
-[ext_resource type="Texture2D" uid="uid://chkln84y842q7" path="res://images/barrelLight.png" id="2_5qp1y"]
-[ext_resource type="Texture2D" uid="uid://ck25gh4sxmqyy" path="res://images/barrel shadow.png" id="3_5gxh0"]
-[ext_resource type="AudioStream" uid="uid://b26ppt4c3h0ak" path="res://audio/barrelBreak.mp3" id="3_i51mg"]
-[ext_resource type="Texture2D" uid="uid://01qpl02am565" path="res://images/barrelTop.png" id="3_vkutl"]
+[ext_resource type="Texture2D" uid="uid://dnnefhcri0kr4" path="res://images/barrelLight.png" id="2_5qp1y"]
+[ext_resource type="Texture2D" uid="uid://bybkhpfjwni0o" path="res://images/barrel shadow.png" id="3_5gxh0"]
+[ext_resource type="AudioStream" uid="uid://bu05g4qtypg83" path="res://audio/barrelBreak.mp3" id="3_i51mg"]
+[ext_resource type="Texture2D" uid="uid://dr8svai5k1jxn" path="res://images/barrelTop.png" id="3_vkutl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dpgly"]
 size = Vector2(45.3333, 35.6471)

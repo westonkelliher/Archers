@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cva4ir2h6v4cm"]
 
 [ext_resource type="Script" path="res://wolf.gd" id="1_mrc20"]
-[ext_resource type="Texture2D" uid="uid://b43d2l0kee732" path="res://images/wolf.png" id="1_t4dfb"]
+[ext_resource type="Texture2D" uid="uid://b1ulp6lgj7ck4" path="res://images/wolf.png" id="1_t4dfb"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3lv70"]
 radius = 56.0
