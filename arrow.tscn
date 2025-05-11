@@ -1,7 +1,9 @@
 [gd_scene load_steps=4 format=3 uid="uid://cuil4gqxlaq1c"]
 
-[ext_resource type="Script" path="res://arrow.gd" id="1_nrblj"]
-[ext_resource type="Texture2D" uid="uid://c24qangxq41qw" path="res://images/Arrow3.png" id="2_t7ps2"]
+[ext_resource type="Script" uid="uid://b1w6yfhydrl02" path="res://arrow.gd" id="1_nrblj"]
+
+[sub_resource type="Resource" id="Resource_l5ahi"]
+metadata/__load_path__ = "res://images/Arrow3.png"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dpp57"]
 radius = 2.0
@@ -14,7 +16,7 @@ script = ExtResource("1_nrblj")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.17, 0.17)
-texture = ExtResource("2_t7ps2")
+texture = SubResource("Resource_l5ahi")
 hframes = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://dy78fyg8j8lfl"]
 
-[ext_resource type="Texture2D" uid="uid://daw2llelw7p1b" path="res://images/barrelfrag.png" id="1_ea0e4"]
-[ext_resource type="Script" path="res://barrel_explosion.gd" id="2_jeopr"]
+[ext_resource type="Texture2D" uid="uid://d01xoe4kgbd2" path="res://images/barrelfrag.png" id="1_ea0e4"]
+[ext_resource type="Script" uid="uid://ckld60itqpvqm" path="res://barrel_explosion.gd" id="2_jeopr"]
 
 [sub_resource type="Curve" id="Curve_pqnmu"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.268817, 1), 0.0, 0.0, 0, 0, Vector2(0.666667, 0), -1.14462, 0.0, 0, 0]

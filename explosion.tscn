@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://18qy2cf0e85y"]
 
-[ext_resource type="Texture2D" uid="uid://c7q18du5aiem1" path="res://images/explosion particle.png" id="1_fpxvg"]
-[ext_resource type="Script" path="res://explosion.gd" id="2_w3w8d"]
-[ext_resource type="Texture2D" uid="uid://8q25ixyus6tf" path="res://icon.svg" id="2_xyb15"]
+[ext_resource type="Texture2D" uid="uid://cgc5xlu6q8dc1" path="res://images/explosion particle.png" id="1_fpxvg"]
+[ext_resource type="Script" uid="uid://mco6nndkg462" path="res://explosion.gd" id="2_w3w8d"]
+[ext_resource type="Texture2D" uid="uid://cbdos2l7v0hel" path="res://icon.svg" id="2_xyb15"]
 
 [sub_resource type="Curve" id="Curve_gdgt7"]
 _data = [Vector2(0.060241, 1), 0.0, 0.0, 0, 0, Vector2(0.240964, 0), 0.0, 0.0, 0, 0]

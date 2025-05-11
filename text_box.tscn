@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://bfdvytebnnfwm"]
 
-[ext_resource type="Texture2D" uid="uid://csl01cssqlrtu" path="res://images/textbox.png" id="1_l4cqf"]
-[ext_resource type="Script" path="res://text_box.gd" id="1_taqi6"]
-[ext_resource type="FontFile" uid="uid://c71iurigqobs1" path="res://fonts/mainFont.ttf" id="3_iuglt"]
+[ext_resource type="Texture2D" uid="uid://ubahhndjvhoe" path="res://images/textbox.png" id="1_l4cqf"]
+[ext_resource type="Script" uid="uid://esr1r2aflo13" path="res://text_box.gd" id="1_taqi6"]
+[ext_resource type="FontFile" uid="uid://eevsekvmk620" path="res://fonts/mainFont.ttf" id="3_iuglt"]
 
 [node name="TextBox" type="MarginContainer"]
 z_index = 10

@@ -1,23 +1,15 @@
 [gd_scene load_steps=5 format=3 uid="uid://dfdnabg7x326v"]
 
-[ext_resource type="Texture2D" uid="uid://xlrjjoq0h6av" path="res://images/backsplash_shaded.png" id="1_mqwc8"]
-[ext_resource type="Texture2D" uid="uid://bjd78qkvattbp" path="res://images/Fence4.png" id="2_qdv8l"]
+[ext_resource type="Texture2D" uid="uid://c50dyq5uvrd8p" path="res://images/backsplash_shaded.png" id="1_mqwc8"]
+[ext_resource type="Texture2D" uid="uid://fxpjqlwymka2" path="res://images/Fence4.png" id="2_qdv8l"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ikih1"]
 texture = ExtResource("2_qdv8l")
 texture_region_size = Vector2i(800, 800)
 0:0/0 = 0
-0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-0:0/0/physics_layer_0/angular_velocity = 0.0
 1:0/0 = 0
-1:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-1:0/0/physics_layer_0/angular_velocity = 0.0
 2:0/0 = 0
-2:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-2:0/0/physics_layer_0/angular_velocity = 0.0
 3:0/0 = 0
-3:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
-3:0/0/physics_layer_0/angular_velocity = 0.0
 
 [sub_resource type="TileSet" id="TileSet_pr6ot"]
 tile_size = Vector2i(800, 800)
