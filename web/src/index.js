@@ -72,6 +72,19 @@ export default {
       const room = url.searchParams.get("room") || "arena";
       return env.ROOMS.get(env.ROOMS.idFromName(room)).fetch(request);
     }
+    // The wasm exceeds the 25MiB asset limit, so it is stored pre-gzipped
+    // (web/build.sh) and served with Content-Encoding for transparent
+    // browser decompression.
+    if (url.pathname === "/index.wasm") {
+      const gz = await env.ASSETS.fetch(url.origin + "/index.wasm.gz");
+      return new Response(gz.body, {
+        headers: {
+          "Content-Type": "application/wasm",
+          "Content-Encoding": "gzip",
+          "Cache-Control": "public, max-age=3600",
+        },
+      });
+    }
     return env.ASSETS.fetch(request);
   },
 };
