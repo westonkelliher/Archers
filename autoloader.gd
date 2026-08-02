@@ -1,6 +1,9 @@
 extends Node
 var mainScene = null
 var buttonRef = null
+# netplay (see ARCHITECTURE.md): set by netplay/lobby.gd before main.tscn loads
+var net_mode = "local" # local | host | client
+var net_room = ""
 var font = preload("res://fonts/mainFont.ttf")
 var barrelDespawning = false
 

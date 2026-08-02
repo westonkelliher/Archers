@@ -24,9 +24,10 @@ func _physics_process(delta):
 	self.scale = Vector2(arrowScale, arrowScale)
 	
 	var speed = self.linear_velocity.length()
-	var speed_reduction = self.drag * (.00001 * speed**2 + .005 * speed)
-	var damp = 1 - speed_reduction/speed
-	self.linear_velocity *= damp
+	if speed > 0:
+		var speed_reduction = self.drag * (.00001 * speed**2 + .005 * speed)
+		var damp = 1 - speed_reduction/speed
+		self.linear_velocity *= damp
 	
 	if z < 0:
 		z_velo = 0

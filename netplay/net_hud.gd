@@ -7,6 +7,7 @@ signal send(msg)
 var _panel: PanelContainer
 var _label: RichTextLabel
 var _choices := {} # "1" -> "arrow", etc.
+var _status: Label
 
 func _ready():
 	layer = 50
@@ -15,6 +16,11 @@ func _ready():
 	hint.position = Vector2(16, 8)
 	hint.add_theme_color_override("font_color", NetTheme.TEXT_DIM)
 	add_child(hint)
+
+	_status = Label.new()
+	_status.position = Vector2(16, 36)
+	_status.add_theme_color_override("font_color", NetTheme.TEXT_ACCENT)
+	add_child(_status)
 
 	_panel = PanelContainer.new()
 	var style := StyleBoxFlat.new()
@@ -35,6 +41,22 @@ func _ready():
 	_label.custom_minimum_size = Vector2(560, 0)
 	_label.add_theme_color_override("default_color", NetTheme.TEXT_MAIN)
 	_panel.add_child(_label)
+
+func set_status(status: String):
+	match status:
+		"connecting":
+			_status.text = "connecting…"
+		"open":
+			_status.text = _invite
+		"closed":
+			_status.text = "connection lost"
+		"hostGone":
+			_status.text = "host left the game"
+
+var _invite := ""
+func show_invite(room: String):
+	_invite = "invite: archers.weston.pub/?room=" + room
+	_status.text = _invite
 
 func receive_state(msg: String):
 	var parts := msg.split(":")

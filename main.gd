@@ -56,6 +56,10 @@ func _ready():
 	musicManager(mainTheme)
 	$BarrelTimer.wait_time = barrelWaitTime
 	#createButton("Free for All", settingsButtonHandler)
+	if Autoloader.net_mode == "client":
+		# Spectator shell: sim stays off, netplay puppets render host snapshots.
+		set_process(false)
+		$Barrel.queue_free() # host serializes its own copy of the menu barrel
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
