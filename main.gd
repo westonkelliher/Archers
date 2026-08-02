@@ -97,7 +97,7 @@ func _on_game_nite_controlpads_message_received(client, message):
 		new_player(client)
 		if debugEquipment:
 			setDebugEquipment(client)
-		players[client].handle_controlpad_input(client)
+		players[client].handle_controlpad_input(message)
 
 func setDebugEquipment(client):
 	if client == "0x1-1":

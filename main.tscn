@@ -1,6 +1,7 @@
-[gd_scene load_steps=16 format=3 uid="uid://bp3o11s21hwfo"]
+[gd_scene load_steps=17 format=3 uid="uid://bp3o11s21hwfo"]
 
 [ext_resource type="Script" uid="uid://bt1esshk3vvgc" path="res://main.gd" id="1_qydqk"]
+[ext_resource type="Script" path="res://netplay/net.gd" id="1_netgd"]
 [ext_resource type="PackedScene" uid="uid://dfdnabg7x326v" path="res://courtyard.tscn" id="1_uhtla"]
 [ext_resource type="FontFile" uid="uid://cj2gsx2fju00v" path="res://fonts/m6x11plus.ttf" id="4_bcyw0"]
 [ext_resource type="PackedScene" uid="uid://chhpjvwbr85aa" path="res://wall.tscn" id="4_ol2fr"]
@@ -47,7 +48,8 @@ layout_mode = 2
 
 [node name="Courtyard" parent="." instance=ExtResource("1_uhtla")]
 
-[node name="Controlpads" type="GameNiteControlpads" parent="."]
+[node name="Controlpads" type="Node" parent="."]
+script = ExtResource("1_netgd")
 
 [node name="Wall" parent="." instance=ExtResource("4_ol2fr")]
 visible = false
