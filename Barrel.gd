@@ -65,10 +65,8 @@ func gotHit():
 		randomSpawn()
 		explode()
 		global_position = Vector2(-500,-500)
-		Net.play($BreakNoise)
 		Autoloader.mainScene.numBarrels -= 1
 		Autoloader.mainScene.existingBodies.erase(self)
-		await $BreakNoise.finished
 		queue_free()
 	else:
 		pass

@@ -65,6 +65,31 @@ window.fetch = (resource, options) => {
 	});
 };
 
+// Browsers stop requestAnimationFrame in a hidden tab, which would freeze the
+// match for everyone if that tab is the host. Worker timers keep running, so
+// borrow one to keep the game ticking while hidden.
+const realRAF = window.requestAnimationFrame.bind(window);
+const pendingFrames = new Map();
+let nextFrameId = 1;
+function runFrame(id, time) {
+	const callback = pendingFrames.get(id);
+	if (!callback) return;
+	pendingFrames.delete(id);
+	callback(time);
+}
+window.requestAnimationFrame = (callback) => {
+	const id = nextFrameId++;
+	pendingFrames.set(id, callback);
+	realRAF((time) => runFrame(id, time));
+	return id;
+};
+window.cancelAnimationFrame = (id) => { pendingFrames.delete(id); };
+const ticker = new Worker(URL.createObjectURL(new Blob(['setInterval(() => postMessage(0), 16)'])));
+ticker.onmessage = () => {
+	if (!document.hidden) return;
+	for (const id of [...pendingFrames.keys()]) runFrame(id, performance.now());
+};
+
 const $ = (id) => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 let room = (params.get('room') || '').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 32);

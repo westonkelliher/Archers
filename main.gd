@@ -30,13 +30,9 @@ var roundNumber = 1
 var menuElemPos = null
 var vpSize
 
-#Music
-var mainTheme = preload("res://audio/Scape Main.ogg")
-var battleTheme = preload("res://audio/Mage Arena.ogg")
-var battleStart = preload("res://audio/battleHorn.mp3")
-var fanfare = preload("res://audio/fanfare.mp3")
-var wardrums = preload("res://audio/warDrums.wav")
-var jaunt = preload("res://audio/VictoryJaunt.ogg")
+# These pauses used to be however long a sound took to play
+const DRUMS_TIME = 3.7
+const FANFARE_TIME = 3.9
 
 #OnReady
 @onready var textBoxLabel = $CenterContainer/TextBox/MarginContainer/Label
@@ -49,9 +45,8 @@ var jaunt = preload("res://audio/VictoryJaunt.ogg")
 
 
 const ARENA_SIZE = Vector2(1920, 1080)
-const UPGRADE_TIMEOUT = 45.0
+const UPGRADE_TIMEOUT = 40.0
 
-var musicPath = ""
 var upgradeMenu = null
 
 func _ready():
@@ -75,10 +70,10 @@ func _ready():
 		return
 	Net.peer_joined.connect(_on_peer_joined)
 	Net.peer_left.connect(remove_player)
-	musicManager(mainTheme)
 	$BarrelTimer.wait_time = barrelWaitTime
 	for id in Net.peers:
-		new_player(id)
+		if not (Net.dedicated and id == Net.my_id):
+			new_player(id)
 	#createButton("Free for All", settingsButtonHandler)
 
 
@@ -107,8 +102,10 @@ func _on_net_packet(from, data):
 		if data[0] == "state":
 			upgradeMenu.apply_state(data[1])
 		return
-	if data[0] == "in" and data.size() == 4:
+	if data[0] == "in" and data.size() == 5:
 		handle_input(from, data[1], data[2], data[3])
+		if from in players and typeof(data[4]) == TYPE_INT:
+			players[from].lastInputSeq = data[4]
 	elif data[0] == "upg" and data.size() == 2:
 		handle_upgrade(from, data[1])
 
@@ -170,7 +167,7 @@ func get_ui_state():
 		$MenuElements.position, $Dummies.position,
 		textBox.visible, textBoxLabel.text,
 		richTextBox.visible, richTextLabel.text, richTextBox.scoreRows,
-		bttnLabel.text, musicPath,
+		bttnLabel.text,
 	]
 
 var _lastUiState = null
@@ -188,13 +185,6 @@ func apply_ui_state(ui):
 		for row in ui[6]:
 			richTextBox.newScoreLabel(row[0], row[1], row[2], row[3])
 	bttnLabel.text = ui[7]
-	if ui[8] != musicPath:
-		musicPath = ui[8]
-		if musicPath == "":
-			$MusicPlayer.stop()
-		else:
-			$MusicPlayer.stream = load(musicPath)
-			$MusicPlayer.play()
 	_lastUiState = ui
 
 func setDebugEquipment(client):
@@ -332,22 +322,18 @@ func winCheck():
 @export var numDummy = 2
 func roundInit():
 	$Dummies.position = Vector2(-5000,-5000)
-	stopMusic()
 	clearJunk()
 	spawnDummy(numDummy)
 	universalControl(false)
 	pvpOn = true
 	placeEvenly()
-	sfxManager(wardrums)
 	textBoxLabel.text = "Round "+str(roundNumber)
 	textBox.visible = true
 	await get_tree().create_timer(1.5).timeout
 	textBoxLabel.text = "Ready?"
-	await sfxDone()
+	await get_tree().create_timer(DRUMS_TIME - 1.5).timeout
 	textBoxLabel.text = "GO!"
-	sfxManager(battleStart)
 	await get_tree().create_timer(1.0).timeout
-	musicManager(battleTheme)
 	textBox.visible = false
 	universalControl(true)
 	$BarrelTimer.start()
@@ -359,8 +345,6 @@ func roundOver(winner):
 	pvpOn = false
 	clearJunk()
 	$BarrelTimer.stop()
-	stopMusic()
-	sfxManager(fanfare)
 	var tempC = winner.playerColor
 	var hex_color = tempC.to_html(false)
 	if winner.gameScore == gamesNeeded4Win:
@@ -387,8 +371,7 @@ func roundOver(winner):
 			send_state_message(players[player])
 		scoreboard()
 		roundNumber += 1
-		await sfxDone()
-		musicManager(jaunt)
+		await get_tree().create_timer(FANFARE_TIME - 2.0).timeout
 		await readyUpGamepad()
 		richTextBox.visible = false
 		richTextBox.clearScores()
@@ -444,7 +427,7 @@ func readyUpGamepad():
 			if not players[player].readyUp:
 				allReady = false
 				break
-		if not $MusicPlayer.is_playing() or waited > UPGRADE_TIMEOUT:
+		if waited > UPGRADE_TIMEOUT:
 			allReady = true
 		else:
 			await get_tree().create_timer(0.5).timeout
@@ -458,7 +441,6 @@ func gameOver():
 	multiplayerStarted = false
 	roundNumber = 1
 	universalControl(true)
-	musicManager(mainTheme)
 	readiedPlayers = []
 	bttnLabel.text = "Shoot to Start Game"
 	$MenuElements.position = Vector2(0,0)
@@ -469,7 +451,7 @@ func gameOver():
 		players[player].global_position = lobbySpawn()
 	send_all_states()
 	for id in Net.peers:
-		if id not in playersAll:
+		if id not in playersAll and not (Net.dedicated and id == Net.my_id):
 			new_player(id)
 	buttonTextHandler()
 
@@ -571,26 +553,3 @@ func createButton(text : String, function : Callable):
 	new_button.connect("buttonFunction", function)
 	$MenuElements/VBoxContainer.add_child(new_button)
 	pass
-
-func musicManager(song):
-	musicPath = song.resource_path
-	$MusicPlayer.stream = song
-	$MusicPlayer.play()
-
-func stopMusic():
-	musicPath = ""
-	$MusicPlayer.stop()
-
-func sfxManager(effect):
-	$SoundEffects.stream = effect
-	Net.play($SoundEffects)
-
-# `await $SoundEffects.finished` can hang in a browser if audio is blocked
-func sfxDone():
-	var limit = $SoundEffects.stream.get_length() + 0.5
-	var waited = 0.0
-	while $SoundEffects.playing and waited < limit:
-		await get_tree().create_timer(0.1).timeout
-		waited += 0.1
-
-

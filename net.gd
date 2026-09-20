@@ -14,7 +14,6 @@ signal packet(from_id, data)
 signal closed()
 
 const DEFAULT_SERVER = "ws://localhost:8787"
-const SFX_VOICES = 12
 
 var ws : WebSocketPeer = null
 var my_id = 0
@@ -25,21 +24,15 @@ var is_host = false
 var is_client = false
 var offline = false
 var bot = false # drive this player with tests/bot.gd
+var dedicated = false # host a room without playing in it, see web/host.sh
 var status = "Connecting..."
 var peers = {}  # id -> name, everyone in the room including me
 
 var _events = []
-var _voices = []
-var _next_voice = 0
-var _streams = {}
 
 
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	for i in range(SFX_VOICES):
-		var voice = AudioStreamPlayer.new()
-		add_child(voice)
-		_voices.append(voice)
 
 
 func start():
@@ -81,6 +74,9 @@ func _read_config():
 			offline = true
 		elif arg == "--bot":
 			bot = true
+		elif arg == "--dedicated":
+			dedicated = true
+			Engine.max_fps = 60 # headless has no vsync to hold it back
 
 
 func _become_offline_host():
@@ -114,6 +110,9 @@ func _process(_delta):
 		else:
 			status = "Connection lost"
 		emit_signal("closed")
+		if dedicated:
+			print("dedicated host: ", status)
+			get_tree().quit(1)
 
 
 func _on_control(text):
@@ -130,6 +129,12 @@ func _on_control(text):
 				peers[int(p["id"])] = str(p["name"])
 			peers[my_id] = my_name
 			status = "Connected"
+			if dedicated and not is_host:
+				print("dedicated host: room '%s' already has a host" % room)
+				get_tree().quit(2)
+				return
+			if dedicated:
+				print("dedicated host: serving room '%s'" % room)
 			emit_signal("welcomed")
 		"join":
 			peers[int(msg["id"])] = str(msg["name"])
@@ -177,7 +182,7 @@ func has_clients():
 
 
 ################################################################################
-# One-shot things the host wants every client to see/hear. They ride along on
+# One-shot things the host wants every client to see. They ride along on
 # the next snapshot (the websocket is ordered + reliable so none get lost).
 
 func event(ev : Array):
@@ -188,20 +193,3 @@ func take_events():
 	var out = _events
 	_events = []
 	return out
-
-# Play a sound locally and, on the host, for everyone else too
-func play(player):
-	player.play()
-	if player.stream != null:
-		event(["snd", player.stream.resource_path, player.volume_db])
-
-func play_remote(path, volume_db):
-	if path == "":
-		return
-	if path not in _streams:
-		_streams[path] = load(path)
-	var voice = _voices[_next_voice]
-	_next_voice = (_next_voice + 1) % SFX_VOICES
-	voice.stream = _streams[path]
-	voice.volume_db = volume_db
-	voice.play()

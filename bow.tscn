@@ -1,7 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dpvb6ptchtp0j"]
 
 [ext_resource type="Script" uid="uid://1cgkor1krc4s" path="res://bow.gd" id="1_h7ojm"]
-[ext_resource type="AudioStream" uid="uid://dx1to7wn1ll1a" path="res://audio/barrelBreak.mp3" id="3_cvte8"]
 
 [sub_resource type="Resource" id="Resource_2of8d"]
 metadata/__load_path__ = "res://gen_images/bow.png"
@@ -21,9 +20,6 @@ scale = Vector2(0.16, 0.16)
 texture = SubResource("Resource_2of8d")
 offset = Vector2(200, 0)
 hframes = 3
-
-[node name="SoundEffects" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_cvte8")
 
 [node name="Arrow" type="Sprite2D" parent="."]
 position = Vector2(40, -1.42109e-14)

@@ -34,9 +34,13 @@ func _process(delta):
 			var k = child.scene_file_path.get_file()
 			if k != "":
 				kinds[k] = kinds.get(k, 0) + 1
-		print("[%s id=%d] hp=%s me=%s started=%s text='%s' btn='%s' music=%s %s" % [
+		var rep = main.get_node("Replicator")
+		if Net.is_client and rep.myRecord != null and rep.myRecord.samples.size() > 0:
+			print("  predict=%s error=%.1fpx ping=%dms" % [rep.predicting,
+				me.position.distance_to(rep.myRecord.samples[-1][1]), rep.pingMs])
+		print("[%s id=%d] hp=%s me=%s started=%s text='%s' btn='%s' %s" % [
 			"host" if Net.is_host else "client", Net.my_id,
 			me.get_node("Healthbar").value if me != null else null,
 			me.position if me != null else null, main.multiplayerStarted,
 			(main.textBoxLabel.text if main.textBox.visible else "") + (main.richTextLabel.text if main.richTextBox.visible else "") + str(main.richTextBox.scoreRows.size()),
-			main.bttnLabel.text.replace("\n", " "), main.musicPath.get_file(), kinds])
+			main.bttnLabel.text.replace("\n", " "), kinds])

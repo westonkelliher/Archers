@@ -18,15 +18,25 @@ const FX_SCENES = {
 }
 const SEND_EVERY = 2 # physics frames
 const TELEPORT_DISTANCE = 250.0
+# Clients draw everyone else this far in the past so there are always two
+# snapshots to glide between, even when the network delivers them in clumps
+const RENDER_DELAY_MS = 80.0
+const MAX_EXTRAPOLATE_MS = 100.0
+# My own player moves right away on my inputs and gets nudged to agree with the host
+const CORRECTION_DEADZONE = 12.0
+const CORRECTION_RATE = 0.15
 
 var main = null
 var kindOfScene = {}
 var frame = 0
 
 # client side
-var puppets = {} # host instance id -> {node, kind, from, to, rotFrom, rotTo}
-var lastArrival = 0.0
-var interval = SEND_EVERY / 60.0
+var puppets = {} # host instance id -> {node, kind, samples: [[hostMs, pos, rot]...]}
+var clockOffset = INF # my clock minus the host's, as seen by the fastest snapshot so far
+var myRecord = null
+var predicting = false
+var history = [] # [[input seq, where I predicted I was when I sent it]...]
+var pingMs = 0.0
 
 
 func _ready():
@@ -51,7 +61,9 @@ func _physics_process(_delta):
 		var kind = kindOfScene.get(child.scene_file_path)
 		if kind != null and not child.is_queued_for_deletion():
 			ents[child.get_instance_id()] = describe(kind, child)
-	Net.broadcast(["snap", ents, main.get_ui_state(), Net.take_events()])
+	# stamped in simulation time, which advances evenly even when frames don't
+	var hostMs = frame * 1000.0 / Engine.physics_ticks_per_second
+	Net.broadcast(["snap", hostMs, ents, main.get_ui_state(), Net.take_events()])
 
 
 ################################################################################
@@ -65,7 +77,8 @@ func describe(kind, n):
 				n.get_node("Bow/Arrow").visible, n.get_node("Bow").charge_amount,
 				n.get_node("Healthbar").value, n.get_node("Healthbar").max_value,
 				n.get_node("Healthbar/Damagebar").value, n.get_node("Eyes").eye_direction,
-				n.modulate.a, n.equipment['bow'], n.equipment['arrow'], n.equipment['armor']]
+				n.modulate.a, n.equipment['bow'], n.equipment['arrow'], n.equipment['armor'],
+				n.lastInputSeq, n.controllable and not n.isDead, n.speedMultiplier]
 		"arrow":
 			return [kind, n.position, n.rotation, n.scale.x, n.get_node("Sprite2D").frame,
 				n.get_node("Sprite2D").modulate, n.graphicName]
@@ -85,37 +98,94 @@ func describe(kind, n):
 # Client
 
 func _on_packet(_from, data):
-	if typeof(data) != TYPE_ARRAY or data.size() != 4 or data[0] != "snap":
+	if typeof(data) != TYPE_ARRAY or data.size() != 5 or data[0] != "snap":
 		return
-	var now = Time.get_ticks_msec() / 1000.0
-	if lastArrival > 0:
-		interval = lerp(interval, clamp(now - lastArrival, 0.01, 0.2), 0.1)
-	lastArrival = now
+	var hostMs = data[1]
+	var lag = Time.get_ticks_msec() - hostMs
+	# creep upward so a drifting clock can't pin us to a stale minimum
+	clockOffset = min(clockOffset + 0.05, lag)
 
-	var ents = data[1]
+	var ents = data[2]
 	for id in puppets.keys():
 		if id not in ents:
+			if puppets[id] == myRecord:
+				myRecord = null
+				predicting = false
 			puppets[id].node.queue_free()
 			puppets.erase(id)
 	for id in ents:
 		var d = ents[id]
 		if id not in puppets:
 			puppets[id] = spawn(d)
-		update(puppets[id], d)
-	main.apply_ui_state(data[2])
-	for ev in data[3]:
+		update(puppets[id], d, hostMs)
+	main.apply_ui_state(data[3])
+	for ev in data[4]:
 		play_event(ev)
 
 
 func _process(_delta):
-	if not Net.is_client:
+	if not Net.is_client or clockOffset == INF:
 		return
-	var t = clamp((Time.get_ticks_msec() / 1000.0 - lastArrival) / interval, 0.0, 1.25)
+	var renderMs = Time.get_ticks_msec() - clockOffset - RENDER_DELAY_MS
 	for id in puppets:
 		var p = puppets[id]
-		p.node.position = p.from.lerp(p.to, t)
+		if p == myRecord and predicting:
+			continue
+		var pose = sample(p.samples, renderMs)
+		p.node.position = pose[0]
 		if p.kind == "wolf":
-			p.node.rotation = lerp_angle(p.rotFrom, p.rotTo, min(t, 1.0))
+			p.node.rotation = pose[1]
+
+
+# Where was this thing at renderMs on the host's clock?
+func sample(samples, renderMs):
+	while samples.size() > 2 and samples[1][0] <= renderMs:
+		samples.pop_front()
+	var a = samples[0]
+	if samples.size() == 1 or renderMs <= a[0]:
+		return [a[1], a[2]]
+	var b = samples[1]
+	if a[1].distance_to(b[1]) > TELEPORT_DISTANCE:
+		return [b[1], b[2]]
+	var span = max(b[0] - a[0], 1.0)
+	var t = min((renderMs - a[0]) / span, 1.0 + MAX_EXTRAPOLATE_MS / span)
+	return [a[1].lerp(b[1], t), lerp_angle(a[2], b[2], min(t, 1.0))]
+
+
+# Client-side prediction for my own player. local_input.gd calls this every
+# physics frame with the input it is about to send.
+func predict(move, seq, sentNow):
+	if myRecord == null or not predicting:
+		history.clear()
+		return
+	var me = myRecord.node
+	me.velocity = move.limit_length(1.0) * me.MOVE_SCALE * myRecord.speed
+	me.move_and_slide()
+	if sentNow:
+		history.append([seq, me.position, Time.get_ticks_msec()])
+		if history.size() > 120:
+			history.pop_front()
+
+
+# The host says: "after your input #ack you were at hostPos"
+func reconcile(ack, hostPos):
+	while history.size() > 0 and history[0][0] < ack:
+		history.pop_front()
+	if history.size() == 0 or history[0][0] != ack:
+		return
+	pingMs = lerp(pingMs, float(Time.get_ticks_msec() - history[0][2]), 0.1)
+	var err = hostPos - history[0][1]
+	if err.length() > TELEPORT_DISTANCE:
+		myRecord.node.position = hostPos
+		history.clear()
+		return
+	# small disagreements are normal while running; settle them once I stop
+	if err.length() < CORRECTION_DEADZONE and myRecord.node.velocity != Vector2.ZERO:
+		return
+	var fix = err * CORRECTION_RATE
+	myRecord.node.position += fix
+	for h in history:
+		h[1] += fix
 
 
 func spawn(d):
@@ -134,7 +204,12 @@ func spawn(d):
 	if kind != "player":
 		node.set_process(false)
 	node.set_physics_process(false)
-	return {"node": node, "kind": kind, "from": d[1], "to": d[1], "rotFrom": 0.0, "rotTo": 0.0}
+	var record = {"node": node, "kind": kind, "samples": [], "speed": 0.0}
+	if kind == "player" and d[2] == Net.my_id:
+		myRecord = record
+		# my own body needs to bump into walls while predicting
+		node.get_node("CollisionShape2D").set_deferred("disabled", false)
+	return record
 
 
 # Nothing on a client should collide, tick or time out by itself
@@ -142,20 +217,28 @@ func make_puppet(node):
 	for child in node.get_children():
 		make_puppet(child)
 	if node is CollisionShape2D or node is CollisionPolygon2D:
-		node.set_deferred("disabled", true)
+		# barrels and dummies stay solid so my predicted player can't walk through them
+		if not node.get_parent() is StaticBody2D:
+			node.set_deferred("disabled", true)
 	elif node is Area2D:
 		node.set_deferred("monitoring", false)
 	elif node is Timer:
 		node.stop()
 
 
-func update(p, d):
+func update(p, d, hostMs):
 	var n = p.node
-	p.from = n.position
-	p.to = d[1]
-	if p.from.distance_to(p.to) > TELEPORT_DISTANCE:
-		p.from = p.to
-		n.position = p.to
+	p.samples.append([hostMs, d[1], d[2] if p.kind == "wolf" else 0.0])
+	if p.samples.size() > 30:
+		p.samples.pop_front()
+	if p == myRecord:
+		p.speed = d[19]
+		if d[18] and not predicting:
+			n.position = d[1]
+			history.clear()
+		predicting = d[18]
+		if predicting:
+			reconcile(d[17], d[1])
 	match p.kind:
 		"player":
 			n.get_node("Nametag/Label").text = d[3]
@@ -192,8 +275,6 @@ func update(p, d):
 		"potion":
 			n.scale = Vector2(d[2], d[2])
 		"wolf":
-			p.rotFrom = n.rotation
-			p.rotTo = d[2]
 			n.get_node("Sprite2D").modulate = d[3]
 		"wolfbar":
 			n.max_value = d[3]
@@ -204,8 +285,6 @@ func update(p, d):
 
 func play_event(ev):
 	match ev[0]:
-		"snd":
-			Net.play_remote(ev[1], ev[2])
 		"dmg":
 			Autoloader.damageNumbers(ev[1], ev[2], ev[3])
 		"fx":
@@ -219,7 +298,4 @@ func play_event(ev):
 
 
 func get_my_puppet():
-	for id in puppets:
-		if puppets[id].kind == "player" and puppets[id].node.playerID == Net.my_id:
-			return puppets[id].node
-	return null
+	return myRecord.node if myRecord != null else null

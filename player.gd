@@ -56,7 +56,6 @@ var arrow_scene = preload("res://arrow.tscn")
 var death_explosion = preload("res://death_explosion.tscn")
 var bow_angle = null
 
-var sfx_shootBow = preload("res://audio/shootBow.mp3")
 
 signal bow_shot(player, chargeLevel, lift)
 signal bow_charge()
@@ -115,6 +114,7 @@ func set_knockback(kb):
 const MOVE_SCALE = 16.0 # what a fully tilted controlpad joystick used to send
 
 var drawing = false
+var lastInputSeq = 0 # echoed to the owning client, see replicator.gd
 
 # move: direction with length <= 1, aim: angle the bow points, draw: is the
 # string held back. Releasing draw shoots.
@@ -235,7 +235,6 @@ func _on_area_2d_body_entered(body):
 			print("This arrow has a special property")
 
 func playerDamaged(damage, damageType = "general"):
-	Net.play($HurtSound)
 	$Healthbar/Damagebar.visible = true
 	$Healthbar.visible = true
 	$Healthbar.value -= damage
@@ -253,8 +252,6 @@ func playerGainHealth(health, potion = false):
 		#$Healthbar.value = $Healthbar.max_value
 		#$Healthbar/Damagebar.value = $Healthbar.max_value
 		amountHealed = $Healthbar.max_value - originalHealth
-	if potion:
-		Net.play($DrinkSound)
 	Autoloader.damageNumbers(amountHealed, $DamageNumberOrigin.global_position, "health")
 
 
@@ -268,6 +265,7 @@ func playerDeath():
 	deathExplosion()
 	savedPosition = self.global_position
 	self.global_position = Vector2(-5000, -5000)
+	velocity_move = Vector2.ZERO # or the body drifts back through the arena
 	if Autoloader.mainScene.multiplayerStarted:
 		isDead = true
 		controllable = false
@@ -353,8 +351,3 @@ func _on_timer_timeout():
 		$Healthbar/Damagebar, "value", $Healthbar.value, 0.3
 	).set_ease(Tween.EASE_OUT)
 	pass
-
-func sfxManager(effect):
-	$SoundEffects.stream = effect
-	$SoundEffects.play()
-

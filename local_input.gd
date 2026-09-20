@@ -8,7 +8,8 @@ const SEND_EVERY = 2 # physics frames, unless draw changes
 var main = null
 var frame = 0
 var lastAim = 0.0
-var lastSent = null
+var lastDraw = false
+var seq = 0
 
 
 var bot = null # tests/bot.gd, only when Net.bot
@@ -21,6 +22,8 @@ func _ready():
 
 
 func _physics_process(_delta):
+	if Net.dedicated:
+		return
 	var move = Vector2(
 		int(key(KEY_D) or key(KEY_RIGHT)) - int(key(KEY_A) or key(KEY_LEFT)),
 		int(key(KEY_S) or key(KEY_DOWN)) - int(key(KEY_W) or key(KEY_UP))
@@ -48,12 +51,15 @@ func _physics_process(_delta):
 		me.get_node("Bow").rotation = lastAim
 		me.get_node("Eyes").set_direction(lastAim if draw or move == Vector2.ZERO else move.angle())
 
+	# always send, even when nothing changed: the host echoes the seq back
+	# and that is what keeps my predicted position honest
 	frame += 1
-	var input = ["in", move, lastAim, draw]
-	var drawChanged = lastSent != null and lastSent[3] != draw
-	if drawChanged or (frame % SEND_EVERY == 0 and input != lastSent):
-		Net.send_host(input)
-		lastSent = input
+	var sendNow = frame % SEND_EVERY == 0 or draw != lastDraw
+	if sendNow:
+		seq += 1
+		Net.send_host(["in", move, lastAim, draw, seq])
+		lastDraw = draw
+	main.get_node("Replicator").predict(move, seq, sendNow)
 
 
 func key(code):

@@ -29,10 +29,6 @@ window/size/mode=3
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep"
 
-[audio]
-
-general/default_playback_type.web=0
-
 [layer_names]
 
 2d_physics/layer_1="Walls"

@@ -2,3 +2,4 @@ node_modules
 .wrangler
 .export
 public/archers/index.*
+host.log

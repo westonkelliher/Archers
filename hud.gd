@@ -3,6 +3,7 @@ extends Control
 
 var info = Label.new()
 var notice = Label.new()
+var ping = Label.new()
 var main = null
 
 
@@ -26,10 +27,16 @@ func _ready():
 	notice.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	notice.visible = false
 	add_child(notice)
+	UITheme.style_label(ping, 18, UITheme.TEXT_MUTED)
+	ping.position = Vector2(12, 8)
+	ping.visible = Net.is_client
+	add_child(ping)
 	Net.closed.connect(_on_closed)
 
 
 func _process(_delta):
+	if ping.visible:
+		ping.text = "ping %d ms" % main.get_node("Replicator").pingMs
 	var inLobby = main.get_node("MenuElements").position == Vector2.ZERO
 	info.visible = inLobby and not notice.visible
 	if not info.visible:
@@ -39,7 +46,7 @@ func _process(_delta):
 		info.text += "Offline"
 	else:
 		info.text += "Room \"%s\"%s  -  share this page's link to invite friends" % [
-			Net.room, "  (you are the host)" if Net.is_host else ""]
+			Net.room, "  (you are the host, keep this tab visible)" if Net.is_host else ""]
 
 
 func _on_closed():

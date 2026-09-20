@@ -3,17 +3,12 @@ extends CharacterBody2D
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
+const DEATH_LINGER = 0.66 # how long the body stays, was the death sound
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 var healthbar_scene = preload("res://wolf_healthbar.tscn")
-var growl1 = preload("res://audio/sfx/wolf/growl1.ogg")
-var growl2 = preload("res://audio/sfx/wolf/growl2.ogg")
-var growl3 = preload("res://audio/sfx/wolf/growl3.ogg")
-var hurt2 = preload("res://audio/sfx/wolf/hurt2.ogg")
-var hurt3 = preload("res://audio/sfx/wolf/hurt3.ogg")
-var sfxdeath = preload("res://audio/sfx/wolf/death.ogg")
 
 
 @export var agro = false
@@ -33,7 +28,6 @@ func _ready():
 	healthbar.global_position = global_position
 	healthbar.wolf = self
 	Autoloader.mainScene.add_child(healthbar)
-	sfxManager(growl2)
 
 
 var targetPlayer = null
@@ -87,7 +81,6 @@ func gotHit(damage):
 	
 
 func hurt():
-	sfxManager(hurt2)
 	$Sprite2D.modulate = Color(1, 0.2, 0.2, 1)
 	inCooldown = true
 	await get_tree().create_timer(0.05).timeout
@@ -98,18 +91,5 @@ func hurt():
 func death():
 	$Sprite2D.modulate = Color(1, 0.2, 0.2, 1)
 	inCooldown = true
-	sfxManager(sfxdeath)
-	await $SoundEffects.finished
+	await get_tree().create_timer(DEATH_LINGER).timeout
 	queue_free()
-
-func sfxManager(effect):
-	$SoundEffects.stream = effect
-	Net.play($SoundEffects)
-
-
-func _on_timer_timeout():
-	var randomIndex = randi() % 2
-	if randomIndex == 0:
-		sfxManager(growl1)
-	else:
-		sfxManager(growl3)

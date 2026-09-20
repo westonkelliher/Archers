@@ -16,8 +16,6 @@ var charge_amount: float = 0 # 0 - 1
 var power = 0
 var delta = 0
 var arrow_scene = preload("res://arrow.tscn")
-var sfx_shootBow = preload("res://audio/shootBow.wav")
-var sfx_loadBow = preload("res://audio/bowLoad.mp3")
 
 var arrow_graphic_name = "Arrow_I"
 
@@ -55,8 +53,6 @@ func set_armor_graphic(graphic_name):
 func pull_back(dead):
 	is_pulling = true
 	$Sprite2D.frame = 1
-	if !dead:
-		sfxManager(sfx_loadBow)
 
 func release(dead):
 	is_pulling = false
@@ -64,8 +60,6 @@ func release(dead):
 	time_pulling = 0
 	charge_amount = 0
 	$Sprite2D.frame = 0
-	if !dead:
-		sfxManager(sfx_shootBow)
 
 func get_power():
 	var q = max_power - base_power
@@ -74,7 +68,3 @@ func get_power():
 func get_lift():
 	var q = max_lift - base_lift
 	return base_lift + charge_amount*q
-
-func sfxManager(effect):
-	$SoundEffects.stream = effect
-	Net.play($SoundEffects)
