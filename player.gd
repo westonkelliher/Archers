@@ -70,19 +70,14 @@ var velocity_knock : Vector2 = Vector2.ZERO
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 
-func get_state_string():
-	var player_color = self.playerColor
-	var colorString = "#%x%x%xff" % [player_color.r*255, player_color.g*255, player_color.b*255]
-	var state_str = "state:" + self.state
-	if self.state == "playing":
-		state_str += ":" + colorString
-	elif self.state == "upgrading":
-		state_str += ":" + colorString + ":" + str(self.upgradePoints)
-		state_str +=  ":" + equipment["arrow"] + "," + equipment["bow"] + "," + equipment["armor"] 
-		state_str +=  ":" + equipment_upgrades["arrow"] + "," + equipment_upgrades["bow"] + "," + equipment_upgrades["armor"] 
-	#print(state_str)
-	return state_str
-	
+func get_state_dict():
+	return {
+		'state': state,
+		'points': upgradePoints,
+		'current': {'bow': equipment['bow'], 'arrow': equipment['arrow'], 'armor': equipment['armor']},
+		'upgrades': {'bow': equipment_upgrades['bow'], 'arrow': equipment_upgrades['arrow'], 'armor': equipment_upgrades['armor']},
+	}
+
 
 func _ready():
 	$Body.modulate = playerColor
@@ -106,6 +101,8 @@ func _process(delta):
 
 
 func _physics_process(delta):
+	if Net.is_client:
+		return
 	velocity = velocity_move + velocity_knock
 	velocity_knock *= .97
 	if velocity_knock.length() < 5:
@@ -115,65 +112,43 @@ func _physics_process(delta):
 func set_knockback(kb):
 	velocity_knock = kb
 
-func handle_controlpad_input(message: String):
-	var parts = message.split(":")
-	if parts[0] == "move" and controllable:
-		var xy = parts[1].split(",")
-		var in_vel = Vector2(float(xy[0]), float(xy[1]))
-		var threshhold = 16.0;
-		if in_vel.length() > threshhold:
-			in_vel *= threshhold/in_vel.length()
-		#var mult = 15.0;
-		self.velocity_move = in_vel * speedMultiplier;
-		if in_vel.length() > 0 and !$Bow.is_pulling:
-			var in_angle = in_vel.angle()
-			$Eyes.set_direction(in_angle)
-		
-		#Test
-		
-	elif parts[0] == "bow": #and controllable:
-		# Rotation
-		var xy = parts[1].split(",")
-		var in_aim = Vector2(float(xy[0]), float(xy[1]))
-		if in_aim.length() < 1:
-			notTaught()
-			return
-		bow_angle = in_aim.angle() - PI
-		$Bow.rotation = bow_angle
-		$Eyes.set_direction(bow_angle)
-		# Pullback
-		var threshhold = 8.0;
-		if in_aim.length() > threshhold:
-			if !$Bow.is_pulling:
-				$Bow.pull_back(isDead)
-			#emit_signal("bow_charge")
-		else:
-			notTaught()
-	
-	elif parts[0] == "upgrade":
-		if self.upgradePoints > 0:
-			upgradeHandler(parts[1])
-			self.upgradePoints -= 1
-		if self.upgradePoints <= 0:
-			self.upgradePoints = 0
-			self.state = "playing"
-			playerReady()
-		else:
-			randomizeUpgradeOptions()
-		
-	
-	elif parts[0] == "ready":
-		readyUp = true
-		controllable = true
-		if isDead:
-			self.global_position = savedPosition
-	
-	elif parts[0] == "name":
-		playerName = parts[1]
-		$Nametag/Label.text = playerName
-	
-	elif parts[0] == "debug":
-		print("Debug from client: " + playerID + " - " + playerName + ": " + str(parts[1]))
+const MOVE_SCALE = 16.0 # what a fully tilted controlpad joystick used to send
+
+var drawing = false
+
+# move: direction with length <= 1, aim: angle the bow points, draw: is the
+# string held back. Releasing draw shoots.
+func set_net_input(move: Vector2, aim: float, draw: bool):
+	if controllable:
+		velocity_move = move.limit_length(1.0) * MOVE_SCALE * speedMultiplier
+	bow_angle = aim
+	$Bow.rotation = aim
+	if draw or move.length() == 0:
+		$Eyes.set_direction(aim)
+	else:
+		$Eyes.set_direction(move.angle())
+	if draw and not drawing:
+		$Bow.pull_back(isDead)
+	elif drawing and not draw:
+		notTaught()
+	drawing = draw
+
+
+# kind: 'bow' | 'arrow' | 'armor' | 'skip'
+func handle_upgrade(kind):
+	if upgradePoints > 0:
+		if kind != "skip":
+			if kind not in equipment_upgrades or equipment_upgrades[kind] == "nothing":
+				return
+			upgradeHandler(kind)
+		upgradePoints -= 1
+	if upgradePoints <= 0:
+		upgradePoints = 0
+		state = "playing"
+		playerReady()
+	else:
+		randomizeUpgradeOptions()
+
 
 func playerReady():
 	readyUp = true
@@ -260,7 +235,7 @@ func _on_area_2d_body_entered(body):
 			print("This arrow has a special property")
 
 func playerDamaged(damage, damageType = "general"):
-	$HurtSound.play()
+	Net.play($HurtSound)
 	$Healthbar/Damagebar.visible = true
 	$Healthbar.visible = true
 	$Healthbar.value -= damage
@@ -279,7 +254,7 @@ func playerGainHealth(health, potion = false):
 		#$Healthbar/Damagebar.value = $Healthbar.max_value
 		amountHealed = $Healthbar.max_value - originalHealth
 	if potion:
-		$DrinkSound.play()
+		Net.play($DrinkSound)
 	Autoloader.damageNumbers(amountHealed, $DamageNumberOrigin.global_position, "health")
 
 
@@ -313,6 +288,8 @@ func respawn():
 	invulnerable = false
 
 func refresh():
+	drawing = false
+	$Bow.release(true)
 	$Healthbar.value = $Healthbar.max_value
 	$Healthbar/Damagebar.value = $Healthbar/Damagebar.max_value
 	$RoyalCrown.visible = false
@@ -327,6 +304,7 @@ func refresh():
 
 
 func deathExplosion():
+	Net.event(["fx", "death", global_position, playerColor])
 	var explosion = death_explosion.instantiate()
 	explosion.global_position = self.global_position
 	explosion.emitting = true

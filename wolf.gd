@@ -26,6 +26,8 @@ var healthbar
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	if Net.is_client:
+		return
 	players = Autoloader.mainScene.players
 	healthbar = healthbar_scene.instantiate()
 	healthbar.global_position = global_position
@@ -102,7 +104,7 @@ func death():
 
 func sfxManager(effect):
 	$SoundEffects.stream = effect
-	$SoundEffects.play()
+	Net.play($SoundEffects)
 
 
 func _on_timer_timeout():

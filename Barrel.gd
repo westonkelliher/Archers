@@ -10,6 +10,8 @@ var hitsTaken = 0
 var barrel_explosion = preload("res://barrel_explosion.tscn")
 
 func _ready():
+	if Net.is_client:
+		return
 	#var offset = 20
 	#$BarrelSprite.position.y = position.y - offset
 	#
@@ -63,7 +65,7 @@ func gotHit():
 		randomSpawn()
 		explode()
 		global_position = Vector2(-500,-500)
-		$BreakNoise.play()
+		Net.play($BreakNoise)
 		Autoloader.mainScene.numBarrels -= 1
 		Autoloader.mainScene.existingBodies.erase(self)
 		await $BreakNoise.finished
@@ -109,6 +111,7 @@ func clean():
 	queue_free()
 
 func explode():
+	Net.event(["fx", "barrel", global_position])
 	var explosion = barrel_explosion.instantiate()
 	explosion.global_position = self.global_position
 	explosion.emitting = true

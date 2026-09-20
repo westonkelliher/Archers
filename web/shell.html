@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Archers</title>
+	<link rel="stylesheet" href="theme.css">
+	<style>
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font-family: var(--font); overflow: hidden; }
+#canvas { display: block; margin: 0 auto; }
+#canvas:focus { outline: none; }
+#lobby { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--bg); z-index: 2; }
+.card { width: min(440px, 90vw); padding: 28px; border: 2px solid var(--border); border-radius: 12px; background: var(--surface); }
+h1 { margin: 0 0 4px; font-size: 2.2rem; letter-spacing: 0.04em; color: var(--accent); }
+p { margin: 0 0 18px; color: var(--muted); line-height: 1.45; }
+label { display: block; margin: 14px 0 6px; font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+input { box-sizing: border-box; width: 100%; padding: 10px 12px; font-size: 1.05rem; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; }
+input:focus { outline: 2px solid var(--accent); }
+.row { display: flex; gap: 8px; }
+button { padding: 10px 16px; font-size: 1rem; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; white-space: nowrap; }
+button:hover { border-color: var(--accent); }
+button.primary { width: 100%; margin-top: 22px; padding: 14px; font-size: 1.2rem; font-weight: 600; color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+button.primary:disabled { opacity: 0.6; cursor: progress; }
+progress { width: 100%; margin-top: 14px; display: none; accent-color: var(--accent); }
+#notice { margin-top: 14px; color: var(--alert); display: none; }
+kbd { padding: 1px 6px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text); }
+	</style>
+	$GODOT_HEAD_INCLUDE
+</head>
+<body>
+	<canvas id="canvas">Your browser does not support the canvas tag.</canvas>
+
+	<div id="lobby">
+		<form class="card" id="join">
+			<h1>ARCHERS</h1>
+			<p><kbd>WASD</kbd> move &middot; mouse aims &middot; hold <kbd>left mouse</kbd> to draw, release to shoot. Shoot the button to ready up.</p>
+			<label for="name">Your name</label>
+			<input id="name" maxlength="16" autocomplete="off" placeholder="leave blank for a random one">
+			<label for="link">Invite link &mdash; everyone with it joins this room</label>
+			<div class="row">
+				<input id="link" readonly>
+				<button type="button" id="copy">Copy</button>
+			</div>
+			<button class="primary" id="play">Play</button>
+			<progress id="progress"></progress>
+			<div id="notice"></div>
+		</form>
+	</div>
+
+	<script src="$GODOT_URL"></script>
+	<script>
+const GODOT_CONFIG = $GODOT_CONFIG;
+
+// The wasm is too big for a single Workers static asset, so it ships gzipped
+// under another extension and gets inflated here.
+const realFetch = window.fetch.bind(window);
+window.fetch = (resource, options) => {
+	const url = typeof resource === 'string' ? resource : resource.url;
+	if (!url.endsWith('.wasm')) return realFetch(resource, options);
+	return realFetch(url + '.gzbin', options).then((res) => {
+		if (!res.ok) return res;
+		return new Response(res.body.pipeThrough(new DecompressionStream('gzip')), {
+			headers: { 'Content-Type': 'application/wasm' },
+		});
+	});
+};
+
+const $ = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+let room = (params.get('room') || '').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 32);
+if (!room) {
+	room = Math.random().toString(36).slice(2, 8);
+	history.replaceState(null, '', '?room=' + room);
+}
+$('link').value = location.origin + location.pathname + '?room=' + room;
+try { $('name').value = localStorage.getItem('archers-name') || ''; } catch {}
+
+$('copy').addEventListener('click', async () => {
+	try {
+		await navigator.clipboard.writeText($('link').value);
+		$('copy').textContent = 'Copied';
+	} catch {
+		$('link').select();
+	}
+	setTimeout(() => { $('copy').textContent = 'Copy'; }, 2000);
+});
+
+function fail(err) {
+	console.error(err);
+	$('notice').textContent = err instanceof Error ? err.message : String(err);
+	$('notice').style.display = 'block';
+	$('progress').style.display = 'none';
+}
+
+$('join').addEventListener('submit', (event) => {
+	event.preventDefault();
+	const name = $('name').value.trim();
+	try { localStorage.setItem('archers-name', name); } catch {}
+	window.ARCHERS_CFG = { room, name };
+	$('play').disabled = true;
+	$('play').textContent = 'Loading...';
+	$('progress').style.display = 'block';
+
+	const missing = Engine.getMissingFeatures({ threads: $GODOT_THREADS_ENABLED });
+	if (missing.length !== 0) {
+		fail('Your browser is missing features Archers needs:\n' + missing.join('\n'));
+		return;
+	}
+	new Engine(GODOT_CONFIG).startGame({
+		onProgress: (current, total) => {
+			if (current > 0 && total > 0) {
+				$('progress').value = current;
+				$('progress').max = total;
+			}
+		},
+	}).then(() => {
+		$('lobby').remove();
+		$('canvas').focus();
+	}, fail);
+});
+	</script>
+</body>
+</html>

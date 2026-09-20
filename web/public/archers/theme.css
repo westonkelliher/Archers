@@ -1,0 +1,12 @@
+/* Every color on the join page comes from here */
+:root {
+	--bg: #1a1714;
+	--surface: #24201b;
+	--border: #4a4136;
+	--text: #f2ebd9;
+	--muted: #b8b09e;
+	--accent: #cca85c;
+	--on-accent: #1a1714;
+	--alert: #ff8c73;
+	--font: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}

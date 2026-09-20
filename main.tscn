@@ -47,8 +47,6 @@ layout_mode = 2
 
 [node name="Courtyard" parent="." instance=ExtResource("1_uhtla")]
 
-[node name="Controlpads" type="GameNiteControlpads" parent="."]
-
 [node name="Wall" parent="." instance=ExtResource("4_ol2fr")]
 visible = false
 position = Vector2(288, 1096)
@@ -245,6 +243,5 @@ position = Vector2(257, 520)
 [node name="Barrel" parent="." instance=ExtResource("13_vxele")]
 position = Vector2(464, 856)
 
-[connection signal="message_received" from="Controlpads" to="." method="_on_game_nite_controlpads_message_received"]
 [connection signal="body_entered" from="MenuElements/MultiplayerButton" to="." method="_on_multiplayer_button_body_entered"]
 [connection signal="timeout" from="BarrelTimer" to="." method="_on_barrel_timer_timeout"]

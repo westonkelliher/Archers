@@ -1,9 +1,11 @@
 extends MarginContainer
 
 var score_label_scene = preload("res://player_score_label.tscn")
+var scoreRows = [] # what's on the board, so the host can tell clients
 # Called when the node enters the scene tree for the first time.
 
 func newScoreLabel(name:String, color:Color, score:int, won:bool = false):
+	scoreRows.append([name, color, score, won])
 	var scoreLabel = score_label_scene.instantiate()
 	scoreLabel.playerName = name
 	scoreLabel.playerColor = color
@@ -12,6 +14,7 @@ func newScoreLabel(name:String, color:Color, score:int, won:bool = false):
 	$MarginContainer/VBoxContainer.add_child(scoreLabel)
 
 func clearScores():
+	scoreRows = []
 	for child in $MarginContainer/VBoxContainer.get_children():
 		if child is PlayerScoreLabel:
 			child.queue_free()

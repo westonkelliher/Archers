@@ -77,4 +77,4 @@ func get_lift():
 
 func sfxManager(effect):
 	$SoundEffects.stream = effect
-	$SoundEffects.play()
+	Net.play($SoundEffects)

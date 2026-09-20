@@ -8,11 +8,15 @@ var playerHit = false
 var specialProperty = null #Can be used for special effects like poison later
 var damage = 20
 var drag = 0
+var graphicName = ""
 
 signal hit()
 
 
 func set_graphic(graphic_name):
+	if graphic_name == graphicName:
+		return
+	graphicName = graphic_name
 	$Sprite2D.texture = load("res://images/equipment/" + graphic_name + ".png")
 
 

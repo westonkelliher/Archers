@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="Archers"
-run/main_scene="res://main.tscn"
+run/main_scene="res://boot.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 boot_splash/bg_color=Color(0.141176, 0.141176, 0.141176, 1)
 config/icon="res://icon.svg"
 
 [autoload]
 
+Net="*res://net.gd"
 Autoloader="*res://autoloader.gd"
 
 [display]
@@ -25,14 +26,12 @@ Autoloader="*res://autoloader.gd"
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/size/mode=3
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
 
-[input]
+[audio]
 
-multiplayer={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":32,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
+general/default_playback_type.web=0
 
 [layer_names]
 

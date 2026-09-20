@@ -245,7 +245,10 @@ func setUpgradeChoice(category, prevTier, prevName):
 	var newTier = prevTier + 1
 	#NOTE: prevName will be used to make you more likely to follow upgrade path e.g. ice -> ice 2
 	#NOTE: There are some gaps in paths currently, fix later
-	var choices = ALL_EQUIPMENT[category][newTier]
+	var specs = {'bows': BOW_SPECS, 'arrows': ARROW_SPECS, 'armors': ARMOR_SPECS}[category]
+	var choices = ALL_EQUIPMENT[category][newTier].filter(func(n): return n in specs)
+	if choices.is_empty():
+		return "nothing"
 	#if newTier > 2 && category != 'bows':
 		#for choice in choices:
 			#pass

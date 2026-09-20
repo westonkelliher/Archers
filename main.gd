@@ -48,28 +48,51 @@ var jaunt = preload("res://audio/VictoryJaunt.ogg")
 
 
 
-# Called when the node enters the scene tree for the first time.
+const ARENA_SIZE = Vector2(1920, 1080)
+const UPGRADE_TIMEOUT = 45.0
+
+var musicPath = ""
+var upgradeMenu = null
+
 func _ready():
 	randomize()
-	vpSize = get_viewport().size
+	vpSize = ARENA_SIZE
 	Autoloader.mainScene = self
+	var replicator = preload("res://replicator.gd").new()
+	replicator.name = "Replicator"
+	add_child(replicator)
+	add_child(preload("res://local_input.gd").new())
+	var hud = CanvasLayer.new()
+	hud.layer = 10
+	add_child(hud)
+	upgradeMenu = preload("res://upgrade_menu.gd").new()
+	hud.add_child(upgradeMenu)
+	hud.add_child(preload("res://hud.gd").new())
+	Net.packet.connect(_on_net_packet)
+	if Net.is_client:
+		# the host owns everything that moves; we only draw what it tells us
+		$Barrel.queue_free()
+		return
+	Net.peer_joined.connect(_on_peer_joined)
+	Net.peer_left.connect(remove_player)
 	musicManager(mainTheme)
 	$BarrelTimer.wait_time = barrelWaitTime
+	for id in Net.peers:
+		new_player(id)
 	#createButton("Free for All", settingsButtonHandler)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	self.delta = delta
-	if Input.is_action_pressed("multiplayer") and not multiplayerStarted:
-		multiplayerSetup()
-	#if not $MusicPlayer.is_playing():
-		#$MusicPlayer.play()
 
 
 func send_state_message(player):
-	var msg = player.get_state_string()
-	$Controlpads.send_message(player.playerID, msg)
+	var st = player.get_state_dict()
+	if player.playerID == Net.my_id:
+		upgradeMenu.apply_state(st)
+	else:
+		Net.send_to(player.playerID, ["state", st])
 
 
 func send_all_states():
@@ -77,27 +100,102 @@ func send_all_states():
 		send_state_message(players[player])
 
 
-func _on_game_nite_controlpads_message_received(client, message):
-	if message == "state-request":
-		if client in playersAll:
-			send_state_message(playersAll[client])
-		else:
-			$Controlpads.send_message(client, "state:joining")
+func _on_net_packet(from, data):
+	if typeof(data) != TYPE_ARRAY or data.size() == 0:
 		return
-	if client in playersAll:
-		if multiplayerStarted and client not in players:
-			return
-		playersAll[client].handle_controlpad_input(message)
-		if playersAll[client].unspawned:
-			playersAll[client].unspawned = false
-			players[client] = playersAll[client]
-			players[client].global_position = Vector2(400, 400)
-			buttonTextHandler()
-	elif not multiplayerStarted:
-		new_player(client)
-		if debugEquipment:
-			setDebugEquipment(client)
-		players[client].handle_controlpad_input(client)
+	if Net.is_client:
+		if data[0] == "state":
+			upgradeMenu.apply_state(data[1])
+		return
+	if data[0] == "in" and data.size() == 4:
+		handle_input(from, data[1], data[2], data[3])
+	elif data[0] == "upg" and data.size() == 2:
+		handle_upgrade(from, data[1])
+
+
+# Host only. Input from any player, including the host's own keyboard/mouse
+func handle_input(client, move, aim, draw):
+	if client not in players:
+		return
+	if typeof(move) != TYPE_VECTOR2 or typeof(aim) != TYPE_FLOAT or typeof(draw) != TYPE_BOOL:
+		return
+	players[client].set_net_input(move, aim, draw)
+
+
+func handle_upgrade(client, kind):
+	if client not in players or players[client].state != "upgrading":
+		return
+	players[client].handle_upgrade(str(kind))
+	send_state_message(players[client])
+
+
+# Either side. The upgrade menu calls this when the local player picks something
+func request_upgrade(kind):
+	if Net.is_client:
+		Net.send_host(["upg", kind])
+	else:
+		handle_upgrade(Net.my_id, kind)
+
+
+func _on_peer_joined(id, _peer_name):
+	# mid-match joiners spectate until the next lobby
+	if not multiplayerStarted:
+		new_player(id)
+
+
+func remove_player(client):
+	if client not in playersAll:
+		return
+	var player = playersAll[client]
+	players.erase(client)
+	playersAll.erase(client)
+	readiedPlayers.erase(client)
+	player.queue_free()
+	buttonTextHandler()
+	if multiplayerStarted:
+		if players.size() < 2:
+			# nobody left to fight; back to a fresh lobby
+			get_tree().reload_current_scene()
+		else:
+			winCheck()
+
+
+func get_my_player():
+	return playersAll.get(Net.my_id)
+
+
+# Everything outside of the entities that clients need to mirror the screen
+func get_ui_state():
+	return [
+		$MenuElements.position, $Dummies.position,
+		textBox.visible, textBoxLabel.text,
+		richTextBox.visible, richTextLabel.text, richTextBox.scoreRows,
+		bttnLabel.text, musicPath,
+	]
+
+var _lastUiState = null
+func apply_ui_state(ui):
+	if ui == _lastUiState:
+		return
+	$MenuElements.position = ui[0]
+	$Dummies.position = ui[1]
+	textBox.visible = ui[2]
+	textBoxLabel.text = ui[3]
+	richTextBox.visible = ui[4]
+	richTextLabel.text = ui[5]
+	if _lastUiState == null or ui[6] != _lastUiState[6]:
+		richTextBox.clearScores()
+		for row in ui[6]:
+			richTextBox.newScoreLabel(row[0], row[1], row[2], row[3])
+	bttnLabel.text = ui[7]
+	if ui[8] != musicPath:
+		musicPath = ui[8]
+		if musicPath == "":
+			$MusicPlayer.stop()
+		else:
+			$MusicPlayer.stream = load(musicPath)
+			$MusicPlayer.play()
+	_lastUiState = ui
 
 func setDebugEquipment(client):
 	if client == "0x1-1":
@@ -117,12 +215,14 @@ func setDebugEquipment(client):
 
 func new_player(client):
 	var new_player = player_scene.instantiate()
-	new_player.global_position = Vector2(400, 400)
+	new_player.global_position = lobbySpawn()
 	new_player.connect("bow_shot", _on_player_bow_shot)
 	new_player.playerID = client
 	var player_color = Color(randf()*0.7 + 0.2, randf()*0.7 + 0.2, randf()*0.7 + 0.2, 1)
 	new_player.playerColor = player_color
-	new_player.playerName = namePlayer()
+	new_player.playerName = Net.peers.get(client, "")
+	if new_player.playerName == "":
+		new_player.playerName = namePlayer()
 	add_child(new_player)
 	players[client] = new_player
 	playersAll[client] = new_player
@@ -145,6 +245,9 @@ var names = [
 var bastardNames = [
 	"Snow", "Rivers", "Sand", "Hill", "Pyke", "Waters", "Stone"
 ]
+
+func lobbySpawn():
+	return Vector2(randf_range(300, 700), randf_range(380, 480))
 
 func namePlayer():
 	if names.size() > 0:
@@ -194,7 +297,7 @@ func multiplayerSetup():
 
 func placeEvenly():
 	var angle_increment = 360 / len(players.values())
-	var viewport_size = get_viewport().size
+	var viewport_size = ARENA_SIZE
 	var level_radius = min(viewport_size.x, viewport_size.y) * 0.4  # Choose a suitable radius based on viewport size
 	var center = Vector2(viewport_size / 2)
 	
@@ -229,7 +332,7 @@ func winCheck():
 @export var numDummy = 2
 func roundInit():
 	$Dummies.position = Vector2(-5000,-5000)
-	$MusicPlayer.stop()
+	stopMusic()
 	clearJunk()
 	spawnDummy(numDummy)
 	universalControl(false)
@@ -240,7 +343,7 @@ func roundInit():
 	textBox.visible = true
 	await get_tree().create_timer(1.5).timeout
 	textBoxLabel.text = "Ready?"
-	await $SoundEffects.finished
+	await sfxDone()
 	textBoxLabel.text = "GO!"
 	sfxManager(battleStart)
 	await get_tree().create_timer(1.0).timeout
@@ -256,7 +359,7 @@ func roundOver(winner):
 	pvpOn = false
 	clearJunk()
 	$BarrelTimer.stop()
-	$MusicPlayer.stop()
+	stopMusic()
 	sfxManager(fanfare)
 	var tempC = winner.playerColor
 	var hex_color = tempC.to_html(false)
@@ -284,7 +387,7 @@ func roundOver(winner):
 			send_state_message(players[player])
 		scoreboard()
 		roundNumber += 1
-		await $SoundEffects.finished
+		await sfxDone()
 		musicManager(jaunt)
 		await readyUpGamepad()
 		richTextBox.visible = false
@@ -334,16 +437,18 @@ func sortByWins():
 
 func readyUpGamepad():
 	var allReady = false
+	var waited = 0.0
 	while not allReady:
 		allReady = true
 		for player in players:
 			if not players[player].readyUp:
 				allReady = false
 				break
-		if not $MusicPlayer.is_playing():
+		if not $MusicPlayer.is_playing() or waited > UPGRADE_TIMEOUT:
 			allReady = true
 		else:
 			await get_tree().create_timer(0.5).timeout
+			waited += 0.5
 	if allReady:
 		return allReady
 
@@ -360,10 +465,13 @@ func gameOver():
 	$Dummies.position = Vector2(0,0)
 	for player in players:
 		players[player].restoreAll()
-		players[player].unspawned = true
-		players[player].global_position = Vector2(-5000, -5000)
-	players = {}
-	pass
+		players[player].state = "playing"
+		players[player].global_position = lobbySpawn()
+	send_all_states()
+	for id in Net.peers:
+		if id not in playersAll:
+			new_player(id)
+	buttonTextHandler()
 
 #Turns controls off or on for all players
 func universalControl(state):
@@ -465,11 +573,24 @@ func createButton(text : String, function : Callable):
 	pass
 
 func musicManager(song):
+	musicPath = song.resource_path
 	$MusicPlayer.stream = song
 	$MusicPlayer.play()
 
+func stopMusic():
+	musicPath = ""
+	$MusicPlayer.stop()
+
 func sfxManager(effect):
 	$SoundEffects.stream = effect
-	$SoundEffects.play()
+	Net.play($SoundEffects)
+
+# `await $SoundEffects.finished` can hang in a browser if audio is blocked
+func sfxDone():
+	var limit = $SoundEffects.stream.get_length() + 0.5
+	var waited = 0.0
+	while $SoundEffects.playing and waited < limit:
+		await get_tree().create_timer(0.1).timeout
+		waited += 0.1
 
 

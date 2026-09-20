@@ -1,0 +1,16 @@
+{
+	"name": "archers",
+	"main": "worker.js",
+	"compatibility_date": "2026-04-06",
+	"assets": {
+		"directory": "./public",
+		"binding": "ASSETS"
+	},
+	"routes": [{ "pattern": "weston.pub/archers*", "zone_name": "weston.pub" }],
+	"workers_dev": false,
+	"durable_objects": {
+		"bindings": [{ "name": "ROOMS", "class_name": "ArchersRoom" }]
+	},
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["ArchersRoom"] }],
+	"observability": { "enabled": true }
+}

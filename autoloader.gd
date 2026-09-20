@@ -5,6 +5,7 @@ var font = preload("res://fonts/mainFont.ttf")
 var barrelDespawning = false
 
 func damageNumbers(value : int, position : Vector2, type : String = "general"):
+	Net.event(["dmg", value, position, type])
 	var number = Label.new()
 	number.global_position = position
 	number.text = str(value)
